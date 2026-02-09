@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía 6: Modelado de Ecuaciones - Robust v2 (Expanded)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-orange: #db6015;
+            --primary-yellow: #f7be00;
+            --primary-blue-dark: #244b5a;
+            --primary-red: #993921;
+            --bg-light: #f8fafc;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --transition-speed: 0.5s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: #1e293b;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #viewport {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: radial-gradient(circle at 10% 20%, rgba(219, 96, 21, 0.05) 0%, rgba(36, 75, 90, 0.05) 100%);
+        }
+
+        .slide-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0.3;
+            transform: scale(0.9);
+            transition: opacity var(--transition-speed), transform var(--transition-speed);
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            color: var(--primary-orange);
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            color: var(--primary-blue-dark);
+            margin-bottom: 1.2rem;
+            font-weight: 700;
+        }
+
+        p {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            line-height: 1.6;
+            max-width: 800px;
+            margin-bottom: 1rem;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 850px;
+        }
+
+        .info-card {
+            padding: 1rem;
+            border-radius: 12px;
+            background: white;
+            border-bottom: 4px solid var(--primary-orange);
+            margin: 0.5rem;
+            text-align: left;
+        }
+
+        .nav-controls {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            width: 45px;
+            height: 45px;
+            border: none;
+            border-radius: 50%;
+            background: var(--primary-blue-dark);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 5px;
+            background: var(--primary-orange);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .quiz-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .option-btn {
+            padding: 0.8rem 1.2rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .option-btn.correct {
+            border-color: #10b981;
+            background: #ecfdf5;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="viewport">
+        <div class="slide-container" id="slide-container">
+
+            <div class="slide active">
+                <div class="glass-card">
+                    <div style="font-size: 60px; margin-bottom: 10px;">🏗️</div>
+                    <p style="color: var(--primary-blue-dark); font-weight: 600; text-transform: uppercase;">Colegio
+                        Escolaris - 4to B</p>
+                    <h1>Tema 6: Modelado de Ecuaciones</h1>
+                    <p>Traducir el mundo real al lenguaje algebraico.</p>
+                </div>
+            </div>
+
+            <!-- Info 1 -->
+            <div class="slide">
+                <div class="glass-card">
+                    <div class="tag" style="background: var(--primary-orange);">INFO 1</div>
+                    <h2>¿Qué es el Modelado?</h2>
+                    <p>Es el proceso de representar una situación real mediante una expresión matemática para poder
+                        resolverla.</p>
+                    <div class="info-card"><strong>Situación:</strong> Quiero saber cuánto dinero tengo si el doble de
+                        mis ahorros es $50.</div>
+                    <div class="info-card"><strong>Modelo:</strong> 2x = 50</div>
+                </div>
+            </div>
+
+            <!-- Info 2 -->
+            <div class="slide">
+                <div class="glass-card">
+                    <div class="tag" style="background: var(--primary-blue-dark);">INFO 2</div>
+                    <h2>Diccionario Base</h2>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="info-card">"Aumentado en" -> +</div>
+                        <div class="info-card">"Disminuido en" -> -</div>
+                        <div class="info-card">"El cociente de" -> /</div>
+                        <div class="info-card">"Es igual a" -> =</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info 3 -->
+            <div class="slide">
+                <div class="glass-card">
+                    <div class="tag" style="background: var(--primary-yellow); color: black;">INFO 3</div>
+                    <h2>La Incógnita (x)</h2>
+                    <p>Siempre debemos definir qué representa nuestra variable.</p>
+                    <div class="info-card"><strong>Error Común:</strong> Empezar a escribir números sin saber qué es x.
+                    </div>
+                    <div class="info-card"><strong>Consejo:</strong> x suele ser lo que la pregunta del problema nos
+                        pide encontrar.</div>
+                </div>
+            </div>
+
+            <!-- Info 4 -->
+            <div class="slide">
+                <div class="glass-card">
+                    <div class="tag" style="background: var(--primary-orange);">INFO 4</div>
+                    <h2>Pasos Maestros</h2>
+                    <ol style="text-align: left; max-width: 500px; margin: 0 auto; line-height: 2;">
+                        <li>Leer el problema 2 veces.</li>
+                        <li>Identificar la incógnita (x).</li>
+                        <li>Relacionar los datos con conectores.</li>
+                        <li>Escribir la ecuación final.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Info 5 -->
+            <div class="slide">
+                <div class="glass-card">
+                    <div class="tag" style="background: var(--primary-blue-dark);">INFO 5</div>
+                    <h2>Ejemplo: Números</h2>
+                    <p>"El triple de un número menos 5 es igual a 10".</p>
+                    <div class="info-card" style="text-align: center; font-size: 1.5rem; font-weight: 800;">3x - 5 = 10
+                    </div>
+                    <p>Donde x es el número misterioso.</p>
+                </div>
+            </div>
+
+            <!-- Info 6 -->
+            <div class="slide">
+                <div class="glass-card">
+                    <div class="tag" style="background: var(--primary-red);">INFO 6</div>
+                    <h2>Ejemplo: Geometría</h2>
+                    <p>"El perímetro de un cuadrado es 20. ¿Cuánto mide su lado?"</p>
+                    <div class="info-card">
+                        Como un cuadrado tiene 4 lados iguales:<br>
+                        <strong>Modelo:</strong> 4x = 20
+                    </div>
+                    <p>Al modelar, simplificamos el dibujo a una sola línea de lógica.</p>
+                </div>
+            </div>
+
+            <div class="slide">
+                <div class="glass-card">
+                    <h2>Quiz Rápido</h2>
+                    <p>¿Cómo se traduce: "La mitad de un número sumado con 8 es 12"?</p>
+                    <div class="quiz-container">
+                        <button class="option-btn" onclick="checkQuiz(6, false, this)">A) x/2 - 8 = 12</button>
+                        <button class="option-btn" onclick="checkQuiz(6, true, this)">B) x/2 + 8 = 12</button>
+                        <button class="option-btn" onclick="checkQuiz(6, false, this)">C) 2x + 8 = 12</button>
+                    </div>
+                    <div id="feedback-6" style="margin-top: 1rem; font-weight: 600;"></div>
+                </div>
+            </div>
+
+            <div class="slide">
+                <div class="glass-card">
+                    <div style="font-size: 60px;">🏆</div>
+                    <h2>¡Arquitecto de Ecuaciones!</h2>
+                    <p>Ahora puedes ver problemas y pensar en ecuaciones.</p>
+                    <button onclick="goToSlide(0)"
+                        style="background: var(--primary-orange); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 30px; font-weight: 700; cursor: pointer;">Volver
+                        al Inicio</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="nav-controls">
+            <button class="nav-btn" id="prev-btn" onclick="prevSlide()" disabled>&#10094;</button>
+            <span id="slide-num" style="font-weight: 600; color: var(--primary-blue-dark);">1 / 9</span>
+            <button class="nav-btn" id="next-btn" onclick="nextSlide()">&#10095;</button>
+        </div>
+
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const container = document.getElementById('slide-container');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const slideNum = document.getElementById('slide-num');
+        const progressBar = document.getElementById('progress-bar');
+
+        function updateGallery() {
+            container.style.transform = `translateX(-${currentSlide * 100}%)`;
+            slides.forEach((slide, index) => slide.classList.toggle('active', index === currentSlide));
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+            slideNum.innerText = `${currentSlide + 1} / ${slides.length}`;
+            progressBar.style.width = `${((currentSlide + 1) / slides.length) * 100}%`;
+        }
+        function nextSlide() { if (currentSlide < slides.length - 1) { currentSlide++; updateGallery(); } }
+        function prevSlide() { if (currentSlide > 0) { currentSlide--; updateGallery(); } }
+        function goToSlide(n) { currentSlide = n; updateGallery(); }
+        document.addEventListener('keydown', e => { if (e.key === 'ArrowRight' || e.key === ' ') nextSlide(); if (e.key === 'ArrowLeft') prevSlide(); });
+        let touchStartX = 0;
+        document.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX, false);
+        document.addEventListener('touchend', e => {
+            let touchEndX = e.changedTouches[0].screenX;
+            if (touchEndX < touchStartX - 40) nextSlide();
+            if (touchEndX > touchStartX + 40) prevSlide();
+        }, false);
+        function checkQuiz(qId, isCorrect, btn) {
+            const feedback = document.getElementById(`feedback-${qId}`);
+            btn.parentElement.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+            if (isCorrect) { btn.classList.add('correct'); feedback.innerText = "¡Perfecto! 'La mitad' es x/2 y 'sumado' es +."; feedback.style.color = "#10b981"; }
+            else { btn.classList.add('wrong'); feedback.innerText = "Revisa los signos y la operación principal."; feedback.style.color = "#993921"; }
+        }
+        updateGallery();
+    </script>
+</body>
+
+</html>

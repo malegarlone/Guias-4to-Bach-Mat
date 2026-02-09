@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía 10: Gráfica de Complejos - Robust v2 (Expanded)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-orange: #db6015;
+            --primary-yellow: #f7be00;
+            --primary-blue-dark: #244b5a;
+            --primary-red: #993921;
+            --bg-light: #f8fafc;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --transition-speed: 0.5s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: #1e293b;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #viewport {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: radial-gradient(circle at 10% 20%, rgba(219, 96, 21, 0.05) 0%, rgba(36, 75, 90, 0.05) 100%);
+        }
+
+        .slide-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0.3;
+            transform: scale(0.9);
+            transition: opacity var(--transition-speed), transform var(--transition-speed);
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            color: var(--primary-orange);
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            color: var(--primary-blue-dark);
+            margin-bottom: 1.2rem;
+            font-weight: 700;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 850px;
+        }
+
+        .info-card {
+            padding: 1rem;
+            border-radius: 12px;
+            background: white;
+            border-bottom: 4px solid var(--primary-orange);
+            margin: 0.5rem;
+            text-align: left;
+        }
+
+        .nav-controls {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            width: 45px;
+            height: 45px;
+            border: none;
+            border-radius: 50%;
+            background: var(--primary-blue-dark);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 5px;
+            background: var(--primary-orange);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .quiz-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .option-btn {
+            padding: 0.8rem 1.2rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .plane-box {
+            width: 180px;
+            height: 180px;
+            border: 2px solid #333;
+            position: relative;
+            background: white;
+            margin: 1rem auto;
+        }
+
+        .plane-x {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            height: 2px;
+            background: #999;
+        }
+
+        .plane-y {
+            position: absolute;
+            left: 50%;
+            height: 100%;
+            width: 2px;
+            background: #999;
+        }
+
+        .point-dot {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: red;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="viewport">
+        <div class="slide-container" id="slide-container">
+
+            <div class="slide active">
+                <div class="glass-card">
+                    <div style="font-size: 60px; margin-bottom: 10px;">🗺️</div>
+                    <p style="color: var(--primary-blue-dark); font-weight: 600; text-transform: uppercase;">Colegio
+                        Escolaris - 4to B</p>
+                    <h1>Guía 10: Gráfica de Complejos</h1>
+                    <p>Visualizando los números en dos dimensiones.</p>
+                </div>
+            </div>
+
+            <!-- Info 1 -->
+            <div class="slide">
+                <div class="glass-card">
+                    <div class="tag" style="background: var(--primary-orange);">INFO 1</div>
+                    <h2>Plano de Argand</h2>
+                    <p>Cualquier complejo <strong>a + bi</strong> se puede graficar en un plano especial.</p>
+                    <div class="info-card"><strong>Eje Horizontal:</strong> Eje Real.</div>
+                    <div class="info-card"><strong>Eje Vertical:</strong> Eje Imaginario.</div>
+                </div>
+            </div>
+
+            <!-- Info 2 -->
+            <div class="slide">
+                <div class="glass-card">
+                    <div class="tag" style="background: var(--primary-blue-dark);">INFO 2</div>
+                    <h2>Componentes</h2>
+                    <p>El número <strong>3 + 2i</strong> se ve así en el plano:</p>
+                    <div class="plane-box">
+                        <div class="plane-x"></div>
+                        <div class="plane-y"></div>
+                        <div class="point-dot" style="left: 80%; top: 20%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info 3 -->
+            <div class="slide">
+                <div class="glass-card">
+                    <div class="tag" style="background: var(--primary-yellow); color: black;">INFO 3</div>
+                    <h2>El Afijo y el Vector</h2>
+                    <p>El punto se llama **afijo**. Si trazamos una flecha desde el centro hasta el afijo, tenemos un
+                        **vector**.</p>
+                    <div class="info-card">Este vector nos permite hablar de dirección y fuerza (módulo).</div>
+                </div>
+            </div>
+
+            <!-- Info 4 -->
+            <div class="slide">
+                <div class="glass-card">
+                    <div class="tag" style="background: var(--primary-orange);">INFO 4</div>
+                    <h2>El Módulo |z|</h2>
+                    <p>Es la distancia del punto al origen (el centro del plano). Se calcula con Pitágoras.</p>
+                    <div class="info-card" style="text-align: center;"><strong>|z| = √(a² + b²)</strong></div>
+                </div>
+            </div>
+
+            <!-- Info 5 -->
+            <div class="slide">
+                <div class="glass-card">
+                    <div class="tag" style="background: var(--primary-blue-dark);">INFO 5</div>
+                    <h2>El Argumento (θ)</h2>
+                    <p>Es el ángulo que forma el vector con el eje real positivo. Se mide en sentido anti-horario.</p>
+                    <div class="info-card">Usamos la función **arcotan(b/a)** para encontrarlo.</div>
+                </div>
+            </div>
+
+            <!-- Info 6 -->
+            <div class="slide">
+                <div class="glass-card">
+                    <div class="tag" style="background: var(--primary-red);">INFO 6</div>
+                    <h2>Relaciones en el Plano</h2>
+                    <p>Visualizar el Conjugado y el Opuesto:</p>
+                    <div class="info-card">
+                        <strong>Conjugado:</strong> Reflejo sobre el eje Real.<br>
+                        <strong>Opuesto:</strong> Reflejo a través del origen.
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide">
+                <div class="glass-card">
+                    <h2>Quiz: Coordenadas</h2>
+                    <p>Si graficamos <strong>-4i</strong>, ¿dónde queda el punto?</p>
+                    <div class="quiz-container">
+                        <button class="option-btn" onclick="checkQuiz(10, false, this)">A) En el eje Real a la
+                            izquierda</button>
+                        <button class="option-btn" onclick="checkQuiz(10, true, this)">B) En el eje Imaginario hacia
+                            abajo</button>
+                        <button class="option-btn" onclick="checkQuiz(10, false, this)">C) En medio de un
+                            cuadrante</button>
+                    </div>
+                    <div id="feedback-10" style="margin-top: 1rem; font-weight: 600;"></div>
+                </div>
+            </div>
+
+            <div class="slide">
+                <div class="glass-card">
+                    <div style="font-size: 60px;">🏆</div>
+                    <h2>¡Explorador de C!</h2>
+                    <p>Has dominado la visión geométrica de los complejos.</p>
+                    <button onclick="goToSlide(0)"
+                        style="background: var(--primary-orange); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 30px; font-weight: 700; cursor: pointer;">Volver
+                        al Inicio</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="nav-controls">
+            <button class="nav-btn" id="prev-btn" onclick="prevSlide()" disabled>&#10094;</button>
+            <span id="slide-num" style="font-weight: 600; color: var(--primary-blue-dark);">1 / 9</span>
+            <button class="nav-btn" id="next-btn" onclick="nextSlide()">&#10095;</button>
+        </div>
+
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const container = document.getElementById('slide-container');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const slideNum = document.getElementById('slide-num');
+        const progressBar = document.getElementById('progress-bar');
+
+        function updateGallery() {
+            container.style.transform = `translateX(-${currentSlide * 100}%)`;
+            slides.forEach((slide, index) => slide.classList.toggle('active', index === currentSlide));
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+            slideNum.innerText = `${currentSlide + 1} / ${slides.length}`;
+            progressBar.style.width = `${((currentSlide + 1) / slides.length) * 100}%`;
+        }
+        function nextSlide() { if (currentSlide < slides.length - 1) { currentSlide++; updateGallery(); } }
+        function prevSlide() { if (currentSlide > 0) { currentSlide--; updateGallery(); } }
+        function goToSlide(n) { currentSlide = n; updateGallery(); }
+        document.addEventListener('keydown', e => { if (e.key === 'ArrowRight' || e.key === ' ') nextSlide(); if (e.key === 'ArrowLeft') prevSlide(); });
+        let touchStartX = 0;
+        document.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX, false);
+        document.addEventListener('touchend', e => {
+            let touchEndX = e.changedTouches[0].screenX;
+            if (touchEndX < touchStartX - 40) nextSlide();
+            if (touchEndX > touchStartX + 40) prevSlide();
+        }, false);
+        function checkQuiz(qId, isCorrect, btn) {
+            const feedback = document.getElementById(`feedback-${qId}`);
+            btn.parentElement.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+            if (isCorrect) { btn.classList.add('correct'); feedback.innerText = "¡Correcto! No tiene parte real, solo imaginaria negativa."; feedback.style.color = "#10b981"; }
+            else { btn.classList.add('wrong'); feedback.innerText = "Recuerda que '-4i' es puramente imaginario."; feedback.style.color = "#993921"; }
+        }
+        updateGallery();
+    </script>
+</body>
+
+</html>
