@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía 5: Proposiciones - Diseño Robusto v2</title>
+    <!-- Modern Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-orange: #db6015;
+            --primary-yellow: #f7be00;
+            --primary-blue-dark: #244b5a;
+            --primary-red: #993921;
+            --bg-light: #f8fafc;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --transition-speed: 0.5s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: #1e293b;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Container & Presentation */
+        #viewport {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: radial-gradient(circle at 10% 20%, rgba(219, 96, 21, 0.05) 0%, rgba(36, 75, 90, 0.05) 100%);
+        }
+
+        .slide-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0.3;
+            transform: scale(0.9);
+            transition: opacity var(--transition-speed), transform var(--transition-speed);
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Typography */
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            color: var(--primary-orange);
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            color: var(--primary-blue-dark);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        p {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            line-height: 1.6;
+            max-width: 800px;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Components */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 850px;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .grid-box {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+            margin-top: 2rem;
+        }
+
+        .info-card {
+            padding: 1.5rem;
+            border-radius: 15px;
+            background: white;
+            border-bottom: 4px solid var(--primary-orange);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Navigation Controls */
+        .nav-controls {
+            position: absolute;
+            bottom: 2rem;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 50%;
+            background: var(--primary-blue-dark);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(36, 75, 90, 0.3);
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: var(--primary-orange);
+            transform: scale(1.1);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .progress-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: rgba(0, 0, 0, 0.05);
+            z-index: 101;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary-orange);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        /* Quiz UI */
+        .quiz-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .option-btn {
+            padding: 1rem 1.5rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            text-align: left;
+            font-family: inherit;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary-orange);
+            background: rgba(219, 96, 21, 0.05);
+        }
+
+        .option-btn.correct {
+            border-color: #10b981;
+            background: #ecfdf5;
+            color: #065f46;
+        }
+
+        .option-btn.wrong {
+            border-color: #ef4444;
+            background: #fef2f2;
+            color: #991b1b;
+        }
+
+        .feedback-msg {
+            margin-top: 1rem;
+            font-weight: 600;
+            min-height: 1.5rem;
+        }
+
+        /* Flip Card JS Version */
+        .flip-card {
+            background-color: transparent;
+            width: 200px;
+            height: 150px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card.is-flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front,
+        .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .flip-card-front {
+            background-color: white;
+            color: var(--primary-blue-dark);
+            border: 2px solid var(--primary-orange);
+        }
+
+        .flip-card-back {
+            background-color: var(--primary-blue-dark);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 600px) {
+            .slide {
+                padding: 1rem;
+            }
+
+            .glass-card {
+                padding: 1.5rem;
+                width: 95%;
+            }
+
+            .nav-controls {
+                bottom: 3rem;
+            }
+
+            .nav-btn {
+                width: 45px;
+                height: 45px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="viewport">
+        <div class="slide-container" id="slide-container">
+
+            <!-- Slide 1: Portada -->
+            <div class="slide active">
+                <div class="glass-card">
+                    <div style="font-size: 80px; margin-bottom: 20px;">💡</div>
+                    <p
+                        style="color: var(--primary-blue-dark); font-weight: 600; text-transform: uppercase; letter-spacing: 2px;">
+                        Colegio Escolaris - 4to B</p>
+                    <h1>Tema 5: Proposiciones</h1>
+                    <p>Dominando la lógica matemática y el pensamiento crítico.</p>
+                    <div
+                        style="background: var(--primary-yellow); height: 4px; width: 60px; margin: 20px auto; border-radius: 2px;">
+                    </div>
+                    <p style="font-size: 0.9rem; color: #64748b;">Pulsa las flechas o desliza la pantalla para navegar
+                    </p>
+                </div>
+            </div>
+
+            <!-- Slide 2: Objetivos -->
+            <div class="slide">
+                <div class="glass-card">
+                    <h2>🎯 Objetivos</h2>
+                    <div class="grid-box">
+                        <div class="info-card">
+                            <h3 style="color: var(--primary-orange)">Identificar</h3>
+                            <p style="font-size: 0.9rem;">Diferenciar entre lenguaje cotidiano y lógico.</p>
+                        </div>
+                        <div class="info-card">
+                            <h3 style="color: var(--primary-blue-dark)">Evaluar</h3>
+                            <p style="font-size: 0.9rem;">Determinar valores de Verdad (V) o Falsedad (F).</p>
+                        </div>
+                        <div class="info-card">
+                            <h3 style="color: var(--primary-red)">Estructura</h3>
+                            <p style="font-size: 0.9rem;">Conocer proposiciones simples y compuestas.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3: Definicion -->
+            <div class="slide">
+                <div class="glass-card">
+                    <h2>¿Qué es una Proposición?</h2>
+                    <p>Es una oración <strong>declarativa</strong> de la cual podemos asegurar (sin ambigüedades) que es
+                        verdadera o falsa.</p>
+                    <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-top: 1rem;">
+                        <div
+                            style="background: #ecfdf5; padding: 1rem; border-radius: 10px; border: 1px solid #10b981;">
+                            <span style="color: #059669; font-weight: 800;">✅ SÍ</span>
+                            <p style="font-size: 0.85rem; margin-top: 5px;">"La luna es de queso"<br>(Falso, pero es
+                                proposición)</p>
+                        </div>
+                        <div
+                            style="background: #fef2f2; padding: 1rem; border-radius: 10px; border: 1px solid #ef4444;">
+                            <span style="color: #dc2626; font-weight: 800;">❌ NO</span>
+                            <p style="font-size: 0.85rem; margin-top: 5px;">"¡Cierra los ojos!"<br>(Es una orden)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 4: Actividad Interactiva -->
+            <div class="slide">
+                <div class="glass-card">
+                    <h2>¿Es o no Proposición?</h2>
+                    <p>Haz clic para descubrirlo</p>
+                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                        <div class="flip-card" onclick="this.classList.toggle('is-flipped')">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front"><strong>3 + 5 = 12</strong></div>
+                                <div class="flip-card-back"><strong>SÍ</strong><br><small>Es una proposición
+                                        falsa.</small></div>
+                            </div>
+                        </div>
+                        <div class="flip-card" onclick="this.classList.toggle('is-flipped')">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front"><strong>¿Cómo estás?</strong></div>
+                                <div class="flip-card-back"><strong>NO</strong><br><small>Es una pregunta.</small></div>
+                            </div>
+                        </div>
+                        <div class="flip-card" onclick="this.classList.toggle('is-flipped')">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front"><strong>Hoy es lunes</strong></div>
+                                <div class="flip-card-back"><strong>SÍ</strong><br><small>Puede ser V o F.</small></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 5: El Quiz -->
+            <div class="slide">
+                <div class="glass-card">
+                    <h2>Ponte a prueba</h2>
+                    <p>¿Cuál de estas es una <strong>proposición lógica</strong>?</p>
+                    <div class="quiz-container">
+                        <button class="option-btn" onclick="checkQuiz(0, false, this)">A) ¡Qué alegría verte!</button>
+                        <button class="option-btn" onclick="checkQuiz(0, true, this)">B) 10 es un número primo.</button>
+                        <button class="option-btn" onclick="checkQuiz(0, false, this)">C) Por favor, escribe.</button>
+                    </div>
+                    <div id="feedback-0" class="feedback-msg"></div>
+                </div>
+            </div>
+
+            <!-- Slide 6: Cierre -->
+            <div class="slide">
+                <div class="glass-card">
+                    <div style="font-size: 80px; margin-bottom: 20px;">🏆</div>
+                    <h2>¡Excelente Trabajo!</h2>
+                    <p>Has completado la base de la lógica matemática.</p>
+                    <button onclick="goToSlide(0)"
+                        style="background: var(--primary-orange); color: white; border: none; padding: 1rem 2rem; border-radius: 30px; font-weight: 700; cursor: pointer; margin-top: 1rem;">Repasar
+                        Guía</button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Navigation UI -->
+        <div class="nav-controls">
+            <button class="nav-btn" id="prev-btn" onclick="prevSlide()" disabled>&#10094;</button>
+            <span id="slide-num" style="font-weight: 600; color: var(--primary-blue-dark);">1 / 6</span>
+            <button class="nav-btn" id="next-btn" onclick="nextSlide()">&#10095;</button>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const container = document.getElementById('slide-container');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const slideNum = document.getElementById('slide-num');
+        const progressBar = document.getElementById('progress-bar');
+
+        function updateGallery() {
+            container.style.transform = `translateX(-${currentSlide * 100}%)`;
+
+            slides.forEach((slide, index) => {
+                slide.classList.toggle('active', index === currentSlide);
+            });
+
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+
+            slideNum.innerText = `${currentSlide + 1} / ${slides.length}`;
+            progressBar.style.width = `${((currentSlide + 1) / slides.length) * 100}%`;
+        }
+
+        function nextSlide() {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                updateGallery();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateGallery();
+            }
+        }
+
+        function goToSlide(n) {
+            currentSlide = n;
+            updateGallery();
+        }
+
+        // Keyboard support
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+
+        // Touch Support (Swipe)
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, false);
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, false);
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) nextSlide();
+            if (touchEndX > touchStartX + 50) prevSlide();
+        }
+
+        // Quiz Logic
+        function checkQuiz(qId, isCorrect, btn) {
+            const feedback = document.getElementById(`feedback-${qId}`);
+            const buttons = btn.parentElement.querySelectorAll('.option-btn');
+
+            buttons.forEach(b => {
+                b.disabled = true;
+                b.classList.remove('correct', 'wrong');
+            });
+
+            if (isCorrect) {
+                btn.classList.add('correct');
+                feedback.innerText = "¡Correcto! Es una proposición (aunque sea falsa).";
+                feedback.style.color = "#10b981";
+            } else {
+                btn.classList.add('wrong');
+                feedback.innerText = "No es una proposición. Es una frase subjetiva o imperativa.";
+                feedback.style.color = "#ef4444";
+            }
+        }
+
+        // Init
+        updateGallery();
+    </script>
+</body>
+
+</html>
