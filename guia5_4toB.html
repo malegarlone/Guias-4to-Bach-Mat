@@ -94,10 +94,14 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 20px;
-            padding: 2.5rem;
+            padding: 3.5rem 2.5rem;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            width: 95%;
-            max-width: 1100px;
+            width: 90%;
+            max-width: 900px;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .info-card {
@@ -206,7 +210,8 @@
                     <div class="tag" style="background: var(--primary-orange);">INFO 1</div>
                     <h2>¿Qué es una Proposición?</h2>
                     <p>Es una oración o enunciado que tiene la propiedad de ser <strong>verdadero (V)</strong> o
-                        <strong>falso (F)</strong>, pero no ambos a la vez.</p>
+                        <strong>falso (F)</strong>, pero no ambos a la vez.
+                    </p>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                         <div class="info-card"><strong>Ejemplo:</strong> "Guatemala está en Centroamérica" (V)</div>
                         <div class="info-card"><strong>Ejemplo:</strong> "5 + 2 = 10" (F)</div>
