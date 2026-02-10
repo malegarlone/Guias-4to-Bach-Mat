@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guía 7: Desigualdades Lineales - Robust v2 (Expanded)</title>
+    <title>Guía 7: Desigualdades Lineales - Robust v2 (Fixed)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@400;700&display=swap"
@@ -94,18 +94,18 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 20px;
-            padding: 2rem;
+            padding: 2.5rem;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            width: 90%;
-            max-width: 850px;
+            width: 95%;
+            max-width: 1100px;
         }
 
         .info-card {
-            padding: 1rem;
+            padding: 1.2rem;
             border-radius: 12px;
             background: white;
             border-bottom: 4px solid var(--primary-orange);
-            margin: 0.5rem;
+            margin: 0.8rem;
             text-align: left;
         }
 
@@ -122,8 +122,8 @@
         }
 
         .nav-btn {
-            width: 45px;
-            height: 45px;
+            width: 50px;
+            height: 50px;
             border: none;
             border-radius: 50%;
             background: var(--primary-blue-dark);
@@ -132,13 +132,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            font-size: 1.2rem;
         }
 
         .progress-bar {
             position: absolute;
             bottom: 0;
             left: 0;
-            height: 5px;
+            height: 6px;
             background: var(--primary-orange);
             width: 0%;
             transition: width 0.4s ease;
@@ -149,31 +150,27 @@
             flex-direction: column;
             gap: 0.8rem;
             width: 100%;
-            max-width: 500px;
-            margin: 0 auto;
+            max-width: 600px;
+            margin: 1rem auto;
         }
 
         .option-btn {
-            padding: 0.8rem 1.2rem;
+            padding: 1rem 1.5rem;
             border: 2px solid #e2e8f0;
             border-radius: 12px;
             background: white;
             cursor: pointer;
-        }
-
-        .option-btn.correct {
-            border-color: #10b981;
-            background: #ecfdf5;
+            text-align: left;
         }
 
         .tag {
             display: inline-block;
-            padding: 0.3rem 0.8rem;
-            border-radius: 15px;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
             font-weight: 700;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: white;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
         }
     </style>
 </head>
@@ -181,10 +178,9 @@
 <body>
     <div id="viewport">
         <div class="slide-container" id="slide-container">
-
             <div class="slide active">
                 <div class="glass-card">
-                    <div style="font-size: 60px; margin-bottom: 10px;">⚖️</div>
+                    <div style="font-size: 80px; margin-bottom: 15px;">⚖️</div>
                     <p style="color: var(--primary-blue-dark); font-weight: 600; text-transform: uppercase;">Colegio
                         Escolaris - 4to B</p>
                     <h1>Guía 7: Desigualdades Lineales</h1>
@@ -192,97 +188,83 @@
                 </div>
             </div>
 
-            <!-- Info 1 -->
             <div class="slide">
                 <div class="glass-card">
                     <div class="tag" style="background: var(--primary-orange);">INFO 1</div>
                     <h2>¿Qué es una Desigualdad?</h2>
-                    <p>A diferencia de una ecuación (que busca un valor exacto), una desigualdad busca un
-                        <strong>conjunto</strong> de valores que cumplen la relación.</p>
+                    <p>A diferencia de una ecuación, una desigualdad busca un <strong>conjunto</strong> de valores que
+                        cumplen la relación.</p>
                     <div class="info-card"><strong>Ecuación:</strong> x = 5 (Solo el 5)</div>
-                    <div class="info-card"><strong>Desigualdad:</strong> x > 5 (6, 7, 10, 1000...)</div>
+                    <div class="info-card"><strong>Desigualdad:</strong> x &gt; 5 (Cualquier número mayor a 5)</div>
                 </div>
             </div>
 
-            <!-- Info 2 -->
             <div class="slide">
                 <div class="glass-card">
                     <div class="tag" style="background: var(--primary-blue-dark);">INFO 2</div>
-                    <h2>Símbolos y Significado</h2>
+                    <h2>Símbolos Clave</h2>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                        <div class="info-card"><strong>></strong> : Mayor que.</div>
-                        <div class="info-card"><strong>
-                                << /strong> : Menor que.</div>
-                        <div class="info-card"><strong>≥</strong> : Mayor o igual (Incluye el número).</div>
-                        <div class="info-card"><strong>≤</strong> : Menor o igual (Incluye el número).</div>
+                        <div class="info-card"><strong>&gt;</strong> : Mayor que</div>
+                        <div class="info-card"><strong>&lt;</strong> : Menor que</div>
+                        <div class="info-card"><strong>&ge;</strong> : Mayor o igual</div>
+                        <div class="info-card"><strong>&le;</strong> : Menor o igual</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Info 3 -->
             <div class="slide">
                 <div class="glass-card">
                     <div class="tag" style="background: var(--primary-yellow); color: black;">INFO 3</div>
                     <h2>La Regla de Oro</h2>
-                    <p>Esta es la regla más importante de las inecuaciones:</p>
-                    <div class="info-card" style="border-color: var(--primary-red); background: #fff5f5;">
-                        "Si multiplicas o divides ambos lados por un número <strong>NEGATIVO</strong>, el sentido de la
-                        desigualdad <strong>SE INVIERTE</strong>."
-                    </div>
-                    <p>Ejemplo: -2x > 10 -> x < -5</p>
+                    <p>Esta regla es vital: Si multiplicas o divides por un número <strong>NEGATIVO</strong>, el sentido
+                        de la desigualdad <strong>SE INVIERTE</strong>.</p>
+                    <div class="info-card" style="border-color: var(--primary-red); background: #fff5f5;">-2x &gt; 10 ⟹
+                        x &lt; -5</div>
                 </div>
             </div>
 
-            <!-- Info 4 -->
             <div class="slide">
                 <div class="glass-card">
                     <div class="tag" style="background: var(--primary-orange);">INFO 4</div>
-                    <h2>Representación: Gráfica</h2>
-                    <p>Usamos la recta numérica para visualizar la solución.</p>
-                    <div class="info-card">
-                        <strong>Círculo Abierto:</strong> No incluye el valor (> o <).<br>
-                            <strong>Círculo Cerrado:</strong> Incluye el valor (≥ o ≤).
-                    </div>
-                    <p>La flecha indica hacia dónde crecen las soluciones.</p>
+                    <h2>Gráfica en la Recta</h2>
+                    <p>Visualizamos la solución sombreando una parte de la recta numérica.</p>
+                    <div class="info-card"><strong>Círculo Abierto:</strong> Excluye el valor (&gt; o &lt;)</div>
+                    <div class="info-card"><strong>Círculo Cerrado:</strong> Incluye el valor (&ge; o &le;)</div>
                 </div>
             </div>
 
-            <!-- Info 5 -->
             <div class="slide">
                 <div class="glass-card">
                     <div class="tag" style="background: var(--primary-blue-dark);">INFO 5</div>
-                    <h2>Representación: Intervalos</h2>
-                    <p>Es una forma compacta de escribir la solución.</p>
-                    <div class="info-card">
-                        Paréntesis <strong>( )</strong> : Excluyen el extremo.<br>
-                        Corchetes <strong>[ ]</strong> : Incluyen el extremo.
-                    </div>
-                    <p>x > 2 se escribe como <strong>(2, ∞)</strong>.</p>
+                    <h2>Notación de Intervalos</h2>
+                    <p>Una forma elegante de escribir la solución usando paréntesis o corchetes.</p>
+                    <div class="info-card"><strong>( )</strong> : Abierto (no incluye)</div>
+                    <div class="info-card"><strong>[ ]</strong> : Cerrado (sí incluye)</div>
+                    <p>Ejemplo: x &gt; 10 se escribe como <strong>(10, &infin;)</strong>.</p>
                 </div>
             </div>
 
-            <!-- Info 6 -->
             <div class="slide">
                 <div class="glass-card">
                     <div class="tag" style="background: var(--primary-red);">INFO 6</div>
-                    <h2>Ejemplo Paso a Paso</h2>
-                    <p>Resolver: 3x + 5 ≤ 14</p>
+                    <h2>Resolución Paso a Paso</h2>
+                    <p>Resolver: 3x + 4 &le; 19</p>
                     <div class="info-card">
-                        1. Restar 5: 3x ≤ 9<br>
-                        2. Dividir por 3: x ≤ 3<br>
-                        3. Solución: x pertenece a (-∞, 3]
+                        1. Restar 4: 3x &le; 15<br>
+                        2. Dividir entre 3: x &le; 5<br>
+                        3. Solución: x &isin; (-&infin;, 5]
                     </div>
                 </div>
             </div>
 
             <div class="slide">
                 <div class="glass-card">
-                    <h2>Quiz: La Regla de Oro</h2>
-                    <p>Si tenemos <strong>-x < 5</strong>, ¿cuál es la solución correcta?</p>
+                    <h2>Quiz: Regla de Oro</h2>
+                    <p>Si tenemos <strong>-x &lt; 7</strong>, ¿cuál es la solución?</p>
                     <div class="quiz-container">
-                        <button class="option-btn" onclick="checkQuiz(7, false, this)">A) x < -5</button>
-                                <button class="option-btn" onclick="checkQuiz(7, true, this)">B) x > -5</button>
-                                <button class="option-btn" onclick="checkQuiz(7, false, this)">C) x < 5</button>
+                        <button class="option-btn" onclick="checkQuiz(7, false, this)">A) x &lt; -7</button>
+                        <button class="option-btn" onclick="checkQuiz(7, true, this)">B) x &gt; -7</button>
+                        <button class="option-btn" onclick="checkQuiz(7, false, this)">C) x &lt; 7</button>
                     </div>
                     <div id="feedback-7" style="margin-top: 1rem; font-weight: 600;"></div>
                 </div>
@@ -290,23 +272,21 @@
 
             <div class="slide">
                 <div class="glass-card">
-                    <div style="font-size: 60px;">🏆</div>
-                    <h2>¡Sabio del Orden!</h2>
-                    <p>Has dominado las inecuaciones lineales.</p>
+                    <div style="font-size: 80px;">🎯</div>
+                    <h2>¡Misión Cumplida!</h2>
+                    <p>Has dominado el arte de las desigualdades lineales.</p>
                     <button onclick="goToSlide(0)"
-                        style="background: var(--primary-orange); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 30px; font-weight: 700; cursor: pointer;">Volver
-                        al Inicio</button>
+                        style="background: var(--primary-orange); color: white; border: none; padding: 1rem 2rem; border-radius: 30px; font-weight: 700; cursor: pointer;">Reiniciar</button>
                 </div>
             </div>
-
         </div>
 
         <div class="nav-controls">
             <button class="nav-btn" id="prev-btn" onclick="prevSlide()" disabled>&#10094;</button>
-            <span id="slide-num" style="font-weight: 600; color: var(--primary-blue-dark);">1 / 9</span>
+            <span id="slide-num" style="font-weight: 600; color: var(--primary-blue-dark); font-size: 1.2rem;">1 /
+                9</span>
             <button class="nav-btn" id="next-btn" onclick="nextSlide()">&#10095;</button>
         </div>
-
         <div class="progress-bar" id="progress-bar"></div>
     </div>
 
@@ -318,7 +298,6 @@
         const nextBtn = document.getElementById('next-btn');
         const slideNum = document.getElementById('slide-num');
         const progressBar = document.getElementById('progress-bar');
-
         function updateGallery() {
             container.style.transform = `translateX(-${currentSlide * 100}%)`;
             slides.forEach((slide, index) => slide.classList.toggle('active', index === currentSlide));
@@ -341,8 +320,8 @@
         function checkQuiz(qId, isCorrect, btn) {
             const feedback = document.getElementById(`feedback-${qId}`);
             btn.parentElement.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
-            if (isCorrect) { btn.classList.add('correct'); feedback.innerText = "¡Brillante! El signo se voltea al multiplicar por -1."; feedback.style.color = "#10b981"; }
-            else { btn.classList.add('wrong'); feedback.innerText = "¡Cuidado! Olvidaste la Regla de Oro."; feedback.style.color = "#993921"; }
+            if (isCorrect) { btn.style.background = "#ecfdf5"; btn.style.borderColor = "#10b981"; feedback.innerText = "¡Correcto! Al multiplicar por -1, el < se convierte en >."; feedback.style.color = "#10b981"; }
+            else { btn.style.background = "#fff5f5"; btn.style.borderColor = "#993921"; feedback.innerText = "Incorrecto. Recuerda invertir el signo al tratar con negativos."; feedback.style.color = "#993921"; }
         }
         updateGallery();
     </script>

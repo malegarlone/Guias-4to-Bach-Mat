@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guía 8: Desigualdades Cuadráticas - Robust v2 (Expanded)</title>
+    <title>Guía 8: Desigualdades Cuadráticas - Robust v2 (Fixed)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@400;700&display=swap"
@@ -44,7 +44,7 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background: radial-gradient(circle at 10% 20%, rgba(219, 96, 21, 0.05) 0%, rgba(36, 75, 90, 0.05) 100%);
+            background: radial-gradient(circle at 10% 20%, rgba(36, 75, 90, 0.05) 0%, rgba(219, 96, 21, 0.05) 100%);
         }
 
         .slide-container {
@@ -94,18 +94,18 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 20px;
-            padding: 2rem;
+            padding: 2.5rem;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            width: 90%;
-            max-width: 850px;
+            width: 95%;
+            max-width: 1100px;
         }
 
         .info-card {
-            padding: 1rem;
+            padding: 1.2rem;
             border-radius: 12px;
             background: white;
             border-bottom: 4px solid var(--primary-orange);
-            margin: 0.5rem;
+            margin: 0.8rem;
             text-align: left;
         }
 
@@ -122,8 +122,8 @@
         }
 
         .nav-btn {
-            width: 45px;
-            height: 45px;
+            width: 50px;
+            height: 50px;
             border: none;
             border-radius: 50%;
             background: var(--primary-blue-dark);
@@ -132,13 +132,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            font-size: 1.2rem;
         }
 
         .progress-bar {
             position: absolute;
             bottom: 0;
             left: 0;
-            height: 5px;
+            height: 6px;
             background: var(--primary-orange);
             width: 0%;
             transition: width 0.4s ease;
@@ -149,46 +150,26 @@
             flex-direction: column;
             gap: 0.8rem;
             width: 100%;
-            max-width: 500px;
-            margin: 0 auto;
+            max-width: 600px;
+            margin: 1rem auto;
         }
 
         .option-btn {
-            padding: 0.8rem 1.2rem;
+            padding: 1rem 1.5rem;
             border: 2px solid #e2e8f0;
             border-radius: 12px;
             background: white;
             cursor: pointer;
         }
 
-        .linea-recta {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            height: 2px;
-            background: #333;
-            margin: 2rem 0;
-        }
-
-        .punto-critico {
-            position: absolute;
-            top: -10px;
-            width: 20px;
-            height: 20px;
-            background: white;
-            border: 3px solid var(--primary-orange);
-            border-radius: 50%;
-            transform: translateX(-50%);
-        }
-
         .tag {
             display: inline-block;
-            padding: 0.3rem 0.8rem;
-            border-radius: 15px;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
             font-weight: 700;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: white;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
         }
     </style>
 </head>
@@ -196,10 +177,9 @@
 <body>
     <div id="viewport">
         <div class="slide-container" id="slide-container">
-
             <div class="slide active">
                 <div class="glass-card">
-                    <div style="font-size: 60px; margin-bottom: 10px;">🎢</div>
+                    <div style="font-size: 80px; margin-bottom: 15px;">🎢</div>
                     <p style="color: var(--primary-blue-dark); font-weight: 600; text-transform: uppercase;">Colegio
                         Escolaris - 4to B</p>
                     <h1>Guía 8: Desigualdades Cuadráticas</h1>
@@ -207,89 +187,79 @@
                 </div>
             </div>
 
-            <!-- Info 1 -->
             <div class="slide">
                 <div class="glass-card">
                     <div class="tag" style="background: var(--primary-orange);">INFO 1</div>
-                    <h2>La Forma Cuadrática</h2>
-                    <p>Se presentan de la forma <strong>ax² + bx + c > 0</strong> (o <, ≥, ≤).</p>
-                            <div class="info-card">Su solución ya no es un simple rango lineal, sino que puede tener
-                                "saltos" en la recta numérica.</div>
+                    <h2>¿Qué son?</h2>
+                    <p>Son inecuaciones donde la variable x está elevada al cuadrado (x²). La forma general es:</p>
+                    <div class="info-card" style="text-align: center; font-size: 1.5rem;"><strong>ax² + bx + c &gt;
+                            0</strong></div>
                 </div>
             </div>
 
-            <!-- Info 2 -->
             <div class="slide">
                 <div class="glass-card">
                     <div class="tag" style="background: var(--primary-blue-dark);">INFO 2</div>
                     <h2>Puntos Críticos</h2>
-                    <p>Son los valores donde la expresión es **igual a cero**. Son nuestras "fronteras".</p>
-                    <div class="info-card">
-                        Ejemplo: (x - 2)(x + 3) = 0<br>
-                        Puntos: <strong>x = 2</strong> y <strong>x = -3</strong>
-                    </div>
+                    <p>Son los valores donde la parábola cruza el eje X. Para hallarlos, resolvemos la ecuación
+                        cuadrática igualándola a cero.</p>
+                    <div class="info-card">Usa factorización o la fórmula general: <strong>x = [-b &plusmn; &radic;(b² -
+                            4ac)] / 2a</strong>.</div>
                 </div>
             </div>
 
-            <!-- Info 3 -->
             <div class="slide">
                 <div class="glass-card">
                     <div class="tag" style="background: var(--primary-yellow); color: black;">INFO 3</div>
-                    <h2>División de la Recta</h2>
-                    <p>Los puntos críticos dividen la recta numérica en 3 intervalos o zonas.</p>
-                    <div class="linea-recta" style="margin: 3rem auto;">
-                        <div class="punto-critico" style="left: 30%"></div>
-                        <div class="punto-critico" style="left: 70%"></div>
-                        <div style="position: absolute; left: 28%; top: 25px;">-3</div>
-                        <div style="position: absolute; left: 68%; top: 25px;">2</div>
-                    </div>
-                    <p>Zonas: (-∞, -3), (-3, 2) y (2, ∞)</p>
+                    <h2>El Método del Cementerio</h2>
+                    <p>También llamado método de intervalos. Dividimos la recta numérica usando los puntos críticos
+                        encontrados.</p>
+                    <div class="info-card">Elegimos un "número de prueba" en cada intervalo para ver si el resultado es
+                        positivo (+) o negativo (-).</div>
                 </div>
             </div>
 
-            <!-- Info 4 -->
             <div class="slide">
                 <div class="glass-card">
                     <div class="tag" style="background: var(--primary-orange);">INFO 4</div>
-                    <h2>El Método del Cementerio</h2>
-                    <p>O "Cuadro de Signos". Elegimos un número de prueba de cada zona para ver si el resultado es
-                        positivo (+) o negativo (-).</p>
-                    <div class="info-card">Si x = 0 (Zona media): (0-2)(0+3) = -6 (Zona negativa).</div>
+                    <h2>Interpretación Gráfica</h2>
+                    <p>Si la inecuación es <strong>&gt; 0</strong>, buscamos los intervalos con signo (+). Si es
+                        <strong>&lt; 0</strong>, buscamos los signos (-).</p>
+                    <div class="info-card">Visualmente, buscamos las partes de la parábola que están arriba o abajo del
+                        eje X.</div>
                 </div>
             </div>
 
-            <!-- Info 5 -->
             <div class="slide">
                 <div class="glass-card">
                     <div class="tag" style="background: var(--primary-blue-dark);">INFO 5</div>
-                    <h2>Eligiendo la Solución</h2>
-                    <p>Si el problema pide <strong>> 0</strong>, tomamos las zonas con signo <strong>(+)</strong>.</p>
-                    <p>Si pide <strong>
-                            < 0</strong>, tomamos las zonas con signo <strong>(-)</strong>.</p>
-                    <div class="info-card">Para x² - x - 6 > 0, la solución serían los extremos.</div>
+                    <h2>Union de Intervalos</h2>
+                    <p>Si la solución está en dos partes separadas, usamos el símbolo de unión (<strong>∪</strong>).</p>
+                    <div class="info-card">Ejemplo: x &isin; (-&infin;, 1) &cup; (5, &infin;)</div>
                 </div>
             </div>
 
-            <!-- Info 6 -->
             <div class="slide">
                 <div class="glass-card">
                     <div class="tag" style="background: var(--primary-red);">INFO 6</div>
-                    <h2>Interpretación Gráfica</h2>
-                    <p>Una cuadrática es una <strong>parábola</strong>. La solución de la desigualdad es donde la curva
-                        está por ARRIBA o por DEBAJO del eje X.</p>
-                    <div class="info-card">Visualiza la curva: si abre hacia arriba, los extremos suelen ser positivos.
+                    <h2>Ejemplo Rápido</h2>
+                    <p>Resolver: x² - 9 &gt; 0</p>
+                    <div class="info-card">
+                        1. Puntos críticos: x = 3, x = -3.<br>
+                        2. Intervalos: (-&infin;, -3), (-3, 3), (3, &infin;).<br>
+                        3. Solución: x &isin; (-&infin;, -3) &cup; (3, &infin;).
                     </div>
                 </div>
             </div>
 
             <div class="slide">
                 <div class="glass-card">
-                    <h2>Quiz: Raíces</h2>
-                    <p>¿Cuáles son los puntos críticos de <strong>x² - 25 ≤ 0</strong>?</p>
+                    <h2>Quiz: Puntos Críticos</h2>
+                    <p>¿Cuáles son los puntos críticos de <strong>x² - 4 &le; 0</strong>?</p>
                     <div class="quiz-container">
-                        <button class="option-btn" onclick="checkQuiz(8, true, this)">A) x = 5 y x = -5</button>
-                        <button class="option-btn" onclick="checkQuiz(8, false, this)">B) Solo x = 5</button>
-                        <button class="option-btn" onclick="checkQuiz(8, false, this)">C) x = 0 y x = 25</button>
+                        <button class="option-btn" onclick="checkQuiz(8, true, this)">A) x = 2, x = -2</button>
+                        <button class="option-btn" onclick="checkQuiz(8, false, this)">B) x = 4, x = -4</button>
+                        <button class="option-btn" onclick="checkQuiz(8, false, this)">C) Solo x = 2</button>
                     </div>
                     <div id="feedback-8" style="margin-top: 1rem; font-weight: 600;"></div>
                 </div>
@@ -297,23 +267,21 @@
 
             <div class="slide">
                 <div class="glass-card">
-                    <div style="font-size: 60px;">🏆</div>
-                    <h2>¡Estratega de Gráficas!</h2>
-                    <p>Has dominado las inecuaciones de segundo grado.</p>
+                    <div style="font-size: 80px;">🎯</div>
+                    <h2>¡Sabio Cuadrático!</h2>
+                    <p>Ahora puedes predecir el comportamiento de cualquier parábola.</p>
                     <button onclick="goToSlide(0)"
-                        style="background: var(--primary-orange); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 30px; font-weight: 700; cursor: pointer;">Volver
-                        al Inicio</button>
+                        style="background: var(--primary-orange); color: white; border: none; padding: 1rem 2rem; border-radius: 30px; font-weight: 700; cursor: pointer;">Reiniciar</button>
                 </div>
             </div>
-
         </div>
 
         <div class="nav-controls">
             <button class="nav-btn" id="prev-btn" onclick="prevSlide()" disabled>&#10094;</button>
-            <span id="slide-num" style="font-weight: 600; color: var(--primary-blue-dark);">1 / 9</span>
+            <span id="slide-num" style="font-weight: 600; color: var(--primary-blue-dark); font-size: 1.2rem;">1 /
+                9</span>
             <button class="nav-btn" id="next-btn" onclick="nextSlide()">&#10095;</button>
         </div>
-
         <div class="progress-bar" id="progress-bar"></div>
     </div>
 
@@ -325,7 +293,6 @@
         const nextBtn = document.getElementById('next-btn');
         const slideNum = document.getElementById('slide-num');
         const progressBar = document.getElementById('progress-bar');
-
         function updateGallery() {
             container.style.transform = `translateX(-${currentSlide * 100}%)`;
             slides.forEach((slide, index) => slide.classList.toggle('active', index === currentSlide));
@@ -348,8 +315,8 @@
         function checkQuiz(qId, isCorrect, btn) {
             const feedback = document.getElementById(`feedback-${qId}`);
             btn.parentElement.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
-            if (isCorrect) { btn.classList.add('correct'); feedback.innerText = "¡Excelente! Son las raíces de (x-5)(x+5)=0."; feedback.style.color = "#10b981"; }
-            else { btn.classList.add('wrong'); feedback.innerText = "Recuerda que x²=25 tiene dos raíces: una positiva y una negativa."; feedback.style.color = "#993921"; }
+            if (isCorrect) { btn.style.background = "#ecfdf5"; btn.style.borderColor = "#10b981"; feedback.innerText = "¡Correcto! x² = 4 tiene como soluciones 2 y -2."; feedback.style.color = "#10b981"; }
+            else { btn.style.background = "#fff5f5"; btn.style.borderColor = "#993921"; feedback.innerText = "Incorrecto. Se deben buscar los valores que hacen cero la expresión."; feedback.style.color = "#993921"; }
         }
         updateGallery();
     </script>

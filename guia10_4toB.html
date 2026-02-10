@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guía 10: Gráfica de Complejos - Robust v2 (Expanded)</title>
+    <title>Guía 10: Gráfica de Complejos - Robust v2 (Fixed)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@400;700&display=swap"
@@ -44,7 +44,7 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background: radial-gradient(circle at 10% 20%, rgba(219, 96, 21, 0.05) 0%, rgba(36, 75, 90, 0.05) 100%);
+            background: radial-gradient(circle at 10% 20%, rgba(36, 75, 90, 0.05) 0%, rgba(219, 96, 21, 0.05) 100%);
         }
 
         .slide-container {
@@ -94,18 +94,18 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 20px;
-            padding: 2rem;
+            padding: 2.5rem;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            width: 90%;
-            max-width: 850px;
+            width: 95%;
+            max-width: 1100px;
         }
 
         .info-card {
-            padding: 1rem;
+            padding: 1.2rem;
             border-radius: 12px;
             background: white;
             border-bottom: 4px solid var(--primary-orange);
-            margin: 0.5rem;
+            margin: 0.8rem;
             text-align: left;
         }
 
@@ -122,8 +122,8 @@
         }
 
         .nav-btn {
-            width: 45px;
-            height: 45px;
+            width: 50px;
+            height: 50px;
             border: none;
             border-radius: 50%;
             background: var(--primary-blue-dark);
@@ -132,13 +132,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            font-size: 1.2rem;
         }
 
         .progress-bar {
             position: absolute;
             bottom: 0;
             left: 0;
-            height: 5px;
+            height: 6px;
             background: var(--primary-orange);
             width: 0%;
             transition: width 0.4s ease;
@@ -149,12 +150,12 @@
             flex-direction: column;
             gap: 0.8rem;
             width: 100%;
-            max-width: 500px;
-            margin: 0 auto;
+            max-width: 600px;
+            margin: 1rem auto;
         }
 
         .option-btn {
-            padding: 0.8rem 1.2rem;
+            padding: 1rem 1.5rem;
             border: 2px solid #e2e8f0;
             border-radius: 12px;
             background: white;
@@ -163,45 +164,47 @@
 
         .tag {
             display: inline-block;
-            padding: 0.3rem 0.8rem;
-            border-radius: 15px;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
             font-weight: 700;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: white;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
         }
 
-        .plane-box {
-            width: 180px;
-            height: 180px;
-            border: 2px solid #333;
+        .plane {
+            width: 250px;
+            height: 250px;
+            border: 2px solid var(--primary-blue-dark);
             position: relative;
-            background: white;
             margin: 1rem auto;
+            background: white;
         }
 
-        .plane-x {
+        .axis-x {
             position: absolute;
             top: 50%;
             width: 100%;
             height: 2px;
-            background: #999;
+            background: #eee;
         }
 
-        .plane-y {
+        .axis-y {
             position: absolute;
             left: 50%;
             height: 100%;
             width: 2px;
-            background: #999;
+            background: #eee;
         }
 
-        .point-dot {
-            position: absolute;
+        .point {
             width: 10px;
             height: 10px;
-            background: red;
+            background: var(--primary-red);
             border-radius: 50%;
+            position: absolute;
+            top: 30%;
+            left: 70%;
             transform: translate(-50%, -50%);
         }
     </style>
@@ -210,97 +213,91 @@
 <body>
     <div id="viewport">
         <div class="slide-container" id="slide-container">
-
             <div class="slide active">
                 <div class="glass-card">
-                    <div style="font-size: 60px; margin-bottom: 10px;">🗺️</div>
+                    <div style="font-size: 80px; margin-bottom: 15px;">📊</div>
                     <p style="color: var(--primary-blue-dark); font-weight: 600; text-transform: uppercase;">Colegio
                         Escolaris - 4to B</p>
                     <h1>Guía 10: Gráfica de Complejos</h1>
-                    <p>Visualizando los números en dos dimensiones.</p>
+                    <p>Visualizando los números en el plano de Argand.</p>
                 </div>
             </div>
 
-            <!-- Info 1 -->
             <div class="slide">
                 <div class="glass-card">
                     <div class="tag" style="background: var(--primary-orange);">INFO 1</div>
-                    <h2>Plano de Argand</h2>
-                    <p>Cualquier complejo <strong>a + bi</strong> se puede graficar en un plano especial.</p>
-                    <div class="info-card"><strong>Eje Horizontal:</strong> Eje Real.</div>
-                    <div class="info-card"><strong>Eje Vertical:</strong> Eje Imaginario.</div>
+                    <h2>El Plano Complejo</h2>
+                    <p>Es similar al plano cartesiano, pero tiene ejes especiales:</p>
+                    <div class="info-card"><strong>Eje Horizontal:</strong> Números Reales (Re).</div>
+                    <div class="info-card"><strong>Eje Vertical:</strong> Números Imaginarios (Im).</div>
                 </div>
             </div>
 
-            <!-- Info 2 -->
             <div class="slide">
                 <div class="glass-card">
                     <div class="tag" style="background: var(--primary-blue-dark);">INFO 2</div>
-                    <h2>Componentes</h2>
-                    <p>El número <strong>3 + 2i</strong> se ve así en el plano:</p>
-                    <div class="plane-box">
-                        <div class="plane-x"></div>
-                        <div class="plane-y"></div>
-                        <div class="point-dot" style="left: 80%; top: 20%;"></div>
+                    <h2>Ubicación de un Punto</h2>
+                    <p>Para graficar <strong>z = a + bi</strong>, nos movemos 'a' unidades en horizontal y 'b' en
+                        vertical.</p>
+                    <div class="plane">
+                        <div class="axis-x"></div>
+                        <div class="axis-y"></div>
+                        <div class="point"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Info 3 -->
             <div class="slide">
                 <div class="glass-card">
                     <div class="tag" style="background: var(--primary-yellow); color: black;">INFO 3</div>
-                    <h2>El Afijo y el Vector</h2>
-                    <p>El punto se llama **afijo**. Si trazamos una flecha desde el centro hasta el afijo, tenemos un
-                        **vector**.</p>
-                    <div class="info-card">Este vector nos permite hablar de dirección y fuerza (módulo).</div>
+                    <h2>Módulo de un Complejo</h2>
+                    <p>Representa la distancia desde el origen (0,0) hasta el punto. Se escribe como
+                        <strong>|z|</strong>.</p>
+                    <div class="info-card" style="text-align: center; font-size: 1.5rem;"><strong>|z| = &radic;(a² +
+                            b²)</strong></div>
+                    <p>¡Es simplemente el Teorema de Pitágoras!</p>
                 </div>
             </div>
 
-            <!-- Info 4 -->
             <div class="slide">
                 <div class="glass-card">
                     <div class="tag" style="background: var(--primary-orange);">INFO 4</div>
-                    <h2>El Módulo |z|</h2>
-                    <p>Es la distancia del punto al origen (el centro del plano). Se calcula con Pitágoras.</p>
-                    <div class="info-card" style="text-align: center;"><strong>|z| = √(a² + b²)</strong></div>
+                    <h2>Argumento (&theta;)</h2>
+                    <p>Es el ángulo formado entre el eje real positivo y la línea que une el origen con el punto.</p>
+                    <div class="info-card"><strong>&theta; = tan⁻¹(b/a)</strong></div>
+                    <p>Ayuda a localizar el punto de forma polar.</p>
                 </div>
             </div>
 
-            <!-- Info 5 -->
             <div class="slide">
                 <div class="glass-card">
                     <div class="tag" style="background: var(--primary-blue-dark);">INFO 5</div>
-                    <h2>El Argumento (θ)</h2>
-                    <p>Es el ángulo que forma el vector con el eje real positivo. Se mide en sentido anti-horario.</p>
-                    <div class="info-card">Usamos la función **arcotan(b/a)** para encontrarlo.</div>
+                    <h2>Vectores en el Plano</h2>
+                    <p>Podemos ver a cada número complejo como un vector que sale del centro.</p>
+                    <div class="info-card">La suma de complejos gráfica sigue la "Regla del Paralelogramo".</div>
                 </div>
             </div>
 
-            <!-- Info 6 -->
             <div class="slide">
                 <div class="glass-card">
                     <div class="tag" style="background: var(--primary-red);">INFO 6</div>
-                    <h2>Relaciones en el Plano</h2>
-                    <p>Visualizar el Conjugado y el Opuesto:</p>
-                    <div class="info-card">
-                        <strong>Conjugado:</strong> Reflejo sobre el eje Real.<br>
-                        <strong>Opuesto:</strong> Reflejo a través del origen.
+                    <h2>Ejemplo: z = 3 + 4i</h2>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="info-card">Ubicación: (3, 4) en el plano.</div>
+                        <div class="info-card">Módulo: &radic;(3² + 4²) = <strong>5</strong>.</div>
                     </div>
                 </div>
             </div>
 
             <div class="slide">
                 <div class="glass-card">
-                    <h2>Quiz: Coordenadas</h2>
-                    <p>Si graficamos <strong>-4i</strong>, ¿dónde queda el punto?</p>
+                    <h2>Quiz: El Plano</h2>
+                    <p>¿Qué representa el <strong>eje vertical</strong> en el plano de Argand?</p>
                     <div class="quiz-container">
-                        <button class="option-btn" onclick="checkQuiz(10, false, this)">A) En el eje Real a la
-                            izquierda</button>
-                        <button class="option-btn" onclick="checkQuiz(10, true, this)">B) En el eje Imaginario hacia
-                            abajo</button>
-                        <button class="option-btn" onclick="checkQuiz(10, false, this)">C) En medio de un
-                            cuadrante</button>
+                        <button class="option-btn" onclick="checkQuiz(10, false, this)">A) Los números Reales</button>
+                        <button class="option-btn" onclick="checkQuiz(10, true, this)">B) Los números
+                            Imaginarios</button>
+                        <button class="option-btn" onclick="checkQuiz(10, false, this)">C) El ángulo teta</button>
                     </div>
                     <div id="feedback-10" style="margin-top: 1rem; font-weight: 600;"></div>
                 </div>
@@ -308,23 +305,21 @@
 
             <div class="slide">
                 <div class="glass-card">
-                    <div style="font-size: 60px;">🏆</div>
-                    <h2>¡Explorador de C!</h2>
-                    <p>Has dominado la visión geométrica de los complejos.</p>
+                    <div style="font-size: 80px;">🎯</div>
+                    <h2>¡Visualizador Maestro!</h2>
+                    <p>Has aprendido a darle forma y lugar a los números complejos.</p>
                     <button onclick="goToSlide(0)"
-                        style="background: var(--primary-orange); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 30px; font-weight: 700; cursor: pointer;">Volver
-                        al Inicio</button>
+                        style="background: var(--primary-orange); color: white; border: none; padding: 1rem 2rem; border-radius: 30px; font-weight: 700; cursor: pointer;">Reiniciar</button>
                 </div>
             </div>
-
         </div>
 
         <div class="nav-controls">
             <button class="nav-btn" id="prev-btn" onclick="prevSlide()" disabled>&#10094;</button>
-            <span id="slide-num" style="font-weight: 600; color: var(--primary-blue-dark);">1 / 9</span>
+            <span id="slide-num" style="font-weight: 600; color: var(--primary-blue-dark); font-size: 1.2rem;">1 /
+                9</span>
             <button class="nav-btn" id="next-btn" onclick="nextSlide()">&#10095;</button>
         </div>
-
         <div class="progress-bar" id="progress-bar"></div>
     </div>
 
@@ -336,7 +331,6 @@
         const nextBtn = document.getElementById('next-btn');
         const slideNum = document.getElementById('slide-num');
         const progressBar = document.getElementById('progress-bar');
-
         function updateGallery() {
             container.style.transform = `translateX(-${currentSlide * 100}%)`;
             slides.forEach((slide, index) => slide.classList.toggle('active', index === currentSlide));
@@ -359,8 +353,8 @@
         function checkQuiz(qId, isCorrect, btn) {
             const feedback = document.getElementById(`feedback-${qId}`);
             btn.parentElement.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
-            if (isCorrect) { btn.classList.add('correct'); feedback.innerText = "¡Correcto! No tiene parte real, solo imaginaria negativa."; feedback.style.color = "#10b981"; }
-            else { btn.classList.add('wrong'); feedback.innerText = "Recuerda que '-4i' es puramente imaginario."; feedback.style.color = "#993921"; }
+            if (isCorrect) { btn.style.background = "#ecfdf5"; btn.style.borderColor = "#10b981"; feedback.innerText = "¡Correcto! El eje vertical es para la parte Imaginaria (bi)."; feedback.style.color = "#10b981"; }
+            else { btn.style.background = "#fff5f5"; btn.style.borderColor = "#993921"; feedback.innerText = "Incorrecto. El eje horizontal es el Real, el vertical el Imaginario."; feedback.style.color = "#993921"; }
         }
         updateGallery();
     </script>

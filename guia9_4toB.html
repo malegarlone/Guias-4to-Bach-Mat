@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guía 9: Operaciones con Complejos - Robust v2 (Expanded)</title>
+    <title>Guía 9: Números Complejos (Ops) - Robust v2 (Fixed)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@400;700&display=swap"
@@ -94,18 +94,18 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 20px;
-            padding: 2rem;
+            padding: 2.5rem;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            width: 90%;
-            max-width: 850px;
+            width: 95%;
+            max-width: 1100px;
         }
 
         .info-card {
-            padding: 1rem;
+            padding: 1.2rem;
             border-radius: 12px;
             background: white;
             border-bottom: 4px solid var(--primary-orange);
-            margin: 0.5rem;
+            margin: 0.8rem;
             text-align: left;
         }
 
@@ -122,8 +122,8 @@
         }
 
         .nav-btn {
-            width: 45px;
-            height: 45px;
+            width: 50px;
+            height: 50px;
             border: none;
             border-radius: 50%;
             background: var(--primary-blue-dark);
@@ -132,13 +132,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            font-size: 1.2rem;
         }
 
         .progress-bar {
             position: absolute;
             bottom: 0;
             left: 0;
-            height: 5px;
+            height: 6px;
             background: var(--primary-orange);
             width: 0%;
             transition: width 0.4s ease;
@@ -149,12 +150,12 @@
             flex-direction: column;
             gap: 0.8rem;
             width: 100%;
-            max-width: 500px;
-            margin: 0 auto;
+            max-width: 600px;
+            margin: 1rem auto;
         }
 
         .option-btn {
-            padding: 0.8rem 1.2rem;
+            padding: 1rem 1.5rem;
             border: 2px solid #e2e8f0;
             border-radius: 12px;
             background: white;
@@ -163,12 +164,12 @@
 
         .tag {
             display: inline-block;
-            padding: 0.3rem 0.8rem;
-            border-radius: 15px;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
             font-weight: 700;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: white;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
         }
     </style>
 </head>
@@ -176,95 +177,86 @@
 <body>
     <div id="viewport">
         <div class="slide-container" id="slide-container">
-
             <div class="slide active">
                 <div class="glass-card">
-                    <div style="font-size: 60px; margin-bottom: 10px;">🌀</div>
+                    <div style="font-size: 80px; margin-bottom: 15px;">🔢</div>
                     <p style="color: var(--primary-blue-dark); font-weight: 600; text-transform: uppercase;">Colegio
                         Escolaris - 4to B</p>
                     <h1>Guía 9: Números Complejos</h1>
-                    <p>Operando más allá de los números reales.</p>
+                    <p>Operaciones fundamentales en el conjunto C.</p>
                 </div>
             </div>
 
-            <!-- Info 1 -->
             <div class="slide">
                 <div class="glass-card">
                     <div class="tag" style="background: var(--primary-orange);">INFO 1</div>
-                    <h2>La Unidad Imaginaria (i)</h2>
-                    <p>Nace de la necesidad de resolver raíces de números negativos.</p>
-                    <div class="info-card" style="text-align: center; font-size: 1.5rem;">
-                        <strong>i = √-1</strong> <br>
-                        <strong>i² = -1</strong>
-                    </div>
+                    <h2>La Unidad Imaginaria</h2>
+                    <p>Surge para resolver raíces negativas. Se define como:</p>
+                    <div class="info-card" style="text-align: center; font-size: 1.5rem;"><strong>i =
+                            &radic;(-1)</strong> ⟹ <strong>i² = -1</strong></div>
                 </div>
             </div>
 
-            <!-- Info 2 -->
             <div class="slide">
                 <div class="glass-card">
                     <div class="tag" style="background: var(--primary-blue-dark);">INFO 2</div>
-                    <h2>Forma Binómica</h2>
-                    <p>Un número complejo se escribe como: <strong>z = a + bi</strong></p>
-                    <div class="info-card"><strong>a:</strong> Parte Real.</div>
-                    <div class="info-card"><strong>b:</strong> Parte Imaginaria.</div>
+                    <h2>Forma Estándar</h2>
+                    <p>Un número complejo 'z' tiene una parte real y una imaginaria:</p>
+                    <div class="info-card" style="text-align: center; font-size: 1.5rem;"><strong>z = a + bi</strong>
+                    </div>
+                    <p>Donde 'a' es real y 'b' es el coeficiente imaginario.</p>
                 </div>
             </div>
 
-            <!-- Info 3 -->
             <div class="slide">
                 <div class="glass-card">
                     <div class="tag" style="background: var(--primary-yellow); color: black;">INFO 3</div>
-                    <h2>Suma de Complejos</h2>
-                    <p>¡Real con Real, Imaginario con Imaginario!</p>
-                    <div class="info-card">
-                        (3 + 2i) + (1 + 4i) = (3+1) + (2+4)i = <strong>4 + 6i</strong>
-                    </div>
+                    <h2>Suma y Resta</h2>
+                    <p>Es muy sencillo: agrupamos reales con reales e imaginarios con imaginarios.</p>
+                    <div class="info-card">(3 + 2i) + (1 + 4i) = (3+1) + (2+4)i = <strong>4 + 6i</strong></div>
                 </div>
             </div>
 
-            <!-- Info 4 -->
             <div class="slide">
                 <div class="glass-card">
                     <div class="tag" style="background: var(--primary-orange);">INFO 4</div>
                     <h2>Multiplicación</h2>
-                    <p>Usa la propiedad distributiva, pero recuerda que <strong>i² = -1</strong>.</p>
-                    <div class="info-card">
-                        (2i)(3i) = 6i² = 6(-1) = <strong>-6</strong>
+                    <p>Usamos la propiedad distributiva (FOIL) y recordamos que <strong>i² = -1</strong>.</p>
+                    <div class="info-card">(2 + i)(3 - i) = 6 - 2i + 3i - i² = 6 + i - (-1) = <strong>7 + i</strong>
                     </div>
                 </div>
             </div>
 
-            <!-- Info 5 -->
             <div class="slide">
                 <div class="glass-card">
                     <div class="tag" style="background: var(--primary-blue-dark);">INFO 5</div>
                     <h2>El Conjugado</h2>
-                    <p>El conjugado de <strong>a + bi</strong> es <strong>a - bi</strong>. Solo cambia el signo de la
-                        parte imaginaria.</p>
-                    <div class="info-card">Sirve para eliminar la parte imaginaria en los denominadores (división).
+                    <p>Si z = a + bi, su conjugado es <strong>z = a - bi</strong>. Solo cambia el signo de la parte
+                        imaginaria.</p>
+                    <div class="info-card">Es útil para eliminar 'i' del denominador en las divisiones.</div>
+                </div>
+            </div>
+
+            <div class="slide">
+                <div class="glass-card">
+                    <div class="tag" style="background: var(--primary-red);">INFO 6</div>
+                    <h2>Potencias de 'i'</h2>
+                    <p>Las potencias de i son cíclicas cada 4 pasos:</p>
+                    <div class="info-card">
+                        i¹ = i, i² = -1, i³ = -i, i⁴ = 1<br>
+                        Para i<sup>25</sup>, dividimos 25/4 y el resto es 1, así que i<sup>25</sup> = i¹ = i.
                     </div>
                 </div>
             </div>
 
-            <!-- Info 6 -->
             <div class="slide">
                 <div class="glass-card">
-                    <div class="tag" style="background: var(--primary-red);">INFO 6</div>
-                    <h2>División de Complejos</h2>
-                    <p>Para dividir, multiplicamos arriba y abajo por el conjugado del denominador.</p>
-                    <div class="info-card">Esto convierte al denominador en un número real puro (a² + b²).</div>
-                </div>
-            </div>
-
-            <div class="slide">
-                <div class="glass-card">
-                    <h2>Quiz: Propiedad</h2>
+                    <h2>Quiz: Imaginarios</h2>
                     <p>¿A cuánto equivale <strong>i²</strong>?</p>
                     <div class="quiz-container">
                         <button class="option-btn" onclick="checkQuiz(9, false, this)">A) 1</button>
                         <button class="option-btn" onclick="checkQuiz(9, true, this)">B) -1</button>
-                        <button class="option-btn" onclick="checkQuiz(9, false, this)">C) √-1</button>
+                        <button class="option-btn" onclick="checkQuiz(9, false, this)">C) i</button>
                     </div>
                     <div id="feedback-9" style="margin-top: 1rem; font-weight: 600;"></div>
                 </div>
@@ -272,23 +264,21 @@
 
             <div class="slide">
                 <div class="glass-card">
-                    <div style="font-size: 60px;">🏆</div>
-                    <h2>¡Mago de los Imaginarios!</h2>
-                    <p>Has aprendido a operar con el conjunto C.</p>
+                    <div style="font-size: 80px;">🎯</div>
+                    <h2>¡Mente Brillante!</h2>
+                    <p>Has expandido tus fronteras numéricas más allá de los reales.</p>
                     <button onclick="goToSlide(0)"
-                        style="background: var(--primary-orange); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 30px; font-weight: 700; cursor: pointer;">Volver
-                        al Inicio</button>
+                        style="background: var(--primary-orange); color: white; border: none; padding: 1rem 2rem; border-radius: 30px; font-weight: 700; cursor: pointer;">Reiniciar</button>
                 </div>
             </div>
-
         </div>
 
         <div class="nav-controls">
             <button class="nav-btn" id="prev-btn" onclick="prevSlide()" disabled>&#10094;</button>
-            <span id="slide-num" style="font-weight: 600; color: var(--primary-blue-dark);">1 / 9</span>
+            <span id="slide-num" style="font-weight: 600; color: var(--primary-blue-dark); font-size: 1.2rem;">1 /
+                9</span>
             <button class="nav-btn" id="next-btn" onclick="nextSlide()">&#10095;</button>
         </div>
-
         <div class="progress-bar" id="progress-bar"></div>
     </div>
 
@@ -300,7 +290,6 @@
         const nextBtn = document.getElementById('next-btn');
         const slideNum = document.getElementById('slide-num');
         const progressBar = document.getElementById('progress-bar');
-
         function updateGallery() {
             container.style.transform = `translateX(-${currentSlide * 100}%)`;
             slides.forEach((slide, index) => slide.classList.toggle('active', index === currentSlide));
@@ -323,8 +312,8 @@
         function checkQuiz(qId, isCorrect, btn) {
             const feedback = document.getElementById(`feedback-${qId}`);
             btn.parentElement.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
-            if (isCorrect) { btn.classList.add('correct'); feedback.innerText = "¡Correcto! Es la base de toda la lógica imaginaria."; feedback.style.color = "#10b981"; }
-            else { btn.classList.add('wrong'); feedback.innerText = "Incorrecto. i es la raíz, pero i al cuadrado es -1."; feedback.style.color = "#993921"; }
+            if (isCorrect) { btn.style.background = "#ecfdf5"; btn.style.borderColor = "#10b981"; feedback.innerText = "¡Correcto! Por definición de unidad imaginaria."; feedback.style.color = "#10b981"; }
+            else { btn.style.background = "#fff5f5"; btn.style.borderColor = "#993921"; feedback.innerText = "Incorrecto. Recuerda que la raíz de -1 al cuadrado es -1."; feedback.style.color = "#993921"; }
         }
         updateGallery();
     </script>

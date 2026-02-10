@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guía 6: Modelado de Ecuaciones - Robust v2 (Expanded)</title>
+    <title>Guía 6: Modelado de Ecuaciones - Robust v2 (Fixed)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@400;700&display=swap"
@@ -44,7 +44,7 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background: radial-gradient(circle at 10% 20%, rgba(219, 96, 21, 0.05) 0%, rgba(36, 75, 90, 0.05) 100%);
+            background: radial-gradient(circle at 10% 20%, rgba(36, 75, 90, 0.05) 0%, rgba(219, 96, 21, 0.05) 100%);
         }
 
         .slide-container {
@@ -89,30 +89,23 @@
             font-weight: 700;
         }
 
-        p {
-            font-size: clamp(1rem, 2vw, 1.2rem);
-            line-height: 1.6;
-            max-width: 800px;
-            margin-bottom: 1rem;
-        }
-
         .glass-card {
             background: var(--glass-bg);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 20px;
-            padding: 2rem;
+            padding: 2.5rem;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            width: 90%;
-            max-width: 850px;
+            width: 95%;
+            max-width: 1100px;
         }
 
         .info-card {
-            padding: 1rem;
+            padding: 1.2rem;
             border-radius: 12px;
             background: white;
             border-bottom: 4px solid var(--primary-orange);
-            margin: 0.5rem;
+            margin: 0.8rem;
             text-align: left;
         }
 
@@ -129,8 +122,8 @@
         }
 
         .nav-btn {
-            width: 45px;
-            height: 45px;
+            width: 50px;
+            height: 50px;
             border: none;
             border-radius: 50%;
             background: var(--primary-blue-dark);
@@ -139,13 +132,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            font-size: 1.2rem;
         }
 
         .progress-bar {
             position: absolute;
             bottom: 0;
             left: 0;
-            height: 5px;
+            height: 6px;
             background: var(--primary-orange);
             width: 0%;
             transition: width 0.4s ease;
@@ -156,32 +150,26 @@
             flex-direction: column;
             gap: 0.8rem;
             width: 100%;
-            max-width: 500px;
-            margin: 0 auto;
+            max-width: 600px;
+            margin: 1rem auto;
         }
 
         .option-btn {
-            padding: 0.8rem 1.2rem;
+            padding: 1rem 1.5rem;
             border: 2px solid #e2e8f0;
             border-radius: 12px;
             background: white;
             cursor: pointer;
-            text-align: left;
-        }
-
-        .option-btn.correct {
-            border-color: #10b981;
-            background: #ecfdf5;
         }
 
         .tag {
             display: inline-block;
-            padding: 0.3rem 0.8rem;
-            border-radius: 15px;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
             font-weight: 700;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: white;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
         }
     </style>
 </head>
@@ -189,105 +177,88 @@
 <body>
     <div id="viewport">
         <div class="slide-container" id="slide-container">
-
             <div class="slide active">
                 <div class="glass-card">
-                    <div style="font-size: 60px; margin-bottom: 10px;">🏗️</div>
+                    <div style="font-size: 80px; margin-bottom: 15px;">📐</div>
                     <p style="color: var(--primary-blue-dark); font-weight: 600; text-transform: uppercase;">Colegio
                         Escolaris - 4to B</p>
-                    <h1>Tema 6: Modelado de Ecuaciones</h1>
-                    <p>Traducir el mundo real al lenguaje algebraico.</p>
+                    <h1>Guía 6: Modelado de Ecuaciones</h1>
+                    <p>Traduciendo el lenguaje común al lenguaje matemático.</p>
                 </div>
             </div>
 
-            <!-- Info 1 -->
             <div class="slide">
                 <div class="glass-card">
                     <div class="tag" style="background: var(--primary-orange);">INFO 1</div>
-                    <h2>¿Qué es el Modelado?</h2>
-                    <p>Es el proceso de representar una situación real mediante una expresión matemática para poder
-                        resolverla.</p>
-                    <div class="info-card"><strong>Situación:</strong> Quiero saber cuánto dinero tengo si el doble de
-                        mis ahorros es $50.</div>
-                    <div class="info-card"><strong>Modelo:</strong> 2x = 50</div>
+                    <h2>¿Qué es Modelar?</h2>
+                    <p>Es convertir un problema de la vida real en una expresión matemática (ecuación) para resolverlo
+                        fácilmente.</p>
+                    <div class="info-card"><strong>Ejemplo:</strong> "El doble de un número aumentado en 5" se escribe
+                        como: <strong>2x + 5</strong>.</div>
                 </div>
             </div>
 
-            <!-- Info 2 -->
             <div class="slide">
                 <div class="glass-card">
                     <div class="tag" style="background: var(--primary-blue-dark);">INFO 2</div>
-                    <h2>Diccionario Base</h2>
+                    <h2>Diccionario de Traducción</h2>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                        <div class="info-card">"Aumentado en" -> +</div>
-                        <div class="info-card">"Disminuido en" -> -</div>
-                        <div class="info-card">"El cociente de" -> /</div>
-                        <div class="info-card">"Es igual a" -> =</div>
+                        <div class="info-card">"Suma/Aumentado": <strong>+</strong></div>
+                        <div class="info-card">"Diferencia/Disminuido": <strong>-</strong></div>
+                        <div class="info-card">"Producto/Veces": <strong>*</strong></div>
+                        <div class="info-card">"Cociente/Entre": <strong>/</strong></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Info 3 -->
             <div class="slide">
                 <div class="glass-card">
                     <div class="tag" style="background: var(--primary-yellow); color: black;">INFO 3</div>
-                    <h2>La Incógnita (x)</h2>
-                    <p>Siempre debemos definir qué representa nuestra variable.</p>
-                    <div class="info-card"><strong>Error Común:</strong> Empezar a escribir números sin saber qué es x.
-                    </div>
-                    <div class="info-card"><strong>Consejo:</strong> x suele ser lo que la pregunta del problema nos
-                        pide encontrar.</div>
+                    <h2>Pasos Sugeridos</h2>
+                    <div class="info-card">1. Identificar la incógnita (darle una letra, ej. 'x').</div>
+                    <div class="info-card">2. Escribir la relación (igualdad).</div>
+                    <div class="info-card">3. Resolver y verificar si el resultado tiene sentido.</div>
                 </div>
             </div>
 
-            <!-- Info 4 -->
             <div class="slide">
                 <div class="glass-card">
                     <div class="tag" style="background: var(--primary-orange);">INFO 4</div>
-                    <h2>Pasos Maestros</h2>
-                    <ol style="text-align: left; max-width: 500px; margin: 0 auto; line-height: 2;">
-                        <li>Leer el problema 2 veces.</li>
-                        <li>Identificar la incógnita (x).</li>
-                        <li>Relacionar los datos con conectores.</li>
-                        <li>Escribir la ecuación final.</li>
-                    </ol>
+                    <h2>Problemas de Edades</h2>
+                    <p>Un clásico del álgebra. Si hoy tengo 'x' años, hace 5 años tenía <strong>x - 5</strong> y en 10
+                        años tendré <strong>x + 10</strong>.</p>
+                    <div class="info-card">"Juan es 3 años mayor que Ana": <strong>J = A + 3</strong>.</div>
                 </div>
             </div>
 
-            <!-- Info 5 -->
             <div class="slide">
                 <div class="glass-card">
                     <div class="tag" style="background: var(--primary-blue-dark);">INFO 5</div>
-                    <h2>Ejemplo: Números</h2>
-                    <p>"El triple de un número menos 5 es igual a 10".</p>
-                    <div class="info-card" style="text-align: center; font-size: 1.5rem; font-weight: 800;">3x - 5 = 10
-                    </div>
-                    <p>Donde x es el número misterioso.</p>
+                    <h2>Problemas de Mezclas</h2>
+                    <p>Se basan en la cantidad total de sustancia. Usualmente siguen la forma:</p>
+                    <div class="info-card"><strong>(P1 * V1) + (P2 * V2) = Pt * Vt</strong></div>
+                    <p>Donde P es porcentaje y V es volumen.</p>
                 </div>
             </div>
 
-            <!-- Info 6 -->
             <div class="slide">
                 <div class="glass-card">
                     <div class="tag" style="background: var(--primary-red);">INFO 6</div>
-                    <h2>Ejemplo: Geometría</h2>
-                    <p>"El perímetro de un cuadrado es 20. ¿Cuánto mide su lado?"</p>
-                    <div class="info-card">
-                        Como un cuadrado tiene 4 lados iguales:<br>
-                        <strong>Modelo:</strong> 4x = 20
-                    </div>
-                    <p>Al modelar, simplificamos el dibujo a una sola línea de lógica.</p>
+                    <h2>Geometría y Perímetros</h2>
+                    <p>El perímetro de un rectángulo es la suma de todos sus lados:</p>
+                    <div class="info-card"><strong>P = 2l + 2a</strong></div>
+                    <p>Si el largo 'l' es el triple del ancho 'a', entonces: <strong>P = 2(3a) + 2a = 8a</strong>.</p>
                 </div>
             </div>
 
             <div class="slide">
                 <div class="glass-card">
-                    <h2>Quiz Rápido</h2>
-                    <p>¿Cómo se traduce: "La mitad de un número sumado con 8 es 12"?</p>
+                    <h2>Quiz de Modelado</h2>
+                    <p>¿Cómo se traduce: "El triple de un número disminuido en 10 es igual a 80"?</p>
                     <div class="quiz-container">
-                        <button class="option-btn" onclick="checkQuiz(6, false, this)">A) x/2 - 8 = 12</button>
-                        <button class="option-btn" onclick="checkQuiz(6, true, this)">B) x/2 + 8 = 12</button>
-                        <button class="option-btn" onclick="checkQuiz(6, false, this)">C) 2x + 8 = 12</button>
+                        <button class="option-btn" onclick="checkQuiz(6, false, this)">A) 3(x - 10) = 80</button>
+                        <button class="option-btn" onclick="checkQuiz(6, true, this)">B) 3x - 10 = 80</button>
+                        <button class="option-btn" onclick="checkQuiz(6, false, this)">C) x/3 - 10 = 80</button>
                     </div>
                     <div id="feedback-6" style="margin-top: 1rem; font-weight: 600;"></div>
                 </div>
@@ -295,23 +266,21 @@
 
             <div class="slide">
                 <div class="glass-card">
-                    <div style="font-size: 60px;">🏆</div>
-                    <h2>¡Arquitecto de Ecuaciones!</h2>
-                    <p>Ahora puedes ver problemas y pensar en ecuaciones.</p>
+                    <div style="font-size: 80px;">�</div>
+                    <h2>¡Traductor Experto!</h2>
+                    <p>Ahora puedes hablar el lenguaje universal de las matemáticas.</p>
                     <button onclick="goToSlide(0)"
-                        style="background: var(--primary-orange); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 30px; font-weight: 700; cursor: pointer;">Volver
-                        al Inicio</button>
+                        style="background: var(--primary-orange); color: white; border: none; padding: 1rem 2rem; border-radius: 30px; font-weight: 700; cursor: pointer;">Reiniciar</button>
                 </div>
             </div>
-
         </div>
 
         <div class="nav-controls">
             <button class="nav-btn" id="prev-btn" onclick="prevSlide()" disabled>&#10094;</button>
-            <span id="slide-num" style="font-weight: 600; color: var(--primary-blue-dark);">1 / 9</span>
+            <span id="slide-num" style="font-weight: 600; color: var(--primary-blue-dark); font-size: 1.2rem;">1 /
+                9</span>
             <button class="nav-btn" id="next-btn" onclick="nextSlide()">&#10095;</button>
         </div>
-
         <div class="progress-bar" id="progress-bar"></div>
     </div>
 
@@ -323,7 +292,6 @@
         const nextBtn = document.getElementById('next-btn');
         const slideNum = document.getElementById('slide-num');
         const progressBar = document.getElementById('progress-bar');
-
         function updateGallery() {
             container.style.transform = `translateX(-${currentSlide * 100}%)`;
             slides.forEach((slide, index) => slide.classList.toggle('active', index === currentSlide));
@@ -346,8 +314,8 @@
         function checkQuiz(qId, isCorrect, btn) {
             const feedback = document.getElementById(`feedback-${qId}`);
             btn.parentElement.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
-            if (isCorrect) { btn.classList.add('correct'); feedback.innerText = "¡Perfecto! 'La mitad' es x/2 y 'sumado' es +."; feedback.style.color = "#10b981"; }
-            else { btn.classList.add('wrong'); feedback.innerText = "Revisa los signos y la operación principal."; feedback.style.color = "#993921"; }
+            if (isCorrect) { btn.style.background = "#ecfdf5"; btn.style.borderColor = "#10b981"; feedback.innerText = "¡Correcto! 'Triple x' es 3x, 'disminuido 10' es -10."; feedback.style.color = "#10b981"; }
+            else { btn.style.background = "#fff5f5"; btn.style.borderColor = "#993921"; feedback.innerText = "Incorrecto. Revisa el orden de las operaciones."; feedback.style.color = "#993921"; }
         }
         updateGallery();
     </script>
