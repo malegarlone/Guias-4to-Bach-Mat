@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía 16: Aplicaciones 2x2 - 4to Bachillerato</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary-blue: #1e3a8a;
+            --primary-gold: #b45309;
+            --primary-teal: #0f766e;
+            --primary-slate: #334155;
+            --accent-red: #be123c;
+            --bg-light: #f8fafc;
+            --transition-speed: 0.5s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #cbd5e1;
+            color: #0f172a;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        #app-container {
+            width: 100%;
+            max-width: 1024px;
+            height: 600px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: auto;
+        }
+
+        header {
+            background-color: var(--primary-slate);
+            color: white;
+            padding: 0 1.5rem;
+            height: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+            font-weight: 500;
+            z-index: 200;
+            letter-spacing: 0.5px;
+        }
+
+        #viewport {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            background: #ffffff;
+        }
+
+        @media (max-height: 650px) or (max-width: 1024px) {
+            #app-container {
+                height: 100vh;
+                border-radius: 0;
+            }
+        }
+
+        .slide-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            padding: 30px 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            transition: opacity var(--transition-speed);
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.8rem;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.1rem;
+            color: var(--primary-teal);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            border-bottom: 2px solid var(--bg-light);
+            padding-bottom: 5px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            color: #334155;
+            max-width: 850px;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .info-card {
+            padding: 1.5rem;
+            border-radius: 8px;
+            background: #f1f5f9;
+            margin: 1rem 0;
+            width: 100%;
+            max-width: 800px;
+            text-align: left;
+            border-left: 5px solid var(--primary-blue);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .math-block {
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            font-size: 1.4rem;
+            margin: 15px 0;
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            transition: all 0.2s ease;
+            z-index: 250;
+            border: 1px solid #e2e8f0;
+            color: var(--primary-slate);
+            font-size: 1.5rem;
+            user-select: none;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            transform: translateY(-50%) scale(1.1);
+            background-color: #f8fafc;
+            color: var(--primary-blue);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #prev-btn {
+            left: 20px;
+        }
+
+        #next-btn {
+            right: 20px;
+        }
+
+        .slide-indicators {
+            position: absolute;
+            padding: 0;
+            bottom: 2rem;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: #64748b;
+            z-index: 100;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 6px;
+            background: var(--primary-gold);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .quiz-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            width: 100%;
+            max-width: 650px;
+            margin: 1rem auto;
+        }
+
+        .option-btn {
+            padding: 1rem 1.5rem;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            color: var(--primary-slate);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary-blue);
+            background: #f0f9ff;
+        }
+
+        .flex-container {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 900px;
+            margin-top: 15px;
+        }
+
+        .content-col {
+            flex: 1;
+            text-align: left;
+        }
+
+        .img-col {
+            flex: 0 0 350px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="app-container">
+        <header id="global-header">
+            <span>Colegio Escolaris - Matemática 4to Bachillerato</span>
+            <span>Lección 16: Aplicación de Sistemas</span>
+        </header>
+
+        <div id="viewport">
+            <div class="slide-container" id="slide-container">
+                
+                <!-- 1. Portada -->
+                <div class="slide active">
+                    <div style="font-size: 4rem; margin-bottom: 20px;">🕵️‍♂️📝</div>
+                    <h1>Aplicaciones en la Vida Real</h1>
+                    <h2>Sistemas de Ecuaciones</h2>
+                    <p style="text-align: center; color: #64748b; font-size: 1.2rem;">Transformando el lenguaje cotidiano al lenguaje algebraico para resolver misterios numéricos.</p>
+                </div>
+
+                <!-- 2. Traducción -->
+                <div class="slide">
+                    <h2>Traduciendo al Álgebra</h2>
+                    <p>El paso más crítico es definir quién es \( x \) y quién es \( y \). Luego, buscamos las palabras clave en el texto.</p>
+                    
+                    <div class="flex-container" style="align-items: stretch; max-width: 800px;">
+                        <div class="info-card" style="margin:0; border-color: var(--primary-teal);">
+                            <h3 style="color: var(--primary-teal); margin-bottom: 10px;">Diccionario Básico</h3>
+                            <ul style="line-height: 1.8; margin-left: 20px; font-size: 1.05rem;">
+                                <li>"La suma de dos números es 10" ➡️ \( x + y = 10 \)</li>
+                                <li>"La diferencia entre ellos es 4" ➡️ \( x - y = 4 \)</li>
+                                <li>"El doble del primero..." ➡️ \( 2x \)</li>
+                                <li>"Un número excede al otro en 5" ➡️ \( x = y + 5 \)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Problema 1: Tienda (Planteamiento) -->
+                <div class="slide">
+                    <h2>Problema 1: La Frutería (Planteamiento)</h2>
+                    
+                    <div class="flex-container">
+                        <div class="content-col">
+                            <div class="info-card" style="background: #fffbeb; border-color: var(--primary-gold); margin-top: 0;">
+                                <p style="font-style: italic;">"En una tienda, 3 manzanas y 2 peras cuestan Q12. En la misma tienda, 2 manzanas y 3 peras cuestan Q13. ¿Cuál es el precio de cada fruta?"</p>
+                            </div>
+                            
+                            <h3 style="color: var(--primary-blue); margin-top: 15px;">Paso 1: Definir variables</h3>
+                            <ul style="margin-left: 20px; font-size: 1.1rem; line-height: 1.5;">
+                                <li>Sea <strong>\( x \)</strong> = Precio de una manzana</li>
+                                <li>Sea <strong>\( y \)</strong> = Precio de una pera</li>
+                            </ul>
+                            
+                            <h3 style="color: var(--primary-teal); margin-top: 15px;">Paso 2: Construir el sistema</h3>
+                            <div class="math-block" style="text-align: left; font-size: 1.3rem;">
+                                \( 3x + 2y = 12 \) &nbsp;&nbsp;<span style="font-size: 0.9rem; color: #666;">(Primera compra)</span><br>
+                                \( 2x + 3y = 13 \) &nbsp;&nbsp;<span style="font-size: 0.9rem; color: #666;">(Segunda compra)</span>
+                            </div>
+                        </div>
+                        <div class="img-col" style="font-size: 7rem; line-height: 1.2;">
+                            🍎🍐<br>
+                            <span style="font-size: 2rem; color: var(--primary-teal); font-weight: bold;">= Q12</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Problema 1: Tienda (Resolución) -->
+                <div class="slide">
+                    <h2>Problema 1: La Frutería (Resolución)</h2>
+                    <p>Resolvamos el sistema usando el método de Reducción (Eliminación).</p>
+                    
+                    <div style="text-align: left; max-width: 750px; line-height: 1.6; font-size: 1.05rem;">
+                        <p><strong>1. Multiplicamos de forma cruzada</strong> para eliminar \( x \):<br>
+                        Multiplicamos la Ec.1 por (2) y la Ec.2 por (-3).</p>
+                        
+                        <div class="math-block" style="width: 100%; font-size: 1.2rem;">
+                            \( 6x + 4y = 24 \)<br>
+                            <span style="border-bottom: 2px solid #ccc;">\( -6x - 9y = -39 \)</span><br>
+                            \( 0x - 5y = -15 \)
+                        </div>
+                        
+                        <p><strong>2. Despejamos Y:</strong><br>
+                        \( -5y = -15 \rightarrow \mathbf{y = 3} \) (Cada pera cuesta Q3).</p>
+                        
+                        <p><strong>3. Sustituimos en la primera:</strong><br>
+                        \( 3x + 2(3) = 12 \rightarrow 3x + 6 = 12 \rightarrow 3x = 6 \rightarrow \mathbf{x = 2} \)</p>
+                        
+                        <p style="font-size: 1.2rem; color: var(--primary-teal); font-weight: bold; text-align: center; margin-top: 10px;">
+                            Respuesta: Manzanas a Q2, Peras a Q3.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 5. Problema 2: Edades (Planteamiento) -->
+                <div class="slide">
+                    <h2>Problema 2: Edades (Planteamiento)</h2>
+                    
+                    <div class="flex-container">
+                        <div class="content-col">
+                            <div class="info-card" style="background: #f0fdfa; border-color: var(--primary-teal); margin-top: 0;">
+                                <p style="font-style: italic;">"La edad de un padre es el triple que la de su hijo. Hace 5 años, la suma de sus edades era 46 años. ¿Qué edad tienen ahora?"</p>
+                            </div>
+                            
+                            <h3 style="color: var(--primary-blue); margin-top: 15px;">Paso 1: Definir variables actuales</h3>
+                            <ul style="margin-left: 20px; font-size: 1.1rem; line-height: 1.5;">
+                                <li>Sea <strong>\( P \)</strong> = Edad actual del padre</li>
+                                <li>Sea <strong>\( H \)</strong> = Edad actual del hijo</li>
+                            </ul>
+                            
+                            <h3 style="color: var(--primary-teal); margin-top: 15px;">Paso 2: Construir ecuaciones</h3>
+                            <div class="math-block" style="text-align: left; font-size: 1.3rem;">
+                                \( P = 3H \) &nbsp;&nbsp;<span style="font-size: 0.9rem; color: #666;">(Es el triple)</span><br>
+                                \( (P - 5) + (H - 5) = 46 \) &nbsp;&nbsp;<span style="font-size: 0.9rem; color: #666;">(Hace 5 años)</span>
+                            </div>
+                        </div>
+                        <div class="img-col" style="font-size: 7rem; line-height: 1.2;">
+                            👨‍👦<br>
+                            <span style="font-size: 2rem; color: var(--primary-teal); font-weight: bold;">+5 años</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. Problema 2: Edades (Resolución) -->
+                <div class="slide">
+                    <h2>Problema 2: Edades (Resolución)</h2>
+                    <p>Dado que en la primera ecuación \( P \) ya está despejada (\( P = 3H \)), ¡el método de <strong>Sustitución</strong> es el ideal!</p>
+                    
+                    <div style="text-align: left; max-width: 750px; line-height: 1.8; font-size: 1.1rem;">
+                        <p><strong>1. Simplificamos la segunda ecuación:</strong><br>
+                        \( P + H - 10 = 46 \rightarrow P + H = 56 \)</p>
+                        
+                        <p><strong>2. Sustituimos \( P = 3H \) en esta ecuación:</strong><br>
+                        \( (3H) + H = 56 \)<br>
+                        \( 4H = 56 \)<br>
+                        <span style="color: var(--primary-blue); font-weight: bold;">\( H = 14 \)</span> (El hijo tiene 14 años)</p>
+                        
+                        <p><strong>3. Encontramos la edad del padre:</strong><br>
+                        \( P = 3(14) \)<br>
+                        <span style="color: var(--primary-blue); font-weight: bold;">\( P = 42 \)</span></p>
+                        
+                        <p style="font-size: 1.3rem; color: var(--primary-teal); font-weight: bold; text-align: center; margin-top: 10px;">
+                            Respuesta: El padre tiene 42 años y el hijo 14.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 7. QUIZ 1 -->
+                <div class="slide">
+                    <h2>Quiz 1: Traducción</h2>
+                    <p>¿Cómo escribirías en álgebra la frase: <em>"El número X excede al número Y en 8 unidades"</em>?</p>
+                    <div class="quiz-container">
+                        <button class="option-btn" onclick="checkQuiz(1, false, this, '', 'Esto significa que Y es mayor que X por 8 unidades.')">A) \( X + 8 = Y \)</button>
+                        <button class="option-btn" onclick="checkQuiz(1, true, this, '¡Correcto! X es igual a Y más 8 unidades adicionales.', '')">B) \( X = Y + 8 \)</button>
+                        <button class="option-btn" onclick="checkQuiz(1, false, this, '', 'Exceder significa suma o diferencia, no multiplicación.')">C) \( X = 8Y \)</button>
+                    </div>
+                    <div id="feedback-1" style="margin-top: 1rem; font-weight: 600; min-height: 24px;"></div>
+                </div>
+
+                <!-- 8. QUIZ 2 -->
+                <div class="slide">
+                    <h2>Quiz 2: Planteamiento</h2>
+                    <p>En un estacionamiento hay motos (\( M \)) y autos (\( A \)). En total hay 50 vehículos. ¿Cuál es la ecuación que representa este hecho?</p>
+                    <div class="quiz-container">
+                        <button class="option-btn" onclick="checkQuiz(2, false, this, '', 'Las llantas no tienen nada que ver con contar la cantidad total de vehículos.')">A) \( 2M + 4A = 50 \)</button>
+                        <button class="option-btn" onclick="checkQuiz(2, false, this, '', 'Esta ecuación no tiene sentido lógico.')">B) \( M \times A = 50 \)</button>
+                        <button class="option-btn" onclick="checkQuiz(2, true, this, '¡Excelente! Simplemente sumando la cantidad de unos y otros nos da el total.', '')">C) \( M + A = 50 \)</button>
+                    </div>
+                    <div id="feedback-2" style="margin-top: 1rem; font-weight: 600; min-height: 24px;"></div>
+                </div>
+
+                <!-- 9. QUIZ 3 -->
+                <div class="slide">
+                    <h2>Quiz 3: Edades en el Tiempo</h2>
+                    <p>Si la edad actual de Ana es \( A \), ¿cómo representas matemáticamente la edad que tendrá <strong>dentro de 7 años</strong>?</p>
+                    <div class="quiz-container">
+                        <button class="option-btn" onclick="checkQuiz(3, false, this, '', 'Esto representaría que Ana tendrá 7 veces su edad actual.')">A) \( 7A \)</button>
+                        <button class="option-btn" onclick="checkQuiz(3, true, this, '¡Correcto! El tiempo futuro siempre se representa sumando años a la edad actual.', '')">B) \( A + 7 \)</button>
+                        <button class="option-btn" onclick="checkQuiz(3, false, this, '', 'Esto representaría la edad de Ana HACE 7 años, en el pasado.')">C) \( A - 7 \)</button>
+                    </div>
+                    <div id="feedback-3" style="margin-top: 1rem; font-weight: 600; min-height: 24px;"></div>
+                </div>
+
+            </div> <!-- slide-container -->
+        </div> <!-- viewport -->
+
+        <button class="nav-btn" id="prev-btn" onclick="prevSlide()" disabled aria-label="Anterior">&#8592;</button>
+        <button class="nav-btn" id="next-btn" onclick="nextSlide()" aria-label="Siguiente">&#8594;</button>
+
+        <div class="slide-indicators">
+            <span id="slide-num">1 / 9</span>
+        </div>
+        <div class="progress-bar" id="progress-bar"></div>
+    </div> <!-- app-container -->
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const container = document.getElementById('slide-container');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const slideNum = document.getElementById('slide-num');
+        const progressBar = document.getElementById('progress-bar');
+
+        function updateGallery() {
+            container.style.transform = `translateX(-${currentSlide * 100}%)`;
+            slides.forEach((slide, index) => slide.classList.toggle('active', index === currentSlide));
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+            slideNum.innerText = `${currentSlide + 1} / ${slides.length}`;
+            progressBar.style.width = `${((currentSlide + 1) / slides.length) * 100}%`;
+            
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function nextSlide() { if (currentSlide < slides.length - 1) { currentSlide++; updateGallery(); } }
+        function prevSlide() { if (currentSlide > 0) { currentSlide--; updateGallery(); } }
+
+        document.addEventListener('keydown', e => { if (e.key === 'ArrowRight' || e.key === ' ') nextSlide(); if (e.key === 'ArrowLeft') prevSlide(); });
+
+        let touchStartX = 0;
+        document.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX, false);
+        document.addEventListener('touchend', e => {
+            let touchEndX = e.changedTouches[0].screenX;
+            if (touchEndX < touchStartX - 40) nextSlide();
+            if (touchEndX > touchStartX + 40) prevSlide();
+        }, false);
+
+        function checkQuiz(qId, isCorrect, btn, correctMsg, incorrectMsg) {
+            const feedback = document.getElementById(`feedback-${qId}`);
+            const container = btn.parentElement;
+
+            if (isCorrect) {
+                container.querySelectorAll('.option-btn').forEach(b => {
+                    b.disabled = true;
+                    b.style.opacity = "0.5";
+                });
+                btn.disabled = false;
+                btn.style.opacity = "1";
+                btn.style.background = "#dcfce7";
+                btn.style.borderColor = "#059669";
+                btn.style.color = "#065f46";
+                feedback.innerHTML = `✅ &iexcl;Correcto! ${correctMsg}`;
+                feedback.style.color = "#059669";
+            } else {
+                btn.style.background = "#fee2e2";
+                btn.style.borderColor = "#e11d48";
+                btn.style.color = "#9f1239";
+                btn.disabled = true;
+                feedback.innerHTML = `❌ <span>${incorrectMsg}</span> <button onclick="resetQuiz(${qId})" style="margin-left:10px; background:var(--primary-slate); color:white; border:none; padding:5px 12px; border-radius:6px; cursor:pointer; font-size:0.85rem;">Reintentar</button>`;
+                feedback.style.color = "#e11d48";
+            }
+        }
+
+        function resetQuiz(qId) {
+            const feedback = document.getElementById(`feedback-${qId}`);
+            const container = feedback.parentElement.querySelector('.quiz-container');
+            container.querySelectorAll('.option-btn').forEach(b => {
+                b.disabled = false;
+                b.style.opacity = "1";
+                b.style.background = "white";
+                b.style.borderColor = "#cbd5e1";
+                b.style.color = "var(--primary-slate)";
+            });
+            feedback.innerHTML = "";
+        }
+
+        updateGallery();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía 15: Sistemas 3x3 - 4to Bachillerato</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary-blue: #1e3a8a;
+            --primary-gold: #b45309;
+            --primary-teal: #0f766e;
+            --primary-slate: #334155;
+            --accent-red: #be123c;
+            --bg-light: #f8fafc;
+            --transition-speed: 0.5s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #cbd5e1;
+            color: #0f172a;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        #app-container {
+            width: 100%;
+            max-width: 1024px;
+            height: 600px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: auto;
+        }
+
+        header {
+            background-color: var(--primary-slate);
+            color: white;
+            padding: 0 1.5rem;
+            height: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+            font-weight: 500;
+            z-index: 200;
+            letter-spacing: 0.5px;
+        }
+
+        #viewport {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            background: #ffffff;
+        }
+
+        @media (max-height: 650px) or (max-width: 1024px) {
+            #app-container {
+                height: 100vh;
+                border-radius: 0;
+            }
+        }
+
+        .slide-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            padding: 30px 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            transition: opacity var(--transition-speed);
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.8rem;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.1rem;
+            color: var(--primary-teal);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            border-bottom: 2px solid var(--bg-light);
+            padding-bottom: 5px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            color: #334155;
+            max-width: 850px;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .info-card {
+            padding: 1.5rem;
+            border-radius: 8px;
+            background: #f1f5f9;
+            margin: 1rem 0;
+            width: 100%;
+            max-width: 800px;
+            text-align: left;
+            border-left: 5px solid var(--primary-blue);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .math-block {
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            font-size: 1.3rem;
+            margin: 10px 0;
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            transition: all 0.2s ease;
+            z-index: 250;
+            border: 1px solid #e2e8f0;
+            color: var(--primary-slate);
+            font-size: 1.5rem;
+            user-select: none;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            transform: translateY(-50%) scale(1.1);
+            background-color: #f8fafc;
+            color: var(--primary-blue);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #prev-btn {
+            left: 20px;
+        }
+
+        #next-btn {
+            right: 20px;
+        }
+
+        .slide-indicators {
+            position: absolute;
+            padding: 0;
+            bottom: 2rem;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: #64748b;
+            z-index: 100;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 6px;
+            background: var(--primary-gold);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .quiz-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            width: 100%;
+            max-width: 650px;
+            margin: 1rem auto;
+        }
+
+        .option-btn {
+            padding: 1rem 1.5rem;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            color: var(--primary-slate);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary-blue);
+            background: #f0f9ff;
+        }
+
+        .flex-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 850px;
+        }
+
+        .step-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .op-text {
+            color: var(--accent-red);
+            font-family: monospace;
+            font-size: 1.1rem;
+            margin: 10px 0;
+            background: #fff1f2;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+
+        .matrix-focus {
+            color: var(--accent-red);
+            font-weight: bold;
+        }
+
+        .matrix-done {
+            color: var(--primary-teal);
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="app-container">
+        <header id="global-header">
+            <span>Colegio Escolaris - Matemática 4to Bachillerato</span>
+            <span>Lección 15: Sistemas de Ecuaciones 3x3</span>
+        </header>
+
+        <div id="viewport">
+            <div class="slide-container" id="slide-container">
+                
+                <!-- 1. Portada -->
+                <div class="slide active">
+                    <div style="font-size: 4rem; margin-bottom: 20px;">🧊✖️</div>
+                    <h1>Sistemas de Ecuaciones 3x3</h1>
+                    <h2>El Método de Eliminación de Gauss</h2>
+                    <p style="text-align: center; color: #64748b; font-size: 1.2rem;">Adentrémonos en la tercera dimensión y resolvamos sistemas usando matrices de forma limpia y estructurada.</p>
+                </div>
+
+                <!-- 2. Concepto -->
+                <div class="slide">
+                    <h2>¿Qué es un Sistema 3x3?</h2>
+                    <div class="info-card">
+                        <p>Es un sistema de <strong>tres ecuaciones</strong> con <strong>tres incógnitas</strong> (normalmente \( x, y, z \)).</p>
+                    </div>
+                    
+                    <p>Geométricamente, ya no estamos buscando dónde se cruzan dos líneas en un papel plano. ¡Estamos buscando el punto exacto en el espacio 3D donde <strong>se cruzan tres planos enteros</strong>!</p>
+                    
+                    <div class="math-block" style="border-color: var(--primary-blue);">
+                        \( x + 2y - z = 4 \)<br>
+                        \( 2x - y + 3z = 9 \)<br>
+                        \( 3x + y - 2z = 3 \)
+                    </div>
+                </div>
+
+                <!-- 3. Introducción a Gauss -->
+                <div class="slide">
+                    <h2>El Método de Gauss</h2>
+                    <p>Manejar tantas variables al mismo tiempo es confuso. Carl Friedrich Gauss popularizó un método que usa <strong>Matrices Aumentadas</strong> para mantener todo limpio.</p>
+                    
+                    <div class="info-card" style="border-color: var(--primary-gold); background: #fffbeb;">
+                        <p><strong>El Objetivo de Gauss:</strong><br>
+                        Transformar la matriz inicial sumando o restando filas, hasta lograr una <strong>matriz triangular superior</strong> (ceros debajo de la diagonal principal). Esto nos permitirá encontrar el valor de la última variable de inmediato.</p>
+                    </div>
+                </div>
+
+                <!-- 4. Paso 0: Matriz Aumentada -->
+                <div class="slide">
+                    <h2>Paso 0: Crear la Matriz Aumentada</h2>
+                    <p>Tomamos solo los coeficientes (los números) de nuestro sistema y los colocamos en una matriz. La línea vertical representa el signo "igual".</p>
+                    
+                    <div class="flex-container">
+                        <div class="step-col">
+                            <h3 style="color: var(--primary-slate); margin-bottom: 10px;">Sistema Original</h3>
+                            <div class="math-block" style="border:none; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                \( 1x + 2y - 1z = 4 \)<br>
+                                \( 2x - 1y + 3z = 9 \)<br>
+                                \( 3x + 1y - 2z = 3 \)
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; font-size: 2rem; color: var(--primary-teal);">➡️</div>
+                        <div class="step-col">
+                            <h3 style="color: var(--primary-blue); margin-bottom: 10px;">Matriz Aumentada</h3>
+                            <div class="math-block" style="border:none; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                \( 
+                                \left[
+                                \begin{array}{ccc|c}
+                                1 & 2 & -1 & 4 \\
+                                2 & -1 & 3 & 9 \\
+                                3 & 1 & -2 & 3
+                                \end{array}
+                                \right]
+                                \)
+                            </div>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.9rem; color: #64748b; margin-top: 15px;">A las filas las llamaremos \( R_1 \), \( R_2 \) y \( R_3 \).</p>
+                </div>
+
+                <!-- 4.5. Notación de Matriz -->
+                <div class="slide">
+                    <h2>Notación de Posiciones Matriciales</h2>
+                    <p>Antes de operar, necesitamos saber cómo nombrar cada posición. Cada elemento se llama \( a_{ij} \), donde <strong>\( i \)</strong> es la Fila (horizontal) y <strong>\( j \)</strong> es la Columna (vertical).</p>
+                    
+                    <div class="math-block" style="border:none; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin: 20px 0;">
+                        \( 
+                        \left[
+                        \begin{array}{ccc|c}
+                        a_{11} & a_{12} & a_{13} & a_{14} \\
+                        \mathbf{a_{21}} & a_{22} & a_{23} & a_{24} \\
+                        \mathbf{a_{31}} & \mathbf{a_{32}} & a_{33} & a_{34}
+                        \end{array}
+                        \right]
+                        \)
+                    </div>
+                    
+                    <div class="info-card" style="border-color: var(--primary-teal); background: #f0fdfa;">
+                        <p style="margin-bottom: 5px;">Por ejemplo:</p>
+                        <ul style="margin-left: 20px; font-size: 0.95rem; line-height: 1.6;">
+                            <li>\( a_{12} \) está en la <strong>Fila 1, Columna 2</strong>.</li>
+                            <li>\( a_{31} \) está en la <strong>Fila 3, Columna 1</strong>.</li>
+                        </ul>
+                        <p style="margin-top: 10px; font-size: 0.95rem;">Para formar nuestro "triángulo inferior" de ceros en Gauss, siempre atacaremos las posiciones resaltadas en negrita: <strong style="color: var(--primary-teal);">\( a_{21} \), \( a_{31} \) y \( a_{32} \)</strong>.</p>
+                    </div>
+                </div>
+
+                <!-- 5. Paso 1: Cero en R2 -->
+                <div class="slide">
+                    <h2>Paso 1: Hacer Cero el elemento \( a_{21} \)</h2>
+                    <p>Queremos que el "2" de la segunda fila se vuelva cero. Para ello, operamos la Fila 2 con la Fila 1.</p>
+                    
+                    <div class="op-text">Operación: \( R_2 \rightarrow R_2 - 2R_1 \)</div>
+                    
+                    <div class="flex-container" style="align-items: center;">
+                        <div class="math-block" style="margin-right: 20px;">
+                            \( \left[ \begin{array}{ccc|c} 1 & 2 & -1 & 4 \\ \mathbf{\color{red}2} & -1 & 3 & 9 \\ 3 & 1 & -2 & 3 \end{array} \right] \)
+                        </div>
+                        <div style="font-size: 1.5rem;">➡️</div>
+                        <div class="math-block" style="margin-left: 20px;">
+                            \( \left[ \begin{array}{ccc|c} 1 & 2 & -1 & 4 \\ \mathbf{\color{teal}0} & -5 & 5 & 1 \\ 3 & 1 & -2 & 3 \end{array} \right] \)
+                        </div>
+                    </div>
+                    
+                    <div class="info-card" style="padding: 1rem; font-size: 0.95rem;">
+                        <p style="margin:0;"><strong>Detalle:</strong> Multiplicamos mentalmente \( R_1 \) por 2: (2, 4, -2 | 8). Luego se lo restamos a \( R_2 \):<br>
+                        (2-2=0), (-1-4=-5), (3 - (-2)=5), (9-8=1).</p>
+                    </div>
+                </div>
+
+                <!-- 6. Paso 2: Cero en R3 -->
+                <div class="slide">
+                    <h2>Paso 2: Hacer Cero el elemento \( a_{31} \)</h2>
+                    <p>Ahora queremos que el "3" de la tercera fila se vuelva cero, operando con la Fila 1.</p>
+                    
+                    <div class="op-text">Operación: \( R_3 \rightarrow R_3 - 3R_1 \)</div>
+                    
+                    <div class="flex-container" style="align-items: center;">
+                        <div class="math-block" style="margin-right: 20px;">
+                            \( \left[ \begin{array}{ccc|c} 1 & 2 & -1 & 4 \\ \color{teal}0 & -5 & 5 & 1 \\ \mathbf{\color{red}3} & 1 & -2 & 3 \end{array} \right] \)
+                        </div>
+                        <div style="font-size: 1.5rem;">➡️</div>
+                        <div class="math-block" style="margin-left: 20px;">
+                            \( \left[ \begin{array}{ccc|c} 1 & 2 & -1 & 4 \\ \color{teal}0 & -5 & 5 & 1 \\ \mathbf{\color{teal}0} & -5 & 1 & -9 \end{array} \right] \)
+                        </div>
+                    </div>
+                    
+                    <div class="info-card" style="padding: 1rem; font-size: 0.95rem;">
+                        <p style="margin:0;"><strong>Detalle:</strong> Multiplicamos mentalmente \( R_1 \) por 3: (3, 6, -3 | 12). Se lo restamos a \( R_3 \):<br>
+                        (3-3=0), (1-6=-5), (-2 - (-3)=1), (3-12=-9).</p>
+                    </div>
+                </div>
+
+                <!-- 7. Paso 3: Triángulo Inferior -->
+                <div class="slide">
+                    <h2>Paso 3: Hacer Cero el elemento \( a_{32} \)</h2>
+                    <p>Solo falta un cero para lograr la "escalera" o forma triangular. Usaremos la Fila 2 para anular el "-5" de la Fila 3.</p>
+                    
+                    <div class="op-text">Operación: \( R_3 \rightarrow R_3 - R_2 \)</div>
+                    
+                    <div class="flex-container" style="align-items: center;">
+                        <div class="math-block" style="margin-right: 20px;">
+                            \( \left[ \begin{array}{ccc|c} 1 & 2 & -1 & 4 \\ \color{teal}0 & -5 & 5 & 1 \\ \color{teal}0 & \mathbf{\color{red}-5} & 1 & -9 \end{array} \right] \)
+                        </div>
+                        <div style="font-size: 1.5rem;">➡️</div>
+                        <div class="math-block" style="margin-left: 20px;">
+                            \( \left[ \begin{array}{ccc|c} 1 & 2 & -1 & 4 \\ \color{teal}0 & -5 & 5 & 1 \\ \color{teal}0 & \mathbf{\color{teal}0} & -4 & -10 \end{array} \right] \)
+                        </div>
+                    </div>
+                    <p style="margin-top: 15px; font-weight: bold; color: var(--primary-teal);">¡Logramos la Matriz Triangular Superior!</p>
+                </div>
+
+                <!-- 8. Sustitución Hacia Atrás (Z) -->
+                <div class="slide">
+                    <h2>Sustitución Hacia Atrás (Parte 1: Hallar Z)</h2>
+                    <p>Con nuestra matriz final, volvemos a escribir las ecuaciones. Observa la última fila:</p>
+                    
+                    <div class="math-block" style="border:none; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 15px;">
+                        \( 
+                        \left[
+                        \begin{array}{ccc|c}
+                        1 & 2 & -1 & 4 \\
+                        0 & -5 & 5 & 1 \\
+                        0 & 0 & \mathbf{\color{teal}-4} & \mathbf{\color{teal}-10}
+                        \end{array}
+                        \right]
+                        \)
+                    </div>
+                    
+                    <div class="info-card">
+                        <p style="margin-bottom: 15px; color: var(--primary-teal); font-weight: bold;">Fila 3: \( -4z = -10 \)</p>
+                        <div class="math-block" style="text-align: left; width: 100%; border:none; background: transparent; padding:0;">
+                            \( z = \frac{-10}{-4} \)<br><br>
+                            \( z = \frac{5}{2} \)<br><br>
+                            <span style="color: var(--primary-blue);"><strong>\( z = 2.5 \)</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 8.1. Sustitución Hacia Atrás (Y) -->
+                <div class="slide">
+                    <h2>Sustitución Hacia Atrás (Parte 2: Hallar Y)</h2>
+                    <p>Ahora usamos la Fila 2, que depende de \( y \) y de \( z \). Como ya conocemos \( z = 2.5 \), ¡solo sustituimos!</p>
+                    
+                    <div class="info-card">
+                        <p style="margin-bottom: 15px; color: var(--primary-gold); font-weight: bold;">Fila 2: \( -5y + 5z = 1 \)</p>
+                        <div class="math-block" style="text-align: left; width: 100%; border:none; background: transparent; padding:0;">
+                            \( -5y + 5(2.5) = 1 \)<br><br>
+                            \( -5y + 12.5 = 1 \)<br><br>
+                            \( -5y = 1 - 12.5 \)<br><br>
+                            \( -5y = -11.5 \)<br><br>
+                            \( y = \frac{-11.5}{-5} \)<br><br>
+                            <span style="color: var(--primary-blue);"><strong>\( y = 2.3 \)</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 8.2. Sustitución Hacia Atrás (X) -->
+                <div class="slide">
+                    <h2>Sustitución Hacia Atrás (Parte 3: Hallar X)</h2>
+                    <p>Finalmente, usamos la Fila 1 original, sustituyendo los valores descubiertos: \( y = 2.3 \) y \( z = 2.5 \).</p>
+                    
+                    <div class="info-card">
+                        <p style="margin-bottom: 15px; color: var(--accent-red); font-weight: bold;">Fila 1: \( 1x + 2y - 1z = 4 \)</p>
+                        <div class="math-block" style="text-align: left; width: 100%; border:none; background: transparent; padding:0;">
+                            \( x + 2(2.3) - (2.5) = 4 \)<br><br>
+                            \( x + 4.6 - 2.5 = 4 \)<br><br>
+                            \( x + 2.1 = 4 \)<br><br>
+                            \( x = 4 - 2.1 \)<br><br>
+                            <span style="color: var(--primary-blue);"><strong>\( x = 1.9 \)</strong></span>
+                        </div>
+                    </div>
+                    <p style="margin-top: 10px; font-weight: bold; color: var(--primary-teal); font-size: 1.3rem;">Solución Final: \( (1.9, 2.3, 2.5) \)</p>
+                </div>
+
+                <!-- 9. QUIZ 1 -->
+                <div class="slide">
+                    <h2>Quiz 1: Concepto Geométrico</h2>
+                    <p>¿Qué representa la solución de un sistema de 3 ecuaciones lineales con 3 variables en la vida real (espacio 3D)?</p>
+                    <div class="quiz-container">
+                        <button class="option-btn" onclick="checkQuiz(1, false, this, '', 'Eso sería un sistema 2x2. En 3D, las ecuaciones lineales forman planos, no líneas rectas simples.')">A) El punto donde se cruzan 3 líneas dibujadas en un papel.</button>
+                        <button class="option-btn" onclick="checkQuiz(1, true, this, '¡Correcto! Cada ecuación de 3 variables forma una hoja plana infinita, y la solución es el único punto donde chocan las 3.', '')">B) El punto en el espacio donde se intersectan 3 planos.</button>
+                        <button class="option-btn" onclick="checkQuiz(1, false, this, '', 'El volumen requiere de otro tipo de matemáticas (cálculo integral), no sistemas lineales.')">C) El volumen del objeto que forman al cruzarse.</button>
+                    </div>
+                    <div id="feedback-1" style="margin-top: 1rem; font-weight: 600; min-height: 24px;"></div>
+                </div>
+
+                <!-- 10. QUIZ 2 -->
+                <div class="slide">
+                    <h2>Quiz 2: Objetivo de Gauss</h2>
+                    <p>¿Cuál es el objetivo principal del método de Eliminación de Gauss al trabajar con la matriz aumentada?</p>
+                    <div class="quiz-container">
+                        <button class="option-btn" onclick="checkQuiz(2, false, this, '', 'No se busca multiplicar matrices, sino operar sus filas entre sí (sumas y restas con múltiplos).')">A) Multiplicar las tres filas para obtener un solo número matriz.</button>
+                        <button class="option-btn" onclick="checkQuiz(2, false, this, '', 'La Regla de Cramer utiliza determinantes, Gauss no necesita calcularlos para resolver el sistema.')">B) Encontrar el determinante de la matriz para dividirlo por la matriz resultante.</button>
+                        <button class="option-btn" onclick="checkQuiz(2, true, this, '¡Excelente! Queremos formar un triángulo de ceros en la esquina inferior izquierda.', '')">C) Operar las filas para obtener una matriz triangular superior (ceros debajo de la diagonal).</button>
+                    </div>
+                    <div id="feedback-2" style="margin-top: 1rem; font-weight: 600; min-height: 24px;"></div>
+                </div>
+
+                <!-- 11. QUIZ 3 -->
+                <div class="slide">
+                    <h2>Quiz 3: Lectura Final</h2>
+                    <p>Si después de aplicar Gauss, la última fila de tu matriz dice \( \left[ \begin{array}{ccc|c} 0 & 0 & 2 & 8 \end{array} \right] \), ¿cuál es el valor de la variable \( z \)?</p>
+                    <div class="quiz-container">
+                        <button class="option-btn" onclick="checkQuiz(3, false, this, '', 'Estás restando en lugar de dividir. La ecuación es 2z = 8.')">A) 6</button>
+                        <button class="option-btn" onclick="checkQuiz(3, false, this, '', 'Recuerda despejar z dividiendo el resultado entre su coeficiente.')">B) 8</button>
+                        <button class="option-btn" onclick="checkQuiz(3, true, this, '¡Perfecto! La fila se traduce como 2z = 8, por lo tanto z = 8 / 2 = 4.', '')">C) 4</button>
+                    </div>
+                    <div id="feedback-3" style="margin-top: 1rem; font-weight: 600; min-height: 24px;"></div>
+                </div>
+
+            </div> <!-- slide-container -->
+        </div> <!-- viewport -->
+
+        <button class="nav-btn" id="prev-btn" onclick="prevSlide()" disabled aria-label="Anterior">&#8592;</button>
+        <button class="nav-btn" id="next-btn" onclick="nextSlide()" aria-label="Siguiente">&#8594;</button>
+
+        <div class="slide-indicators">
+            <span id="slide-num">1 / 14</span>
+        </div>
+        <div class="progress-bar" id="progress-bar"></div>
+    </div> <!-- app-container -->
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const container = document.getElementById('slide-container');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const slideNum = document.getElementById('slide-num');
+        const progressBar = document.getElementById('progress-bar');
+
+        function updateGallery() {
+            container.style.transform = `translateX(-${currentSlide * 100}%)`;
+            slides.forEach((slide, index) => slide.classList.toggle('active', index === currentSlide));
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+            slideNum.innerText = `${currentSlide + 1} / ${slides.length}`;
+            progressBar.style.width = `${((currentSlide + 1) / slides.length) * 100}%`;
+            
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function nextSlide() { if (currentSlide < slides.length - 1) { currentSlide++; updateGallery(); } }
+        function prevSlide() { if (currentSlide > 0) { currentSlide--; updateGallery(); } }
+
+        document.addEventListener('keydown', e => { if (e.key === 'ArrowRight' || e.key === ' ') nextSlide(); if (e.key === 'ArrowLeft') prevSlide(); });
+
+        let touchStartX = 0;
+        document.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX, false);
+        document.addEventListener('touchend', e => {
+            let touchEndX = e.changedTouches[0].screenX;
+            if (touchEndX < touchStartX - 40) nextSlide();
+            if (touchEndX > touchStartX + 40) prevSlide();
+        }, false);
+
+        function checkQuiz(qId, isCorrect, btn, correctMsg, incorrectMsg) {
+            const feedback = document.getElementById(`feedback-${qId}`);
+            const container = btn.parentElement;
+
+            if (isCorrect) {
+                container.querySelectorAll('.option-btn').forEach(b => {
+                    b.disabled = true;
+                    b.style.opacity = "0.5";
+                });
+                btn.disabled = false;
+                btn.style.opacity = "1";
+                btn.style.background = "#dcfce7";
+                btn.style.borderColor = "#059669";
+                btn.style.color = "#065f46";
+                feedback.innerHTML = `✅ &iexcl;Correcto! ${correctMsg}`;
+                feedback.style.color = "#059669";
+            } else {
+                btn.style.background = "#fee2e2";
+                btn.style.borderColor = "#e11d48";
+                btn.style.color = "#9f1239";
+                btn.disabled = true;
+                feedback.innerHTML = `❌ <span>${incorrectMsg}</span> <button onclick="resetQuiz(${qId})" style="margin-left:10px; background:var(--primary-slate); color:white; border:none; padding:5px 12px; border-radius:6px; cursor:pointer; font-size:0.85rem;">Reintentar</button>`;
+                feedback.style.color = "#e11d48";
+            }
+        }
+
+        function resetQuiz(qId) {
+            const feedback = document.getElementById(`feedback-${qId}`);
+            const container = feedback.parentElement.querySelector('.quiz-container');
+            container.querySelectorAll('.option-btn').forEach(b => {
+                b.disabled = false;
+                b.style.opacity = "1";
+                b.style.background = "white";
+                b.style.borderColor = "#cbd5e1";
+                b.style.color = "var(--primary-slate)";
+            });
+            feedback.innerHTML = "";
+        }
+
+        updateGallery();
+    </script>
+</body>
+
+</html>

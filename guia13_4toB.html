@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía 13: Información de Gráficas - 4to Bachillerato</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary-blue: #1e3a8a;
+            --primary-gold: #b45309;
+            --primary-teal: #0f766e;
+            --primary-slate: #334155;
+            --accent-red: #be123c;
+            --bg-light: #f8fafc;
+            --transition-speed: 0.5s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #cbd5e1;
+            color: #0f172a;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        #app-container {
+            width: 100%;
+            max-width: 1024px;
+            height: 600px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: auto;
+        }
+
+        header {
+            background-color: var(--primary-slate);
+            color: white;
+            padding: 0 1.5rem;
+            height: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+            font-weight: 500;
+            z-index: 200;
+            letter-spacing: 0.5px;
+        }
+
+        #viewport {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            background: #ffffff;
+        }
+
+        @media (max-height: 650px) or (max-width: 1024px) {
+            #app-container {
+                height: 100vh;
+                border-radius: 0;
+            }
+        }
+
+        .slide-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            padding: 30px 70px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            transition: opacity var(--transition-speed);
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.8rem;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.1rem;
+            color: var(--primary-teal);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            border-bottom: 2px solid var(--bg-light);
+            padding-bottom: 5px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            color: #334155;
+            max-width: 850px;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .info-card {
+            padding: 1.5rem;
+            border-radius: 8px;
+            background: #f1f5f9;
+            margin: 1rem 0;
+            width: 100%;
+            max-width: 800px;
+            text-align: left;
+            border-left: 5px solid var(--primary-blue);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .math-block {
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            font-size: 1.4rem;
+            margin: 15px 0;
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            transition: all 0.2s ease;
+            z-index: 250;
+            border: 1px solid #e2e8f0;
+            color: var(--primary-slate);
+            font-size: 1.5rem;
+            user-select: none;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            transform: translateY(-50%) scale(1.1);
+            background-color: #f8fafc;
+            color: var(--primary-blue);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #prev-btn {
+            left: 20px;
+        }
+
+        #next-btn {
+            right: 20px;
+        }
+
+        .slide-indicators {
+            position: absolute;
+            padding: 0;
+            bottom: 2rem;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: #64748b;
+            z-index: 100;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 6px;
+            background: var(--primary-gold);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .quiz-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            width: 100%;
+            max-width: 650px;
+            margin: 1rem auto;
+        }
+
+        .option-btn {
+            padding: 1rem 1.5rem;
+            border: 2px solid #cbd5e1;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            color: var(--primary-slate);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary-blue);
+            background: #f0f9ff;
+        }
+
+        .flex-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .graph-placeholder {
+            width: 250px;
+            height: 200px;
+            background: #e2e8f0;
+            border: 2px dashed #94a3b8;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #64748b;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .axis-box {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            flex: 1;
+            min-width: 280px;
+            text-align: left;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div id="app-container">
+        <header id="global-header">
+            <span>Colegio Escolaris - Matemática 4to Bachillerato</span>
+            <span>Lección 13: Gráficas de Funciones</span>
+        </header>
+
+        <div id="viewport">
+            <div class="slide-container" id="slide-container">
+                
+                <!-- 1. Portada -->
+                <div class="slide active">
+                    <div style="font-size: 4rem; margin-bottom: 20px; color: var(--primary-teal);">📉🔍</div>
+                    <h1>Información de Gráficas</h1>
+                    <h2>Leyendo la Historia detrás de la Curva</h2>
+                    <p style="text-align: center; color: #64748b; font-size: 1.2rem;">Aprende a extraer todos los secretos analíticos de una función con solo observar su dibujo en el plano cartesiano.</p>
+                </div>
+
+                <!-- 2. Intersecciones -->
+                <div class="slide">
+                    <h2>Intersecciones con los Ejes</h2>
+                    <p>Las intersecciones son los puntos clave donde la gráfica "cruza" o toca las líneas principales del plano cartesiano.</p>
+                    
+                    <div class="flex-container">
+                        <div class="axis-box" style="border-top: 4px solid var(--accent-red);">
+                            <h3 style="color: var(--accent-red); margin-bottom: 10px;">Intersección en Y</h3>
+                            <p style="font-size: 0.95rem;">Donde la gráfica cruza el eje vertical (Y).</p>
+                            <p style="font-size: 0.95rem; margin-top: 10px;"><strong>Condición Analítica:</strong> <br>Se encuentra haciendo \( x = 0 \) y evaluando \( f(0) \).</p>
+                            <p style="font-size: 0.95rem; margin-top: 10px; font-weight: bold;">El punto es \( (0, y) \).</p>
+                        </div>
+                        <div class="axis-box" style="border-top: 4px solid var(--primary-blue);">
+                            <h3 style="color: var(--primary-blue); margin-bottom: 10px;">Intersecciones en X</h3>
+                            <p style="font-size: 0.95rem;">Donde la gráfica cruza el eje horizontal (X). ¡También se les llama <strong>"Raíces"</strong> o <strong>"Ceros"</strong> de la función!</p>
+                            <p style="font-size: 0.95rem; margin-top: 10px;"><strong>Condición Analítica:</strong> <br>Se encuentran haciendo \( f(x) = 0 \) y despejando \( x \).</p>
+                            <p style="font-size: 0.95rem; margin-top: 10px; font-weight: bold;">Los puntos son \( (x, 0) \).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Crecimiento y Decrecimiento -->
+                <div class="slide">
+                    <h2>Intervalos de Crecimiento</h2>
+                    <p>Imagina que caminas sobre la gráfica <strong>siempre de izquierda a derecha</strong> (en el sentido del eje X positivo).</p>
+                    
+                    <div class="info-card" style="border-color: var(--primary-gold); background: #fffbeb;">
+                        <ul style="margin-left: 20px; line-height: 1.8;">
+                            <li><strong>Creciente:</strong> Si al avanzar hacia la derecha, la curva "sube" (\( y \) aumenta).</li>
+                            <li><strong>Decreciente:</strong> Si al avanzar hacia la derecha, la curva "baja" (\( y \) disminuye).</li>
+                            <li><strong>Constante:</strong> Si la curva es totalmente plana horizontalmente.</li>
+                        </ul>
+                    </div>
+                    
+                    <p style="font-size: 0.95rem; color: var(--accent-red); font-weight: bold;">⚠️ ¡Importante! Los intervalos siempre se escriben utilizando los valores del EJE X, no del eje Y.</p>
+                </div>
+
+                <!-- 4. Extremos Relativos -->
+                <div class="slide">
+                    <h2>Máximos y Mínimos</h2>
+                    <p>Estos son los "picos" y "valles" de nuestra gráfica. Ocurren justo cuando la función cambia de dirección.</p>
+                    
+                    <div class="flex-container">
+                        <div class="axis-box" style="text-align: center;">
+                            <h3 style="color: var(--primary-teal); margin-bottom: 10px;">Máximo Relativo</h3>
+                            <div style="font-size: 2rem;">⛰️</div>
+                            <p style="font-size: 0.95rem; margin-top: 10px;">El punto más alto de su "vecindario".<br>Ocurre cuando la función cambia de <strong>creciente a decreciente</strong>.</p>
+                        </div>
+                        <div class="axis-box" style="text-align: center;">
+                            <h3 style="color: var(--primary-gold); margin-bottom: 10px;">Mínimo Relativo</h3>
+                            <div style="font-size: 2rem;">🕳️</div>
+                            <p style="font-size: 0.95rem; margin-top: 10px;">El punto más bajo de su "vecindario".<br>Ocurre cuando la función cambia de <strong>decreciente a creciente</strong>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Simetría -->
+                <div class="slide">
+                    <h2>Paridad: Simetría de Funciones</h2>
+                    <p>Las gráficas nos muestran de inmediato si una función tiene una simetría especial, lo cual nos ahorra mucho trabajo algebraico.</p>
+                    
+                    <div class="info-card" style="background: #f8fafc; border: 1px solid #cbd5e1; border-left: 5px solid var(--primary-slate);">
+                        <p style="color: var(--primary-blue); font-weight: bold;">Función PAR:</p>
+                        <p>Es simétrica respecto al <strong>eje Y</strong>. <br>Como un espejo doblado por la mitad vertical. <br><span style="font-family: monospace;">Condición: \( f(-x) = f(x) \)</span>. (Ejemplo: \( f(x) = x^2 \))</p>
+                    </div>
+                    
+                    <div class="info-card" style="background: #f8fafc; border: 1px solid #cbd5e1; border-left: 5px solid var(--primary-slate);">
+                        <p style="color: var(--accent-red); font-weight: bold;">Función IMPAR:</p>
+                        <p>Es simétrica respecto al <strong>Origen (0,0)</strong>. <br>Si la rotas 180 grados, se ve igual. <br><span style="font-family: monospace;">Condición: \( f(-x) = -f(x) \)</span>. (Ejemplo: \( f(x) = x^3 \))</p>
+                    </div>
+                </div>
+
+                <!-- 6. QUIZ 1 -->
+                <div class="slide">
+                    <h2>Quiz 1: Intersecciones</h2>
+                    <p>Para encontrar matemáticamente dónde cruza una gráfica el <strong>Eje Y</strong>, ¿qué operación debes realizar?</p>
+                    <div class="quiz-container">
+                        <button class="option-btn" onclick="checkQuiz(1, true, this, '¡Correcto! En todo el eje Y, el valor de x es 0.', '')">A) Evaluar la función en \( x = 0 \) (\( f(0) \)).</button>
+                        <button class="option-btn" onclick="checkQuiz(1, false, this, '', 'Eso te daría las raíces o intersecciones en el Eje X.')">B) Igualar toda la función a cero (\( f(x) = 0 \)).</button>
+                        <button class="option-btn" onclick="checkQuiz(1, false, this, '', 'Para encontrar la intersección en Y no importa dónde f(x)=1.')">C) Evaluar la función en \( x = 1 \).</button>
+                    </div>
+                    <div id="feedback-1" style="margin-top: 1rem; font-weight: 600; min-height: 24px;"></div>
+                </div>
+
+                <!-- 7. QUIZ 2 -->
+                <div class="slide">
+                    <h2>Quiz 2: Crecimiento</h2>
+                    <p>Al describir el intervalo donde una función es "Creciente", ¿qué valores utilizas para escribir el intervalo?</p>
+                    <div class="quiz-container">
+                        <button class="option-btn" onclick="checkQuiz(2, false, this, '', 'El error más común. Recuerda que Y nos dice SI crece o no, pero X nos dice DÓNDE.')">A) Los valores mínimos y máximos del Eje Y.</button>
+                        <button class="option-btn" onclick="checkQuiz(2, true, this, '¡Exacto! Siempre respondemos de DÓNDE a DÓNDE (en X) ocurre el comportamiento.', '')">B) Los valores correspondientes en el Eje X.</button>
+                        <button class="option-btn" onclick="checkQuiz(2, false, this, '', 'Los infinitos solo se usan si la gráfica no se detiene nunca, pero no es la regla general.')">C) Siempre usamos infinitos \( (-\infty, \infty) \).</button>
+                    </div>
+                    <div id="feedback-2" style="margin-top: 1rem; font-weight: 600; min-height: 24px;"></div>
+                </div>
+
+                <!-- 8. QUIZ 3 -->
+                <div class="slide">
+                    <h2>Quiz 3: Simetría</h2>
+                    <p>Si una gráfica es idéntica a su reflejo en el <strong>Eje Y</strong> (como si el eje Y fuera un espejo), decimos que la función es:</p>
+                    <div class="quiz-container">
+                        <button class="option-btn" onclick="checkQuiz(3, false, this, '', 'La función impar tiene simetría respecto al Origen (0,0), no al Eje Y.')">A) Una función impar.</button>
+                        <button class="option-btn" onclick="checkQuiz(3, false, this, '', 'No existe este término de simetría formalmente.')">B) Una función asimétrica.</button>
+                        <button class="option-btn" onclick="checkQuiz(3, true, this, '¡Perfecto! La simetría respecto al eje Y es la característica visual principal de las funciones Pares.', '')">C) Una función par.</button>
+                    </div>
+                    <div id="feedback-3" style="margin-top: 1rem; font-weight: 600; min-height: 24px;"></div>
+                </div>
+
+            </div> <!-- slide-container -->
+        </div> <!-- viewport -->
+
+        <button class="nav-btn" id="prev-btn" onclick="prevSlide()" disabled aria-label="Anterior">&#8592;</button>
+        <button class="nav-btn" id="next-btn" onclick="nextSlide()" aria-label="Siguiente">&#8594;</button>
+
+        <div class="slide-indicators">
+            <span id="slide-num">1 / 8</span>
+        </div>
+        <div class="progress-bar" id="progress-bar"></div>
+    </div> <!-- app-container -->
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const container = document.getElementById('slide-container');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const slideNum = document.getElementById('slide-num');
+        const progressBar = document.getElementById('progress-bar');
+
+        function updateGallery() {
+            container.style.transform = `translateX(-${currentSlide * 100}%)`;
+            slides.forEach((slide, index) => slide.classList.toggle('active', index === currentSlide));
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+            slideNum.innerText = `${currentSlide + 1} / ${slides.length}`;
+            progressBar.style.width = `${((currentSlide + 1) / slides.length) * 100}%`;
+            
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function nextSlide() { if (currentSlide < slides.length - 1) { currentSlide++; updateGallery(); } }
+        function prevSlide() { if (currentSlide > 0) { currentSlide--; updateGallery(); } }
+
+        document.addEventListener('keydown', e => { if (e.key === 'ArrowRight' || e.key === ' ') nextSlide(); if (e.key === 'ArrowLeft') prevSlide(); });
+
+        let touchStartX = 0;
+        document.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX, false);
+        document.addEventListener('touchend', e => {
+            let touchEndX = e.changedTouches[0].screenX;
+            if (touchEndX < touchStartX - 40) nextSlide();
+            if (touchEndX > touchStartX + 40) prevSlide();
+        }, false);
+
+        function checkQuiz(qId, isCorrect, btn, correctMsg, incorrectMsg) {
+            const feedback = document.getElementById(`feedback-${qId}`);
+            const container = btn.parentElement;
+
+            if (isCorrect) {
+                container.querySelectorAll('.option-btn').forEach(b => {
+                    b.disabled = true;
+                    b.style.opacity = "0.5";
+                });
+                btn.disabled = false;
+                btn.style.opacity = "1";
+                btn.style.background = "#dcfce7";
+                btn.style.borderColor = "#059669";
+                btn.style.color = "#065f46";
+                feedback.innerHTML = `✅ &iexcl;Correcto! ${correctMsg}`;
+                feedback.style.color = "#059669";
+            } else {
+                btn.style.background = "#fee2e2";
+                btn.style.borderColor = "#e11d48";
+                btn.style.color = "#9f1239";
+                btn.disabled = true;
+                feedback.innerHTML = `❌ <span>${incorrectMsg}</span> <button onclick="resetQuiz(${qId})" style="margin-left:10px; background:var(--primary-slate); color:white; border:none; padding:5px 12px; border-radius:6px; cursor:pointer; font-size:0.85rem;">Reintentar</button>`;
+                feedback.style.color = "#e11d48";
+            }
+        }
+
+        function resetQuiz(qId) {
+            const feedback = document.getElementById(`feedback-${qId}`);
+            const container = feedback.parentElement.querySelector('.quiz-container');
+            container.querySelectorAll('.option-btn').forEach(b => {
+                b.disabled = false;
+                b.style.opacity = "1";
+                b.style.background = "white";
+                b.style.borderColor = "#cbd5e1";
+                b.style.color = "var(--primary-slate)";
+            });
+            feedback.innerHTML = "";
+        }
+
+        updateGallery();
+    </script>
+</body>
+
+</html>
