@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Didáctica 18: Circunferencias y Parábolas - 4to Bachillerato</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@400;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-orange: #db6015;
+            --primary-yellow: #f7be00;
+            --primary-blue-dark: #244b5a;
+            --primary-green: #10b981;
+            --primary-red: #ef4444;
+            --primary-purple: #8b5cf6;
+            --bg-light: #f8fafc;
+            --transition-speed: 0.5s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e2e8f0;
+            color: #1e293b;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        #app-container {
+            width: 100%;
+            max-width: 960px;
+            height: 540px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: auto;
+        }
+
+        header {
+            background-color: var(--primary-blue-dark);
+            color: white;
+            padding: 0 1.5rem;
+            height: 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            z-index: 200;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        #viewport {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            background: #ffffff;
+        }
+
+        @media (max-height: 600px) or (max-width: 960px) {
+            #app-container {
+                height: 100vh;
+                border-radius: 0;
+            }
+        }
+
+        .slide-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            padding: 20px 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            transition: opacity var(--transition-speed);
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.2rem;
+            color: var(--primary-orange);
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+        }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.9rem;
+            color: var(--primary-blue-dark);
+            margin-bottom: 0.8rem;
+            font-weight: 700;
+        }
+
+        p {
+            font-size: 1.05rem;
+            color: #444;
+            max-width: 720px;
+            line-height: 1.4;
+        }
+
+        .info-card {
+            padding: 0.8rem 1.2rem;
+            border-radius: 12px;
+            background: #f0f8ff;
+            margin: 0.5rem 0;
+            width: 100%;
+            max-width: 720px;
+            text-align: left;
+            border-left: 5px solid var(--primary-orange);
+        }
+
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60px;
+            height: 60px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+            z-index: 250;
+            border: 1px solid #ddd;
+            color: var(--primary-blue-dark);
+            font-size: 1.5rem;
+            user-select: none;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            background: var(--primary-orange);
+            color: white;
+            border-color: var(--primary-orange);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #prev-btn {
+            left: 20px;
+        }
+
+        #next-btn {
+            right: 20px;
+        }
+
+        .slide-indicators {
+            position: absolute;
+            padding: 0;
+            bottom: 1.5rem;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: #888;
+            z-index: 100;
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 6px;
+            background: var(--primary-orange);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .quiz-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            width: 100%;
+            max-width: 600px;
+            margin: 0.6rem auto 0;
+        }
+
+        .option-btn {
+            padding: 0.6rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            text-align: left;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary-orange);
+            background: #fffcf9;
+        }
+
+        /* Fraction Math CSS */
+        .math-fraction {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            vertical-align: middle;
+            margin: 0 5px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: bold;
+            color: var(--primary-blue-dark);
+            text-align: center;
+            line-height: 1.1;
+        }
+
+        .math-numerator {
+            border-bottom: 2px solid currentColor;
+            padding: 0 5px;
+            width: 100%;
+        }
+
+        .math-denominator {
+            padding: 2px 5px 0 5px;
+            width: 100%;
+        }
+
+        /* Staircase and layout */
+        .explorer-layout {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            max-width: 800px;
+            margin-top: 5px;
+            height: 320px;
+        }
+
+        .explorer-control {
+            flex: 1;
+            background: #f8fafc;
+            border: 2px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 10px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            text-align: left;
+            justify-content: center;
+        }
+
+        .control-row {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .control-row label {
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: var(--primary-blue-dark);
+        }
+
+        .control-row select, .control-row input[type="range"] {
+            padding: 4px 6px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            outline: none;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .explorer-visual {
+            flex: 1.2;
+            background: white;
+            border: 2px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .cartesian-svg {
+            background: #fdfaf6;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app-container">
+        <header id="global-header">
+            <span>Colegio Escolaris - Matemática 4to Bachillerato</span>
+            <span>Guía 18: Circunferencias y Parábolas</span>
+        </header>
+
+        <div id="viewport">
+            <div class="slide-container" id="slide-container">
+                <!-- Slide 1: Portada -->
+                <div class="slide active">
+                    <div style="font-size: 70px; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));">⭕🧗</div>
+                    <h1 style="font-size: 2.2rem; margin-top: 10px;">Circunferencias y Parábolas</h1>
+                    <h2 style="font-weight: 600; color: #64748b; font-size: 1.4rem;">Guía Didáctica 18 &bull; 4&deg; Bachillerato</h2>
+                    <p style="color: #64748b; font-style: italic; margin-top: 1rem;">Explora la geometría analítica de las secciones cónicas y comprende la relación de sus ecuaciones.</p>
+                </div>
+
+                <!-- Slide 2: Objetivos -->
+                <div class="slide">
+                    <h2 style="margin-bottom: 10px;">¿Qué aprenderemos hoy?</h2>
+                    <div class="info-card" style="border-left-color: var(--primary-blue-dark); background: #f8fafc; max-width: 600px;">
+                        <ul style="list-style-type: none; font-size: 1.1rem; line-height: 1.8; color: var(--primary-blue-dark);">
+                            <li>⭕ <strong>Analizar</strong> la ecuación ordinaria de la circunferencia y su radio.</li>
+                            <li>📐 <strong>Calcular</strong> el foco, directriz y diámetro focal de una parábola.</li>
+                            <li>📊 <strong>Graficar</strong> estas cónicas de forma dinámica e identificar sus variables.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Slide 3: La Circunferencia -->
+                <div class="slide">
+                    <h2>Ecuación de la Circunferencia</h2>
+                    <p style="margin-bottom: 10px;">Una circunferencia es el conjunto de todos los puntos que están a una misma distancia (radio <em>r</em>) de un punto fijo llamado centro <em>(h, k)</em>.</p>
+                    <div class="info-card" style="border-left-color: var(--primary-orange); background: #fffcf9; font-size: 1.05rem;">
+                        <p style="text-align: center; margin-bottom: 10px;">La ecuación ordinaria es:</p>
+                        <p style="text-align: center; font-size: 1.6rem; font-family: 'Outfit'; font-weight: bold; color: var(--primary-blue-dark);">
+                            (x - <span style="color: var(--primary-orange);">h</span>)² + (y - <span style="color: var(--primary-purple);">k</span>)² = <span style="color: var(--primary-green);">r</span>²
+                        </p>
+                    </div>
+                    <p>Si el centro está en el origen (0, 0), la ecuación se reduce a la forma canónica: <span style="white-space: nowrap;">x² + y² = r²</span>.</p>
+                </div>
+
+                <!-- Slide 4: La Parábola -->
+                <div class="slide">
+                    <h2>Ecuación de la Parábola</h2>
+                    <p style="margin-bottom: 8px;">Es el conjunto de puntos que equidistan de un punto fijo (foco <em>F</em>) y de una recta fija (directriz <em>d</em>).</p>
+                    <div style="display: flex; gap: 15px; width: 100%; max-width: 760px; text-align: left; font-size: 0.95rem;">
+                        <div class="info-card" style="flex: 1; border-left-color: var(--primary-purple); background: #f5f3ff; margin: 0; padding: 10px;">
+                            <h3 style="color: var(--primary-purple); font-size: 1rem; margin-bottom: 5px;">Vertical (Eje Y)</h3>
+                            Ecuación: (x - h)&sup2; = 4p(y - k)<br>
+                            Foco: F(h, k + p)<br>
+                            Directriz: y = k - p
+                        </div>
+                        <div class="info-card" style="flex: 1; border-left-color: var(--primary-green); background: #f0fdf4; margin: 0; padding: 10px;">
+                            <h3 style="color: var(--primary-green); font-size: 1rem; margin-bottom: 5px;">Horizontal (Eje X)</h3>
+                            Ecuación: (y - k)&sup2; = 4p(x - h)<br>
+                            Foco: F(h + p, k)<br>
+                            Directriz: x = h - p
+                        </div>
+                    </div>
+                    <p style="margin-top: 8px;">El <strong>diámetro focal</strong> (lado recto) mide exactamente <strong>|4p|</strong> y nos dice la anchura de la parábola.</p>
+                </div>
+
+                <!-- Slide 5: Ejemplo Resuelto -->
+                <div class="slide">
+                    <h2 style="margin-bottom: 5px;">Análisis de la Parábola x = 8y&sup2;</h2>
+                    <div class="info-card" style="border-left-color: var(--primary-blue-dark); background: #f8fafc; font-size: 0.95rem; line-height: 1.5; padding: 10px 15px;">
+                        <strong>Paso 1: Reescribir en la forma estándar.</strong><br>
+                        Despejamos el término cuadrático: y&sup2; = <span class="math-fraction"><span class="math-numerator">1</span><span class="math-denominator">8</span></span>x. El vértice es V(0,0) y el eje es horizontal.<br>
+                        
+                        <strong style="margin-top: 8px; display: inline-block;">Paso 2: Calcular el parámetro p.</strong><br>
+                        Como la ecuación horizontal es y&sup2; = 4px, igualamos coeficientes:<br>
+                        4p = <span class="math-fraction"><span class="math-numerator">1</span><span class="math-denominator">8</span></span> ➔ p = <span class="math-fraction"><span class="math-numerator">1</span><span class="math-denominator">32</span></span> (Abre hacia la derecha ya que p &gt; 0).<br>
+                        
+                        <strong style="margin-top: 8px; display: inline-block;">Paso 3: Determinar elementos.</strong><br>
+                        * <strong>Foco:</strong> F(p, 0) = F(<span class="math-fraction"><span class="math-numerator">1</span><span class="math-denominator">32</span></span>, 0)<br>
+                        * <strong>Directriz:</strong> x = -p ➔ x = -<span class="math-fraction"><span class="math-numerator">1</span><span class="math-denominator">32</span></span><br>
+                        * <strong>Diámetro Focal:</strong> |4p| = <span class="math-fraction"><span class="math-numerator">1</span><span class="math-denominator">8</span></span> (Lado Recto).
+                    </div>
+                </div>
+
+                <!-- Slide 6: Graficador Dinámico -->
+                <div class="slide">
+                    <h2 style="margin-bottom: 5px;">Graficador Interactivo de Cónicas</h2>
+                    
+                    <div class="explorer-layout">
+                        <!-- Controls -->
+                        <div class="explorer-control">
+                            <div class="control-row">
+                                <label>Tipo de Cónica:</label>
+                                <select id="sel-conic" onchange="switchConicType()">
+                                    <option value="circle">Circunferencia</option>
+                                    <option value="par-v">Parábola Vertical</option>
+                                    <option value="par-h">Parábola Horizontal</option>
+                                </select>
+                            </div>
+                            <div class="control-row" id="row-h">
+                                <label style="color: var(--primary-orange);" id="lbl-h">Centro h: 0</label>
+                                <input type="range" id="val-h" min="-5" max="5" value="0" oninput="drawConic()">
+                            </div>
+                            <div class="control-row" id="row-k">
+                                <label style="color: var(--primary-purple);" id="lbl-k">Centro k: 0</label>
+                                <input type="range" id="val-k" min="-5" max="5" value="0" oninput="drawConic()">
+                            </div>
+                            <div class="control-row" id="row-r">
+                                <label style="color: var(--primary-green);" id="lbl-r">Radio r: 3</label>
+                                <input type="range" id="val-r" min="1" max="6" value="3" oninput="drawConic()">
+                            </div>
+                        </div>
+
+                        <!-- Visualization -->
+                        <div class="explorer-visual">
+                            <svg class="cartesian-svg" width="200" height="200" id="cartesian-svg-container">
+                                <!-- Cartesian grid lines -->
+                                <line x1="0" y1="100" x2="200" y2="100" stroke="#cbd5e1" stroke-width="1.5" />
+                                <line x1="100" y1="0" x2="100" y2="200" stroke="#cbd5e1" stroke-width="1.5" />
+                                <!-- Dynamic shape path / circle -->
+                                <circle id="svg-circle" cx="100" cy="100" r="30" fill="none" stroke="var(--primary-green)" stroke-width="2.5" />
+                                <path id="svg-parabola" d="" fill="none" stroke="var(--primary-purple)" stroke-width="2.5" style="display: none;" />
+                            </svg>
+                            <div id="dynamic-equation" style="font-size: 0.95rem; font-family: 'Outfit'; font-weight: bold; background: #fffbeb; padding: 6px 12px; border-radius: 8px; border: 1px dashed var(--primary-yellow); width: 100%; text-align: center;">
+                                Ecuación: ...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 7: QUIZ 1 -->
+                <div class="slide">
+                    <h2>Cuestionario Circunferencia (1/2)</h2>
+                    <p style="margin-bottom: 10px;">Si la ecuación de una circunferencia es <strong>x&sup2; + y&sup2; = 16</strong>, ¿cuáles son las coordenadas del centro y la medida del radio?</p>
+                    <div class="quiz-container">
+                        <button class="option-btn" onclick="checkQuiz(1, true, this, '¡Correcto! Como no hay h y k restando a x y y, el centro está en el origen (0, 0). El radio es la raíz de 16, es decir, r = 4.', '')">A) Centro (0, 0) y radio = 4</button>
+                        <button class="option-btn" onclick="checkQuiz(1, false, this, '', 'Cuidado. El radio de la ecuación es r², por lo que debes extraer la raíz cuadrada de 16, no tomar el 16 directo.')">B) Centro (0, 0) y radio = 16</button>
+                    </div>
+                    <div id="feedback-1" style="margin-top: 1rem; font-weight: 600; min-height: 24px;"></div>
+                </div>
+
+                <!-- Slide 8: QUIZ 2 -->
+                <div class="slide">
+                    <h2>Cuestionario Circunferencia (2/2)</h2>
+                    <p style="margin-bottom: 10px;">Si la ecuación es <strong>(x + 3)&sup2; + (y - 5)&sup2; = 9</strong>, ¿en qué coordenadas del plano se ubica su centro?</p>
+                    <div class="quiz-container">
+                        <button class="option-btn" onclick="checkQuiz(2, false, this, '', 'Te confundiste con los signos. En la fórmula estándar (x - h)² y (y - k)², los signos se invierten al extraer el centro.')">A) Centro (3, -5)</button>
+                        <button class="option-btn" onclick="checkQuiz(2, true, this, '¡Excelente! Al extraer h y k de (x - h)² y (y - k)², el signo cambia: (x + 3) da h = -3, y (y - 5) da k = 5. El centro es (-3, 5).', '')">B) Centro (-3, 5)</button>
+                    </div>
+                    <div id="feedback-2" style="margin-top: 1rem; font-weight: 600; min-height: 24px;"></div>
+                </div>
+
+                <!-- Slide 9: Cuestionario Parábola (1/2) -->
+                <div class="slide">
+                    <h2>Cuestionario Parábola (1/2)</h2>
+                    <p style="margin-bottom: 10px;">¿Qué nombre recibe la recta fija del plano que sirve como referencia y se encuentra a una misma distancia del vértice que el foco, pero en sentido opuesto?</p>
+                    <div class="quiz-container">
+                        <button class="option-btn" onclick="checkQuiz(3, true, this, '¡Correcto! La directriz es la recta perpendicular al eje focal que equidista del vértice en sentido opuesto al foco.', '')">A) La Directriz</button>
+                        <button class="option-btn" onclick="checkQuiz(3, false, this, '', 'El lado recto es un segmento de recta paralelo a la directriz que pasa por el foco, no una recta fija exterior.')">B) El Lado Recto</button>
+                    </div>
+                    <div id="feedback-3" style="margin-top: 1rem; font-weight: 600; min-height: 24px;"></div>
+                </div>
+
+                <!-- Slide 10: Cuestionario Parábola (2/2) -->
+                <div class="slide">
+                    <h2>Cuestionario Parábola (2/2)</h2>
+                    <p style="margin-bottom: 10px;">¿Qué nos indica geométricamente la medida del diámetro focal o lado recto <strong>|4p|</strong> en una parábola?</p>
+                    <div class="quiz-container">
+                        <button class="option-btn" onclick="checkQuiz(4, false, this, '', 'La distancia del vértice al foco es simplemente p (o |p|), no |4p|.')">A) La distancia del vértice al foco.</button>
+                        <button class="option-btn" onclick="checkQuiz(4, true, this, '¡Extraordinario! El diámetro focal representa el ancho de la abertura de la parábola a la altura de su foco.', '')">B) El ancho de la abertura de la parábola en el foco.</button>
+                    </div>
+                    <div id="feedback-4" style="margin-top: 1rem; font-weight: 600; min-height: 24px;"></div>
+                </div>
+
+                <!-- Slide 11: Final -->
+                <div class="slide">
+                    <div style="font-size: 80px;">🎯</div>
+                    <h2>¡Misión Cumplida!</h2>
+                    <p>¡Eres un experto graficando y calculando circunferencias y parábolas!</p>
+                    <button onclick="goToSlide(0)"
+                        style="background: var(--primary-orange); color: white; border: none; padding: 1rem 2rem; border-radius: 30px; font-weight: 700; cursor: pointer; margin-top: 1.5rem; font-size: 1.1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">Volver al inicio</button>
+                </div>
+            </div>
+        </div>
+
+        <button class="nav-btn" id="prev-btn" onclick="prevSlide()" disabled aria-label="Anterior">&#8592;</button>
+        <button class="nav-btn" id="next-btn" onclick="nextSlide()" aria-label="Siguiente">&#8594;</button>
+
+        <div class="slide-indicators">
+            <span id="slide-num">1 / 11</span>
+        </div>
+        <div class="progress-bar-container" style="position: absolute; bottom: 0; left: 0; right: 0; height: 6px; background: #e2e8f0; z-index: 100;">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const container = document.getElementById('slide-container');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const slideNum = document.getElementById('slide-num');
+        const progressBar = document.getElementById('progress-bar');
+
+        function updateGallery() {
+            container.style.transform = `translateX(-${currentSlide * 100}%)`;
+            slides.forEach((slide, index) => slide.classList.toggle('active', index === currentSlide));
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+            slideNum.innerText = `${currentSlide + 1} / ${slides.length}`;
+            progressBar.style.width = `${((currentSlide + 1) / slides.length) * 100}%`;
+        }
+
+        function nextSlide() { if (currentSlide < slides.length - 1) { currentSlide++; updateGallery(); } }
+        function prevSlide() { if (currentSlide > 0) { currentSlide--; updateGallery(); } }
+        function goToSlide(n) { currentSlide = n; updateGallery(); }
+
+        document.addEventListener('keydown', e => { 
+            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide(); 
+            if (e.key === 'ArrowLeft') prevSlide(); 
+        });
+
+        // Dynamic Cónic explorer logic
+        function switchConicType() {
+            const type = document.getElementById('sel-conic').value;
+            const lblH = document.getElementById('lbl-h');
+            const lblK = document.getElementById('lbl-k');
+            const lblR = document.getElementById('lbl-r');
+            const rSlider = document.getElementById('val-r');
+            
+            if (type === 'circle') {
+                lblH.innerText = "Centro h: 0";
+                lblK.innerText = "Centro k: 0";
+                lblR.innerText = "Radio r: 3";
+                rSlider.min = 1; rSlider.max = 6; rSlider.value = 3;
+            } else {
+                lblH.innerText = "Vértice h: 0";
+                lblK.innerText = "Vértice k: 0";
+                lblR.innerText = "Parámetro p: 2";
+                rSlider.min = -3; rSlider.max = 3; rSlider.value = 2;
+            }
+            drawConic();
+        }
+
+        function drawConic() {
+            const type = document.getElementById('sel-conic').value;
+            const h = parseFloat(document.getElementById('val-h').value) || 0;
+            const k = parseFloat(document.getElementById('val-k').value) || 0;
+            const rVal = parseFloat(document.getElementById('val-r').value) || 1; // radius or p
+            
+            const lblH = document.getElementById('lbl-h');
+            const lblK = document.getElementById('lbl-k');
+            const lblR = document.getElementById('lbl-r');
+            
+            if (type === 'circle') {
+                lblH.innerText = `Centro h: ${h}`;
+                lblK.innerText = `Centro k: ${k}`;
+                lblR.innerText = `Radio r: ${rVal}`;
+            } else {
+                lblH.innerText = `Vértice h: ${h}`;
+                lblK.innerText = `Vértice k: ${k}`;
+                lblR.innerText = `Parámetro p: ${rVal}`;
+            }
+            
+            const svgCircle = document.getElementById('svg-circle');
+            const svgParabola = document.getElementById('svg-parabola');
+            const eqEl = document.getElementById('dynamic-equation');
+            
+            const colorH = '#db6015';
+            const colorK = '#8b5cf6';
+            const colorR = '#10b981';
+            
+            if (type === 'circle') {
+                svgCircle.style.display = 'block';
+                svgParabola.style.display = 'none';
+                
+                // Map coordinates: center (0,0) is (100,100) on SVG canvas
+                const cx = 100 + h * 10;
+                const cy = 100 - k * 10; // SVG y goes down
+                const radius = rVal * 10;
+                
+                svgCircle.setAttribute('cx', cx);
+                svgCircle.setAttribute('cy', cy);
+                svgCircle.setAttribute('r', radius);
+                
+                // Render color-mapped equation
+                const termH = h >= 0 ? `- <span style="color:${colorH}">${h}</span>` : `+ <span style="color:${colorH}">${Math.abs(h)}</span>`;
+                const termK = k >= 0 ? `- <span style="color:${colorK}">${k}</span>` : `+ <span style="color:${colorK}">${Math.abs(k)}</span>`;
+                eqEl.innerHTML = `(x ${termH})&sup2; + (y ${termK})&sup2; = <span style="color:${colorR}">${rVal * rVal}</span>`;
+                
+            } else {
+                svgCircle.style.display = 'none';
+                svgParabola.style.display = 'block';
+                
+                // Parabola parameter check (avoid 0)
+                let p = rVal;
+                if (p === 0) p = 1;
+                
+                let d = "";
+                if (type === 'par-v') {
+                    // Vertical: y = k + (1/4p)(x-h)^2
+                    for (let x_val = -10; x_val <= 10; x_val += 0.25) {
+                        const y_val = k + (1 / (4 * p)) * Math.pow(x_val - h, 2);
+                        const svg_x = 100 + x_val * 10;
+                        const svg_y = 100 - y_val * 10;
+                        if (svg_y >= 0 && svg_y <= 200) {
+                            if (d === "") d += `M ${svg_x} ${svg_y}`;
+                            else d += ` L ${svg_x} ${svg_y}`;
+                        }
+                    }
+                    const termH = h >= 0 ? `- <span style="color:${colorH}">${h}</span>` : `+ <span style="color:${colorH}">${Math.abs(h)}</span>`;
+                    const termK = k >= 0 ? `- <span style="color:${colorK}">${k}</span>` : `+ <span style="color:${colorK}">${Math.abs(k)}</span>`;
+                    eqEl.innerHTML = `(x ${termH})&sup2; = <span style="color:${colorR}">${4 * p}</span>(y ${termK})`;
+                    
+                } else if (type === 'par-h') {
+                    // Horizontal: x = h + (1/4p)(y-k)^2
+                    for (let y_val = -10; y_val <= 10; y_val += 0.25) {
+                        const x_val = h + (1 / (4 * p)) * Math.pow(y_val - k, 2);
+                        const svg_x = 100 + x_val * 10;
+                        const svg_y = 100 - y_val * 10;
+                        if (svg_x >= 0 && svg_x <= 200) {
+                            if (d === "") d += `M ${svg_x} ${svg_y}`;
+                            else d += ` L ${svg_x} ${svg_y}`;
+                        }
+                    }
+                    const termH = h >= 0 ? `- <span style="color:${colorH}">${h}</span>` : `+ <span style="color:${colorH}">${Math.abs(h)}</span>`;
+                    const termK = k >= 0 ? `- <span style="color:${colorK}">${k}</span>` : `+ <span style="color:${colorK}">${Math.abs(k)}</span>`;
+                    eqEl.innerHTML = `(y ${termK})&sup2; = <span style="color:${colorR}">${4 * p}</span>(x ${termH})`;
+                }
+                svgParabola.setAttribute('d', d);
+            }
+        }
+
+        // Quiz Logic
+        function checkQuiz(qId, isCorrect, btn, correctMsg, incorrectMsg) {
+            const feedback = document.getElementById(`feedback-${qId}`);
+            const containerOpts = btn.parentElement;
+
+            if (isCorrect) {
+                containerOpts.querySelectorAll('.option-btn').forEach(b => {
+                    b.disabled = true;
+                    b.style.opacity = "0.5";
+                });
+                btn.disabled = false;
+                btn.style.opacity = "1";
+                btn.style.background = "#dcfce7";
+                btn.style.borderColor = "#10b981";
+                feedback.innerHTML = `✅ ¡Correcto! ${correctMsg}`;
+                feedback.style.color = "#10b981";
+            } else {
+                btn.style.background = "#fee2e2";
+                btn.style.borderColor = "#dc2626";
+                btn.disabled = true;
+                feedback.innerHTML = `❌ <span>${incorrectMsg}</span> <button onclick="resetQuiz(${qId})" style="margin-left:10px; background:var(--primary-blue-dark); color:white; border:none; padding:4px 10px; border-radius:15px; cursor:pointer; font-size:0.8rem;">Reintentar</button>`;
+                feedback.style.color = "#dc2626";
+            }
+        }
+
+        function resetQuiz(qId) {
+            const feedback = document.getElementById(`feedback-${qId}`);
+            const containerOpts = feedback.parentElement.querySelector('.quiz-container');
+            containerOpts.querySelectorAll('.option-btn').forEach(b => {
+                b.disabled = false;
+                b.style.opacity = "1";
+                b.style.background = "white";
+                b.style.borderColor = "#e2e8f0";
+            });
+            feedback.innerHTML = "";
+        }
+
+        switchConicType();
+        updateGallery();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Didáctica 19: Elipse e Hipérbola - 4to Bachillerato</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@400;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-orange: #db6015;
+            --primary-yellow: #f7be00;
+            --primary-blue-dark: #244b5a;
+            --primary-green: #10b981;
+            --primary-red: #ef4444;
+            --primary-purple: #8b5cf6;
+            --bg-light: #f8fafc;
+            --transition-speed: 0.5s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e2e8f0;
+            color: #1e293b;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        #app-container {
+            width: 100%;
+            max-width: 960px;
+            height: 540px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: auto;
+        }
+
+        header {
+            background-color: var(--primary-blue-dark);
+            color: white;
+            padding: 0 1.5rem;
+            height: 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            z-index: 200;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        #viewport {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            background: #ffffff;
+        }
+
+        @media (max-height: 600px) or (max-width: 960px) {
+            #app-container {
+                height: 100vh;
+                border-radius: 0;
+            }
+        }
+
+        .slide-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            padding: 20px 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            transition: opacity var(--transition-speed);
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.2rem;
+            color: var(--primary-orange);
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+        }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.9rem;
+            color: var(--primary-blue-dark);
+            margin-bottom: 0.8rem;
+            font-weight: 700;
+        }
+
+        p {
+            font-size: 1.05rem;
+            color: #444;
+            max-width: 720px;
+            line-height: 1.4;
+        }
+
+        .info-card {
+            padding: 0.8rem 1.2rem;
+            border-radius: 12px;
+            background: #f0f8ff;
+            margin: 0.5rem 0;
+            width: 100%;
+            max-width: 720px;
+            text-align: left;
+            border-left: 5px solid var(--primary-orange);
+        }
+
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60px;
+            height: 60px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+            z-index: 250;
+            border: 1px solid #ddd;
+            color: var(--primary-blue-dark);
+            font-size: 1.5rem;
+            user-select: none;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            background: var(--primary-orange);
+            color: white;
+            border-color: var(--primary-orange);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #prev-btn {
+            left: 20px;
+        }
+
+        #next-btn {
+            right: 20px;
+        }
+
+        .slide-indicators {
+            position: absolute;
+            padding: 0;
+            bottom: 1.5rem;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: #888;
+            z-index: 100;
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 6px;
+            background: var(--primary-orange);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .quiz-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            width: 100%;
+            max-width: 600px;
+            margin: 0.6rem auto 0;
+        }
+
+        .option-btn {
+            padding: 0.6rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            text-align: left;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary-orange);
+            background: #fffcf9;
+        }
+
+        /* Fraction Math CSS */
+        .math-fraction {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            vertical-align: middle;
+            margin: 0 5px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: bold;
+            color: var(--primary-blue-dark);
+            text-align: center;
+            line-height: 1.1;
+        }
+
+        .math-numerator {
+            border-bottom: 2px solid currentColor;
+            padding: 0 5px;
+            width: 100%;
+        }
+
+        .math-denominator {
+            padding: 2px 5px 0 5px;
+            width: 100%;
+        }
+
+        /* Layout styles */
+        .explorer-layout {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            max-width: 800px;
+            margin-top: 5px;
+            height: 320px;
+        }
+
+        .explorer-control {
+            flex: 1.1;
+            background: #f8fafc;
+            border: 2px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 10px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            text-align: left;
+            justify-content: center;
+        }
+
+        .control-row {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .control-row label {
+            font-weight: 700;
+            font-size: 0.75rem;
+            color: var(--primary-blue-dark);
+        }
+
+        .control-row select, .control-row input[type="range"] {
+            padding: 2px 4px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            outline: none;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .explorer-visual {
+            flex: 1.2;
+            background: white;
+            border: 2px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .cartesian-svg {
+            background: #fdfaf6;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app-container">
+        <header id="global-header">
+            <span>Colegio Escolaris - Matemática 4to Bachillerato</span>
+            <span>Guía 19: Elipse e Hipérbola</span>
+        </header>
+
+        <div id="viewport">
+            <div class="slide-container" id="slide-container">
+                <!-- Slide 1: Portada -->
+                <div class="slide active">
+                    <div style="font-size: 70px; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));">🪐🧲</div>
+                    <h1 style="font-size: 2.2rem; margin-top: 10px;">Elipse e Hipérbola</h1>
+                    <h2 style="font-weight: 600; color: #64748b; font-size: 1.4rem;">Guía Didáctica 19 &bull; 4&deg; Bachillerato</h2>
+                    <p style="color: #64748b; font-style: italic; margin-top: 1rem;">Estudia las secciones cónicas compuestas, sus focos, semiejes y las asíntotas que definen sus límites.</p>
+                </div>
+
+                <!-- Slide 2: Objetivos -->
+                <div class="slide">
+                    <h2 style="margin-bottom: 10px;">¿Qué aprenderemos hoy?</h2>
+                    <div class="info-card" style="border-left-color: var(--primary-blue-dark); background: #f8fafc; max-width: 600px;">
+                        <ul style="list-style-type: none; font-size: 1.1rem; line-height: 1.8; color: var(--primary-blue-dark);">
+                            <li>🪐 <strong>Deducir</strong> la ecuación ordinaria de la elipse y calcular sus focos.</li>
+                            <li>📐 <strong>Identificar</strong> las asíntotas y la ecuación de la hipérbola.</li>
+                            <li>📊 <strong>Graficar</strong> estas figuras manipulando sus semiejes en tiempo real.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Slide 3: La Elipse -->
+                <div class="slide">
+                    <h2>Ecuación de la Elipse</h2>
+                    <p style="margin-bottom: 10px;">Es el conjunto de puntos cuya suma de distancias a dos puntos fijos (focos F₁ y F₂) es constante.</p>
+                    <div class="info-card" style="border-left-color: var(--primary-orange); background: #fffcf9; font-size: 1.05rem;">
+                        <p style="text-align: center; margin-bottom: 8px;">La ecuación ordinaria horizontal es:</p>
+                        <p style="text-align: center; font-size: 1.25rem; font-family: 'Outfit'; color: var(--primary-blue-dark);">
+                            <span class="math-fraction"><span class="math-numerator">(x - <span style="color: var(--primary-orange);">h</span>)&sup2;</span><span class="math-denominator"><span style="color: var(--primary-green);">a</span>&sup2;</span></span> + 
+                            <span class="math-fraction"><span class="math-numerator">(y - <span style="color: var(--primary-purple);">k</span>)&sup2;</span><span class="math-denominator"><span style="color: var(--primary-yellow);">b</span>&sup2;</span></span> = 1
+                        </p>
+                    </div>
+                    <p>Donde <em>a</em> es el semieje mayor, <em>b</em> es el semieje menor, y los focos se ubican mediante <span style="white-space: nowrap;">c&sup2; = a&sup2; - b&sup2;</span>.</p>
+                </div>
+
+                <!-- Slide 4: La Hipérbola -->
+                <div class="slide">
+                    <h2>Ecuación de la Hipérbola</h2>
+                    <p style="margin-bottom: 8px;">Es el conjunto de puntos cuya diferencia de distancias a dos focos F₁ y F₂ en valor absoluto es constante.</p>
+                    <div class="info-card" style="border-left-color: var(--primary-purple); background: #f5f3ff; font-size: 1.05rem; margin-bottom: 8px;">
+                        <p style="text-align: center; margin-bottom: 8px;">La ecuación ordinaria horizontal es:</p>
+                        <p style="text-align: center; font-size: 1.25rem; font-family: 'Outfit'; color: var(--primary-blue-dark);">
+                            <span class="math-fraction"><span class="math-numerator">(x - <span style="color: var(--primary-orange);">h</span>)&sup2;</span><span class="math-denominator"><span style="color: var(--primary-green);">a</span>&sup2;</span></span> - 
+                            <span class="math-fraction"><span class="math-numerator">(y - <span style="color: var(--primary-purple);">k</span>)&sup2;</span><span class="math-denominator"><span style="color: var(--primary-yellow);">b</span>&sup2;</span></span> = 1
+                        </p>
+                    </div>
+                    <p>Los focos se calculan con <span style="white-space: nowrap;">c&sup2; = a&sup2; + b&sup2;</span>. Las asíntotas siguen las rectas: <span style="white-space: nowrap;">y - k = &plusmn; <span class="math-fraction"><span class="math-numerator">b</span><span class="math-denominator">a</span></span>(x - h)</span>.</p>
+                </div>
+
+                <!-- Slide 5: Explorador Dinámico -->
+                <div class="slide">
+                    <h2 style="margin-bottom: 5px;">Explorador de Elipses e Hipérbolas</h2>
+                    
+                    <div class="explorer-layout">
+                        <!-- Controls -->
+                        <div class="explorer-control">
+                            <div class="control-row">
+                                <label>Cónica:</label>
+                                <select id="sel-conic" onchange="drawConic()">
+                                    <option value="ellipse">Elipse</option>
+                                    <option value="hyperbola">Hipérbola</option>
+                                </select>
+                            </div>
+                            <div class="control-row">
+                                <label style="color: var(--primary-orange);" id="lbl-h">Centro h: 0</label>
+                                <input type="range" id="val-h" min="-4" max="4" value="0" oninput="drawConic()">
+                            </div>
+                            <div class="control-row">
+                                <label style="color: var(--primary-purple);" id="lbl-k">Centro k: 0</label>
+                                <input type="range" id="val-k" min="-4" max="4" value="0" oninput="drawConic()">
+                            </div>
+                            <div class="control-row">
+                                <label style="color: var(--primary-green);" id="lbl-a">Semieje a: 4</label>
+                                <input type="range" id="val-a" min="1" max="6" value="4" oninput="drawConic()">
+                            </div>
+                            <div class="control-row">
+                                <label style="color: var(--primary-yellow);" id="lbl-b">Semieje b: 3</label>
+                                <input type="range" id="val-b" min="1" max="6" value="3" oninput="drawConic()">
+                            </div>
+                        </div>
+
+                        <!-- Visualization -->
+                        <div class="explorer-visual">
+                            <svg class="cartesian-svg" width="200" height="200" id="cartesian-svg-container">
+                                <!-- Cartesian grid lines -->
+                                <line x1="0" y1="100" x2="200" y2="100" stroke="#cbd5e1" stroke-width="1.5" />
+                                <line x1="100" y1="0" x2="100" y2="200" stroke="#cbd5e1" stroke-width="1.5" />
+                                
+                                <!-- Dynamic elements -->
+                                <ellipse id="svg-ellipse" cx="100" cy="100" rx="40" ry="30" fill="none" stroke="var(--primary-green)" stroke-width="2.5" />
+                                <path id="svg-hyperbola" d="" fill="none" stroke="var(--primary-purple)" stroke-width="2.5" style="display: none;" />
+                                <!-- Asymptotes -->
+                                <line id="asym-1" x1="0" y1="0" x2="200" y2="200" stroke="#ef4444" stroke-width="1" stroke-dasharray="3,3" style="display: none;" />
+                                <line id="asym-2" x1="0" y1="200" x2="200" y2="0" stroke="#ef4444" stroke-width="1" stroke-dasharray="3,3" style="display: none;" />
+                            </svg>
+                            <div id="dynamic-equation" style="font-size: 0.9rem; font-family: 'Outfit'; font-weight: bold; background: #fffbeb; padding: 4px 8px; border-radius: 8px; border: 1px dashed var(--primary-yellow); width: 100%; text-align: center; display: flex; align-items: center; justify-content: center; min-height: 44px;">
+                                Ecuación: ...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 6: QUIZ 1 -->
+                <div class="slide">
+                    <h2>Reto Teórico 1</h2>
+                    <p style="margin-bottom: 10px;">Para una elipse, la relación que vincula el semieje mayor <strong>a</strong>, el semieje menor <strong>b</strong> y la distancia focal <strong>c</strong> está dada por la ecuación:</p>
+                    <div class="quiz-container">
+                        <button class="option-btn" onclick="checkQuiz(1, true, this, '¡Correcto! En la elipse el semieje mayor a es la hipotenusa de la relación, cumpliéndose a² = b² + c².', '')">A) a&sup2; = b&sup2; + c&sup2;</button>
+                        <button class="option-btn" onclick="checkQuiz(1, false, this, '', 'Incorrecto. Esa es la relación para la hipérbola, donde c es mayor que a y b.')">B) c&sup2; = a&sup2; + b&sup2;</button>
+                    </div>
+                    <div id="feedback-1" style="margin-top: 1rem; font-weight: 600; min-height: 24px;"></div>
+                </div>
+
+                <!-- Slide 7: QUIZ 2 -->
+                <div class="slide">
+                    <h2>Reto Teórico 2</h2>
+                    <p style="margin-bottom: 10px;">¿Cuál de las siguientes afirmaciones describe la diferencia fundamental en la estructura matemática de las ecuaciones ordinarias de la elipse y la hipérbola?</p>
+                    <div class="quiz-container">
+                        <button class="option-btn" onclick="checkQuiz(2, false, this, '', 'Incorrecto. Ambas ecuaciones ordinarias están igualadas a 1.')">A) La elipse está igualada a 1 y la hipérbola a 0.</button>
+                        <button class="option-btn" onclick="checkQuiz(2, true, this, '¡Excelente! La ecuación de la elipse suma las fracciones, mientras que la ecuación de la hipérbola resta una fracción de la otra.', '')">B) La elipse tiene un signo positivo (+) entre sus términos y la hipérbola un signo negativo (-).</button>
+                    </div>
+                    <div id="feedback-2" style="margin-top: 1rem; font-weight: 600; min-height: 24px;"></div>
+                </div>
+
+                <!-- Slide 8: Final -->
+                <div class="slide">
+                    <div style="font-size: 80px;">🎯</div>
+                    <h2>¡Misión Cumplida!</h2>
+                    <p>¡Eres un experto analizando y diferenciando elipses e hipérbolas!</p>
+                    <button onclick="goToSlide(0)"
+                        style="background: var(--primary-orange); color: white; border: none; padding: 1rem 2rem; border-radius: 30px; font-weight: 700; cursor: pointer; margin-top: 1.5rem; font-size: 1.1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">Volver al inicio</button>
+                </div>
+            </div>
+        </div>
+
+        <button class="nav-btn" id="prev-btn" onclick="prevSlide()" disabled aria-label="Anterior">&#8592;</button>
+        <button class="nav-btn" id="next-btn" onclick="nextSlide()" aria-label="Siguiente">&#8594;</button>
+
+        <div class="slide-indicators">
+            <span id="slide-num">1 / 8</span>
+        </div>
+        <div class="progress-bar-container" style="position: absolute; bottom: 0; left: 0; right: 0; height: 6px; background: #e2e8f0; z-index: 100;">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const container = document.getElementById('slide-container');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const slideNum = document.getElementById('slide-num');
+        const progressBar = document.getElementById('progress-bar');
+
+        function updateGallery() {
+            container.style.transform = `translateX(-${currentSlide * 100}%)`;
+            slides.forEach((slide, index) => slide.classList.toggle('active', index === currentSlide));
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+            slideNum.innerText = `${currentSlide + 1} / ${slides.length}`;
+            progressBar.style.width = `${((currentSlide + 1) / slides.length) * 100}%`;
+        }
+
+        function nextSlide() { if (currentSlide < slides.length - 1) { currentSlide++; updateGallery(); } }
+        function prevSlide() { if (currentSlide > 0) { currentSlide--; updateGallery(); } }
+        function goToSlide(n) { currentSlide = n; updateGallery(); }
+
+        document.addEventListener('keydown', e => { 
+            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide(); 
+            if (e.key === 'ArrowLeft') prevSlide(); 
+        });
+
+        // Dynamic Ellipse and Hyperbola explorer logic
+        function drawConic() {
+            const type = document.getElementById('sel-conic').value;
+            const h = parseFloat(document.getElementById('val-h').value) || 0;
+            const k = parseFloat(document.getElementById('val-k').value) || 0;
+            const a = parseFloat(document.getElementById('val-a').value) || 1;
+            const b = parseFloat(document.getElementById('val-b').value) || 1;
+            
+            document.getElementById('lbl-h').innerText = `Centro h: ${h}`;
+            document.getElementById('lbl-k').innerText = `Centro k: ${k}`;
+            document.getElementById('lbl-a').innerText = `Semieje a: ${a}`;
+            document.getElementById('lbl-b').innerText = `Semieje b: ${b}`;
+            
+            const svgEllipse = document.getElementById('svg-ellipse');
+            const svgHyperbola = document.getElementById('svg-hyperbola');
+            const asym1 = document.getElementById('asym-1');
+            const asym2 = document.getElementById('asym-2');
+            const eqEl = document.getElementById('dynamic-equation');
+            
+            const colorH = '#db6015';
+            const colorK = '#8b5cf6';
+            const colorA = '#10b981';
+            const colorB = '#f7be00';
+            
+            const termH = h >= 0 ? `- <span style="color:${colorH}">${h}</span>` : `+ <span style="color:${colorH}">${Math.abs(h)}</span>`;
+            const termK = k >= 0 ? `- <span style="color:${colorK}">${k}</span>` : `+ <span style="color:${colorK}">${Math.abs(k)}</span>`;
+            
+            if (type === 'ellipse') {
+                svgEllipse.style.display = 'block';
+                svgHyperbola.style.display = 'none';
+                asym1.style.display = 'none';
+                asym2.style.display = 'none';
+                
+                // Ellipse centers mapped to 100, 100
+                svgEllipse.setAttribute('cx', 100 + h * 10);
+                svgEllipse.setAttribute('cy', 100 - k * 10);
+                svgEllipse.setAttribute('rx', a * 10);
+                svgEllipse.setAttribute('ry', b * 10);
+                
+                eqEl.innerHTML = `
+                    <span class="math-fraction">
+                        <span class="math-numerator">(x ${termH})&sup2;</span>
+                        <span class="math-denominator" style="color:${colorA}">${a * a}</span>
+                    </span> + 
+                    <span class="math-fraction">
+                        <span class="math-numerator">(y ${termK})&sup2;</span>
+                        <span class="math-denominator" style="color:${colorB}">${b * b}</span>
+                    </span> = 1
+                `;
+                
+            } else {
+                svgEllipse.style.display = 'none';
+                svgHyperbola.style.display = 'block';
+                asym1.style.display = 'block';
+                asym2.style.display = 'block';
+                
+                // Hyperbola Horizontal branches: x = h +- a * sqrt(1 + (y-k)^2 / b^2)
+                let d = "";
+                
+                // Left branch
+                let leftD = "";
+                for (let y_val = -10; y_val <= 10; y_val += 0.25) {
+                    const radical = 1 + Math.pow(y_val - k, 2) / Math.pow(b, 2);
+                    const x_val = h - a * Math.sqrt(radical);
+                    const svg_x = 100 + x_val * 10;
+                    const svg_y = 100 - y_val * 10;
+                    if (svg_x >= 0 && svg_x <= 200) {
+                        if (leftD === "") leftD += `M ${svg_x} ${svg_y}`;
+                        else leftD += ` L ${svg_x} ${svg_y}`;
+                    }
+                }
+                
+                // Right branch
+                let rightD = "";
+                for (let y_val = -10; y_val <= 10; y_val += 0.25) {
+                    const radical = 1 + Math.pow(y_val - k, 2) / Math.pow(b, 2);
+                    const x_val = h + a * Math.sqrt(radical);
+                    const svg_x = 100 + x_val * 10;
+                    const svg_y = 100 - y_val * 10;
+                    if (svg_x >= 0 && svg_x <= 200) {
+                        if (rightD === "") rightD += `M ${svg_x} ${svg_y}`;
+                        else rightD += ` L ${svg_x} ${svg_y}`;
+                    }
+                }
+                
+                d = leftD + " " + rightD;
+                svgHyperbola.setAttribute('d', d);
+                
+                // Draw asymptotes passing through center: y - k = +- (b/a)(x - h)
+                // line 1: y = k + (b/a)*(x - h) ➔ mapped
+                const cx = 100 + h * 10;
+                const cy = 100 - k * 10;
+                
+                // Let's compute two points on screen edges (x = 0, x = 200)
+                const slope = b / a;
+                const y1_edge = cy - slope * 100;
+                const y2_edge = cy + slope * 100;
+                asym1.setAttribute('x1', cx - 100);
+                asym1.setAttribute('y1', y1_edge);
+                asym1.setAttribute('x2', cx + 100);
+                asym1.setAttribute('y2', y2_edge);
+                
+                const y3_edge = cy + slope * 100;
+                const y4_edge = cy - slope * 100;
+                asym2.setAttribute('x1', cx - 100);
+                asym2.setAttribute('y1', y3_edge);
+                asym2.setAttribute('x2', cx + 100);
+                asym2.setAttribute('y2', y4_edge);
+                
+                eqEl.innerHTML = `
+                    <span class="math-fraction">
+                        <span class="math-numerator">(x ${termH})&sup2;</span>
+                        <span class="math-denominator" style="color:${colorA}">${a * a}</span>
+                    </span> - 
+                    <span class="math-fraction">
+                        <span class="math-numerator">(y ${termK})&sup2;</span>
+                        <span class="math-denominator" style="color:${colorB}">${b * b}</span>
+                    </span> = 1
+                `;
+            }
+        }
+
+        // Quiz Logic
+        function checkQuiz(qId, isCorrect, btn, correctMsg, incorrectMsg) {
+            const feedback = document.getElementById(`feedback-${qId}`);
+            const containerOpts = btn.parentElement;
+
+            if (isCorrect) {
+                containerOpts.querySelectorAll('.option-btn').forEach(b => {
+                    b.disabled = true;
+                    b.style.opacity = "0.5";
+                });
+                btn.disabled = false;
+                btn.style.opacity = "1";
+                btn.style.background = "#dcfce7";
+                btn.style.borderColor = "#10b981";
+                feedback.innerHTML = `✅ ¡Correcto! ${correctMsg}`;
+                feedback.style.color = "#10b981";
+            } else {
+                btn.style.background = "#fee2e2";
+                btn.style.borderColor = "#dc2626";
+                btn.disabled = true;
+                feedback.innerHTML = `❌ <span>${incorrectMsg}</span> <button onclick="resetQuiz(${qId})" style="margin-left:10px; background:var(--primary-blue-dark); color:white; border:none; padding:4px 10px; border-radius:15px; cursor:pointer; font-size:0.8rem;">Reintentar</button>`;
+                feedback.style.color = "#dc2626";
+            }
+        }
+
+        function resetQuiz(qId) {
+            const feedback = document.getElementById(`feedback-${qId}`);
+            const containerOpts = feedback.parentElement.querySelector('.quiz-container');
+            containerOpts.querySelectorAll('.option-btn').forEach(b => {
+                b.disabled = false;
+                b.style.opacity = "1";
+                b.style.background = "white";
+                b.style.borderColor = "#e2e8f0";
+            });
+            feedback.innerHTML = "";
+        }
+
+        drawConic();
+        updateGallery();
+    </script>
+</body>
+
+</html>

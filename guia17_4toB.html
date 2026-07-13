@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Didáctica 17: Matrices y sus Operaciones - 4to Bachillerato</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@400;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-orange: #db6015;
+            --primary-yellow: #f7be00;
+            --primary-blue-dark: #244b5a;
+            --primary-green: #10b981;
+            --primary-red: #ef4444;
+            --primary-purple: #8b5cf6;
+            --bg-light: #f8fafc;
+            --transition-speed: 0.5s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e2e8f0;
+            color: #1e293b;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        #app-container {
+            width: 100%;
+            max-width: 960px;
+            height: 540px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: auto;
+        }
+
+        header {
+            background-color: var(--primary-blue-dark);
+            color: white;
+            padding: 0 1.5rem;
+            height: 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            z-index: 200;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        #viewport {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            background: #ffffff;
+        }
+
+        @media (max-height: 600px) or (max-width: 960px) {
+            #app-container {
+                height: 100vh;
+                border-radius: 0;
+            }
+        }
+
+        .slide-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            padding: 30px 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            transition: opacity var(--transition-speed);
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.3rem;
+            color: var(--primary-orange);
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+        }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.1rem;
+            color: var(--primary-blue-dark);
+            margin-bottom: 1.2rem;
+            font-weight: 700;
+        }
+
+        p {
+            font-size: 1.15rem;
+            color: #444;
+            max-width: 720px;
+            line-height: 1.5;
+        }
+
+        .info-card {
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            background: #f0f8ff;
+            margin: 0.8rem 0;
+            width: 100%;
+            max-width: 720px;
+            text-align: left;
+            border-left: 5px solid var(--primary-orange);
+        }
+
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60px;
+            height: 60px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+            z-index: 250;
+            border: 1px solid #ddd;
+            color: var(--primary-blue-dark);
+            font-size: 1.5rem;
+            user-select: none;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            background: var(--primary-orange);
+            color: white;
+            border-color: var(--primary-orange);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #prev-btn {
+            left: 20px;
+        }
+
+        #next-btn {
+            right: 20px;
+        }
+
+        .slide-indicators {
+            position: absolute;
+            padding: 0;
+            bottom: 1.5rem;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: #888;
+            z-index: 100;
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 6px;
+            background: var(--primary-orange);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .quiz-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            width: 100%;
+            max-width: 600px;
+            margin: 1rem auto 0;
+        }
+
+        .option-btn {
+            padding: 0.8rem 1.2rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1.05rem;
+            transition: all 0.3s;
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary-orange);
+            background: #fffcf9;
+        }
+
+        /* Matrix CSS design */
+        .math-matrix {
+            display: inline-flex;
+            align-items: center;
+            font-family: 'Outfit', sans-serif;
+            font-weight: bold;
+            color: var(--primary-blue-dark);
+            margin: 0 10px;
+            font-size: 1.2rem;
+        }
+
+        .matrix-bracket {
+            width: 10px;
+            height: 80px;
+            border: 3px solid var(--primary-blue-dark);
+            transition: all 0.3s;
+        }
+
+        .bracket-left {
+            border-right: none;
+            border-radius: 8px 0 0 8px;
+        }
+
+        .bracket-right {
+            border-left: none;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 40px);
+            grid-template-rows: repeat(2, 35px);
+            gap: 5px;
+            padding: 0 10px;
+            align-items: center;
+            justify-items: center;
+        }
+
+        /* Matrix edit inputs */
+        .matrix-input {
+            width: 35px;
+            height: 30px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border: 2px solid #cbd5e1;
+            border-radius: 6px;
+            outline: none;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .matrix-input:focus {
+            border-color: var(--primary-orange);
+        }
+
+        .matrix-expr {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 15px;
+            gap: 25px;
+            width: 100%;
+        }
+
+        .matrix-op {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-orange);
+            user-select: none;
+            margin: 0 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app-container">
+        <header id="global-header">
+            <span>Colegio Escolaris - Matemática 4to Bachillerato</span>
+            <span>Guía 17: Matrices y sus Operaciones</span>
+        </header>
+
+        <div id="viewport">
+            <div class="slide-container" id="slide-container">
+                <!-- Slide 1: Portada -->
+                <div class="slide active">
+                    <div style="font-size: 70px; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));">🧮🔢</div>
+                    <h1 style="font-size: 2.2rem; margin-top: 10px;">Matrices y sus Operaciones</h1>
+                    <h2 style="font-weight: 600; color: #64748b; font-size: 1.5rem;">Guía Didáctica 17 &bull; 4&deg; Bachillerato</h2>
+                    <p style="color: #64748b; font-style: italic; margin-top: 1rem;">Explora las estructuras algebraicas rectangulares y aprende a realizar operaciones fundamentales.</p>
+                </div>
+
+                <!-- Slide 2: Objetivos -->
+                <div class="slide">
+                    <h2 style="margin-bottom: 10px;">¿Qué aprenderemos hoy?</h2>
+                    <div class="info-card" style="border-left-color: var(--primary-blue-dark); background: #f8fafc; max-width: 600px;">
+                        <ul style="list-style-type: none; font-size: 1.15rem; line-height: 1.8; color: var(--primary-blue-dark);">
+                            <li>📐 <strong>Definir</strong> qué es una matriz y cómo se determinan sus dimensiones.</li>
+                            <li>➕ <strong>Sumar y restar</strong> matrices del mismo orden de forma directa.</li>
+                            <li>✖️ <strong>Multiplicar</strong> matrices aplicando el algoritmo de fila por columna.</li>
+                        </ul>
+                    </div>
+                    <div style="font-size: 3rem; margin-top: 1rem;">🏛️</div>
+                </div>
+
+                <!-- Slide 3: ¿Qué es una Matriz? -->
+                <div class="slide">
+                    <h2>¿Qué es una Matriz?</h2>
+                    <p style="margin-bottom: 10px;">Una matriz es un arreglo rectangular de números organizados en <strong>filas</strong> (horizontales) y <strong>columnas</strong> (verticales).</p>
+                    <div class="info-card" style="border-left-color: var(--primary-orange); background: #fffcf9;">
+                        <p style="font-size: 1.1rem; line-height: 1.5;">
+                            El tamaño o <strong>dimensión</strong> de una matriz se expresa como <strong>m &times; n</strong>, donde <em>m</em> es el número de filas y <em>n</em> es el número de columnas.<br>
+                            Ejemplo: Una matriz con 2 filas y 3 columnas es de orden <strong>2 &times; 3</strong>.
+                        </p>
+                    </div>
+                    <div style="font-size: 2.5rem; margin-top: 5px;">📊</div>
+                </div>
+
+                <!-- Slide 4: Suma y Resta -->
+                <div class="slide">
+                    <h2>Suma y Resta de Matrices</h2>
+                    <p style="margin-bottom: 10px;">Para poder sumar o restar dos matrices, estas deben tener exactamente las <strong>mismas dimensiones</strong> (mismo orden).</p>
+                    <div class="info-card" style="border-left-color: var(--primary-green); background: #f0fdf4;">
+                        <p style="font-size: 1.1rem; color: #166534; line-height: 1.5;">
+                            La operación se realiza término a término, es decir, sumando o restando los elementos que ocupan la misma posición en ambas matrices.
+                        </p>
+                    </div>
+                    <div class="matrix-expr" style="font-size: 1rem;">
+                        <div class="math-matrix"><div class="matrix-bracket bracket-left"></div><div class="matrix-grid"><span>1</span><span>3</span><span>2</span><span>4</span></div><div class="matrix-bracket bracket-right"></div></div>
+                        <div class="matrix-op">+</div>
+                        <div class="math-matrix"><div class="matrix-bracket bracket-left"></div><div class="matrix-grid"><span>5</span><span>0</span><span>1</span><span>2</span></div><div class="matrix-bracket bracket-right"></div></div>
+                        <div class="matrix-op">=</div>
+                        <div class="math-matrix" style="color: var(--primary-green);"><div class="matrix-bracket bracket-left"></div><div class="matrix-grid"><span>6</span><span>3</span><span>3</span><span>6</span></div><div class="matrix-bracket bracket-right"></div></div>
+                    </div>
+                </div>
+
+                <!-- Slide 5: Producto por Escalar -->
+                <div class="slide">
+                    <h2>Multiplicación por un Escalar</h2>
+                    <p style="margin-bottom: 10px;">Multiplicar una matriz por un escalar (un número real <em>k</em>) consiste en multiplicar cada elemento de la matriz por ese número.</p>
+                    <div class="matrix-expr" style="font-size: 1rem;">
+                        <div class="matrix-op" style="align-self: center; font-size: 1.5rem; margin-right: 5px;">3 &bull;</div>
+                        <div class="math-matrix"><div class="matrix-bracket bracket-left"></div><div class="matrix-grid"><span>1</span><span>-2</span><span>4</span><span>0</span></div><div class="matrix-bracket bracket-right"></div></div>
+                        <div class="matrix-op">=</div>
+                        <div class="math-matrix" style="color: var(--primary-purple);"><div class="matrix-bracket bracket-left"></div><div class="matrix-grid"><span>3</span><span>-6</span><span>12</span><span>0</span></div><div class="matrix-bracket bracket-right"></div></div>
+                    </div>
+                    <p style="margin-top: 15px; font-size: 0.95rem; color: #555;">Cada término adentro se triplicó de forma individual.</p>
+                </div>
+
+                <!-- Slide 6: Multiplicación de Matrices -->
+                <div class="slide">
+                    <h2>Multiplicación entre Matrices</h2>
+                    <p style="margin-bottom: 10px;">Dos matrices A y B se pueden multiplicar <strong>(A &times; B)</strong> únicamente si el número de columnas de A es igual al número de filas de B.</p>
+                    <div class="info-card" style="border-left-color: var(--primary-red); background: #fef2f2;">
+                        <p style="font-size: 1.1rem; color: #991b1b; line-height: 1.5;">
+                            El elemento de la posición <em>(i, j)</em> de la matriz resultante se obtiene multiplicando los elementos de la fila <em>i</em> de la primera matriz por los elementos de la columna <em>j</em> de la segunda matriz, y sumando los productos.
+                        </p>
+                    </div>
+                    <div style="font-size: 2.5rem; margin-top: 5px;">🔄🎒</div>
+                </div>
+
+                <!-- Slide 7: Calculadora Interactiva -->
+                <div class="slide">
+                    <h2 style="margin-bottom: 5px;">Calculadora de Matrices 2&times;2</h2>
+                    <p style="margin-bottom: 10px; font-size: 0.95rem;">Modifica los valores de las matrices A y B, y elige la operación.</p>
+                    
+                    <div class="matrix-expr" style="margin-top: 5px;">
+                        <!-- Matrix A -->
+                        <span style="font-weight: bold; color: var(--primary-orange); font-family: 'Outfit'; font-size: 1.4rem; margin-right: 5px;">A =</span>
+                        <div class="math-matrix">
+                            <div class="matrix-bracket bracket-left" style="height: 70px;"></div>
+                            <div class="matrix-grid" style="grid-template-rows: repeat(2, 30px); grid-template-columns: repeat(2, 35px);">
+                                <input type="number" id="a11" class="matrix-input" value="2" oninput="calcMatrices()">
+                                <input type="number" id="a12" class="matrix-input" value="1" oninput="calcMatrices()">
+                                <input type="number" id="a21" class="matrix-input" value="0" oninput="calcMatrices()">
+                                <input type="number" id="a22" class="matrix-input" value="3" oninput="calcMatrices()">
+                            </div>
+                            <div class="matrix-bracket bracket-right" style="height: 70px;"></div>
+                        </div>
+
+                        <!-- Op Selector -->
+                        <select id="matrix-op-sel" onchange="calcMatrices()" style="padding: 6px 10px; border: 2px solid #cbd5e1; border-radius: 8px; font-family: 'Outfit'; font-weight: bold; font-size: 1.1rem; outline: none; margin: 0 10px;">
+                            <option value="add">+</option>
+                            <option value="sub">-</option>
+                            <option value="mul">&times;</option>
+                        </select>
+
+                        <!-- Matrix B -->
+                        <span style="font-weight: bold; color: var(--primary-orange); font-family: 'Outfit'; font-size: 1.4rem; margin-right: 5px;">B =</span>
+                        <div class="math-matrix">
+                            <div class="matrix-bracket bracket-left" style="height: 70px;"></div>
+                            <div class="matrix-grid" style="grid-template-rows: repeat(2, 30px); grid-template-columns: repeat(2, 35px);">
+                                <input type="number" id="b11" class="matrix-input" value="1" oninput="calcMatrices()">
+                                <input type="number" id="b12" class="matrix-input" value="2" oninput="calcMatrices()">
+                                <input type="number" id="b21" class="matrix-input" value="3" oninput="calcMatrices()">
+                                <input type="number" id="b22" class="matrix-input" value="0" oninput="calcMatrices()">
+                            </div>
+                            <div class="matrix-bracket bracket-right" style="height: 70px;"></div>
+                        </div>
+
+                        <div class="matrix-op">=</div>
+
+                        <!-- Result Matrix -->
+                        <div class="math-matrix" style="color: var(--primary-green);">
+                            <div class="matrix-bracket bracket-left" style="height: 70px;"></div>
+                            <div class="matrix-grid" style="grid-template-rows: repeat(2, 30px); grid-template-columns: repeat(2, 45px);">
+                                <span id="r11">3</span>
+                                <span id="r12">3</span>
+                                <span id="r21">3</span>
+                                <span id="r22">3</span>
+                            </div>
+                            <div class="matrix-bracket bracket-right" style="height: 70px;"></div>
+                        </div>
+                    </div>
+
+                    <div id="calc-steps" style="font-size: 0.95rem; background: #fffbeb; border: 1px dashed var(--primary-yellow); border-radius: 12px; padding: 15px 25px; margin-top: 15px; width: 100%; max-width: 800px; min-height: 100px; box-sizing: border-box; color: var(--primary-blue-dark);">
+                        Paso a paso...
+                    </div>
+                </div>
+
+                <!-- Slide 8: QUIZ 1 -->
+                <div class="slide">
+                    <h2>Reto Teórico 1</h2>
+                    <p style="margin-bottom: 10px;">Si la matriz A es de orden <strong>2 &times; 3</strong> y la matriz B es de orden <strong>3 &times; 2</strong>, ¿es posible realizar la suma <strong>A + B</strong>?</p>
+                    <div class="quiz-container">
+                        <button class="option-btn" onclick="checkQuiz(1, false, this, '', 'Al revés. Para sumar matrices, sus dimensiones deben ser exactamente iguales. En este caso 2x3 no es igual a 3x2.')">A) Sí, porque el número de columnas de A es igual a las filas de B.</button>
+                        <button class="option-btn" onclick="checkQuiz(1, true, this, '¡Correcto! Para sumar matrices se requiere la igualdad estricta de sus órdenes. A (2x3) y B (3x2) no se pueden sumar.', '')">B) No, porque no tienen exactamente el mismo orden.</button>
+                    </div>
+                    <div id="feedback-1" style="margin-top: 1rem; font-weight: 600; min-height: 24px;"></div>
+                </div>
+
+                <!-- Slide 9: QUIZ 2 -->
+                <div class="slide">
+                    <h2>Reto Teórico 2</h2>
+                    <p style="margin-bottom: 10px;">Si multiplicamos una matriz A de orden <strong>2 &times; 3</strong> por una matriz B de orden <strong>3 &times; 1</strong>: ¿De qué orden será la matriz resultant?</p>
+                    <div class="quiz-container">
+                        <button class="option-btn" onclick="checkQuiz(2, true, this, '¡Excelente! En la multiplicación de matrices (m &times; n) &times; (n &times; p), la matriz resultante hereda las filas de la primera (m) y las columnas de la segunda (p), dando un orden de 2 &times; 1.', '')">A) De orden 2 &times; 1</button>
+                        <button class="option-btn" onclick="checkQuiz(2, false, this, '', 'Casi, pero recuerda la regla básica: el orden resultante toma las filas de la primera matriz (2) y las columnas de la segunda (1).')">B) De orden 3 &times; 3</button>
+                    </div>
+                    <div id="feedback-2" style="margin-top: 1rem; font-weight: 600; min-height: 24px;"></div>
+                </div>
+
+                <!-- Slide 10: Final -->
+                <div class="slide">
+                    <div style="font-size: 80px;">🎯</div>
+                    <h2>¡Misión Cumplida!</h2>
+                    <p>¡Has completado con éxito la lección sobre matrices y sus operaciones!</p>
+                    <button onclick="goToSlide(0)"
+                        style="background: var(--primary-orange); color: white; border: none; padding: 1rem 2rem; border-radius: 30px; font-weight: 700; cursor: pointer; margin-top: 1.5rem; font-size: 1.1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">Volver al inicio</button>
+                </div>
+            </div>
+        </div>
+
+        <button class="nav-btn" id="prev-btn" onclick="prevSlide()" disabled aria-label="Anterior">&#8592;</button>
+        <button class="nav-btn" id="next-btn" onclick="nextSlide()" aria-label="Siguiente">&#8594;</button>
+
+        <div class="slide-indicators">
+            <span id="slide-num">1 / 10</span>
+        </div>
+        <div class="progress-bar-container" style="position: absolute; bottom: 0; left: 0; right: 0; height: 6px; background: #e2e8f0; z-index: 100;">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const container = document.getElementById('slide-container');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const slideNum = document.getElementById('slide-num');
+        const progressBar = document.getElementById('progress-bar');
+
+        function updateGallery() {
+            container.style.transform = `translateX(-${currentSlide * 100}%)`;
+            slides.forEach((slide, index) => slide.classList.toggle('active', index === currentSlide));
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+            slideNum.innerText = `${currentSlide + 1} / ${slides.length}`;
+            progressBar.style.width = `${((currentSlide + 1) / slides.length) * 100}%`;
+        }
+
+        function nextSlide() { if (currentSlide < slides.length - 1) { currentSlide++; updateGallery(); } }
+        function prevSlide() { if (currentSlide > 0) { currentSlide--; updateGallery(); } }
+        function goToSlide(n) { currentSlide = n; updateGallery(); }
+
+        document.addEventListener('keydown', e => { 
+            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide(); 
+            if (e.key === 'ArrowLeft') prevSlide(); 
+        });
+
+        // Matrix calculator logic
+        function calcMatrices() {
+            const a11 = parseFloat(document.getElementById('a11').value) || 0;
+            const a12 = parseFloat(document.getElementById('a12').value) || 0;
+            const a21 = parseFloat(document.getElementById('a21').value) || 0;
+            const a22 = parseFloat(document.getElementById('a22').value) || 0;
+
+            const b11 = parseFloat(document.getElementById('b11').value) || 0;
+            const b12 = parseFloat(document.getElementById('b12').value) || 0;
+            const b21 = parseFloat(document.getElementById('b21').value) || 0;
+            const b22 = parseFloat(document.getElementById('b22').value) || 0;
+
+            const op = document.getElementById('matrix-op-sel').value;
+            
+            let r11_val = 0, r12_val = 0, r21_val = 0, r22_val = 0;
+            let stepsHtml = "";
+
+            if (op === 'add') {
+                r11_val = a11 + b11;
+                r12_val = a12 + b12;
+                r21_val = a21 + b21;
+                r22_val = a22 + b22;
+                stepsHtml = `
+                <div style="font-weight: 700; color: var(--primary-orange); margin-bottom: 8px; text-align: center; font-size: 1.05rem;">Suma elemento a elemento:</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px 40px; text-align: left; font-family: 'Outfit';">
+                    <div>c₁₁ = a₁₁ + b₁₁ = ${a11} + ${b11} = <strong>${r11_val}</strong></div>
+                    <div>c₁₂ = a₁₂ + b₁₂ = ${a12} + ${b12} = <strong>${r12_val}</strong></div>
+                    <div>c₂₁ = a₂₁ + b₂₁ = ${a21} + ${b21} = <strong>${r21_val}</strong></div>
+                    <div>c₂₂ = a₂₂ + b₂₂ = ${a22} + ${b22} = <strong>${r22_val}</strong></div>
+                </div>`;
+            } else if (op === 'sub') {
+                r11_val = a11 - b11;
+                r12_val = a12 - b12;
+                r21_val = a21 - b21;
+                r22_val = a22 - b22;
+                stepsHtml = `
+                <div style="font-weight: 700; color: var(--primary-orange); margin-bottom: 8px; text-align: center; font-size: 1.05rem;">Resta elemento a elemento:</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px 40px; text-align: left; font-family: 'Outfit';">
+                    <div>c₁₁ = a₁₁ - b₁₁ = ${a11} - ${b11} = <strong>${r11_val}</strong></div>
+                    <div>c₁₂ = a₁₂ - b₁₂ = ${a12} - ${b12} = <strong>${r12_val}</strong></div>
+                    <div>c₂₁ = a₂₁ - b₂₁ = ${a21} - ${b21} = <strong>${r21_val}</strong></div>
+                    <div>c₂₂ = a₂₂ - b₂₂ = ${a22} - ${b22} = <strong>${r22_val}</strong></div>
+                </div>`;
+            } else if (op === 'mul') {
+                r11_val = a11 * b11 + a12 * b21;
+                r12_val = a11 * b12 + a12 * b22;
+                r21_val = a21 * b11 + a22 * b21;
+                r22_val = a21 * b12 + a22 * b22;
+                stepsHtml = `
+                <div style="font-weight: 700; color: var(--primary-orange); margin-bottom: 8px; text-align: center; font-size: 1.05rem;">Multiplicación Fila &times; Columna:</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px 40px; text-align: left; font-family: 'Outfit';">
+                    <div>c₁₁ = a₁₁b₁₁ + a₁₂b₂₁ = (${a11} &times; ${b11}) + (${a12} &times; ${b21}) = <strong>${r11_val}</strong></div>
+                    <div>c₁₂ = a₁₁b₁₂ + a₁₂b₂₂ = (${a11} &times; ${b12}) + (${a12} &times; ${b22}) = <strong>${r12_val}</strong></div>
+                    <div>c₂₁ = a₂₁b₁₁ + a₂₂b₂₁ = (${a21} &times; ${b11}) + (${a22} &times; ${b21}) = <strong>${r21_val}</strong></div>
+                    <div>c₂₂ = a₂₁b₁₂ + a₂₂b₂₂ = (${a21} &times; ${b12}) + (${a22} &times; ${b22}) = <strong>${r22_val}</strong></div>
+                </div>`;
+            }
+
+            document.getElementById('r11').innerText = r11_val;
+            document.getElementById('r12').innerText = r12_val;
+            document.getElementById('r21').innerText = r21_val;
+            document.getElementById('r22').innerText = r22_val;
+            document.getElementById('calc-steps').innerHTML = stepsHtml;
+        }
+
+        // Quiz Logic
+        function checkQuiz(qId, isCorrect, btn, correctMsg, incorrectMsg) {
+            const feedback = document.getElementById(`feedback-${qId}`);
+            const containerOpts = btn.parentElement;
+
+            if (isCorrect) {
+                containerOpts.querySelectorAll('.option-btn').forEach(b => {
+                    b.disabled = true;
+                    b.style.opacity = "0.5";
+                });
+                btn.disabled = false;
+                btn.style.opacity = "1";
+                btn.style.background = "#dcfce7";
+                btn.style.borderColor = "#10b981";
+                feedback.innerHTML = `✅ ¡Correcto! ${correctMsg}`;
+                feedback.style.color = "#10b981";
+            } else {
+                btn.style.background = "#fee2e2";
+                btn.style.borderColor = "#dc2626";
+                btn.disabled = true;
+                feedback.innerHTML = `❌ <span>${incorrectMsg}</span> <button onclick="resetQuiz(${qId})" style="margin-left:10px; background:var(--primary-blue-dark); color:white; border:none; padding:4px 10px; border-radius:15px; cursor:pointer; font-size:0.8rem;">Reintentar</button>`;
+                feedback.style.color = "#dc2626";
+            }
+        }
+
+        function resetQuiz(qId) {
+            const feedback = document.getElementById(`feedback-${qId}`);
+            const containerOpts = feedback.parentElement.querySelector('.quiz-container');
+            containerOpts.querySelectorAll('.option-btn').forEach(b => {
+                b.disabled = false;
+                b.style.opacity = "1";
+                b.style.background = "white";
+                b.style.borderColor = "#e2e8f0";
+            });
+            feedback.innerHTML = "";
+        }
+
+        calcMatrices();
+        updateGallery();
+    </script>
+</body>
+
+</html>
