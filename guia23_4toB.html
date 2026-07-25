@@ -441,41 +441,163 @@
                     </div>
                 </div>
 
-                <!-- 3. Teorema de Tales -->
+                <!-- 3. Vocabulario Geométrico Previo (Fundamentos) -->
                 <div class="slide">
-                    <h2>Teorema Fundamental de Tales</h2>
-                    <p>Dadas tres rectas paralelas $L_1 \parallel L_2 \parallel L_3$ que cortan a dos transversales $t_1$ y $t_2$:</p>
+                    <h2>Vocabulario Geométrico Previo</h2>
+                    <p>Antes de estudiar los teoremas, aclaremos los conceptos geométricos fundamentales:</p>
 
-                    <div class="info-card" style="border-left: 5px solid var(--primary-orange); background: #fffbeb;">
-                        <h3 style="color: var(--primary-orange);">Ecuación de Proporcionalidad Geométrica:</h3>
-                        <p style="font-size: 1.45rem; font-weight: bold; color: var(--primary-blue-dark); margin: 8px 0;">
-                            $$\frac{AB}{BC} = \frac{A'B'}{B'C'} \quad \Longrightarrow \quad AB \cdot B'C' = BC \cdot A'B'$$
+                    <div style="display: flex; gap: 12px; width: 100%; max-width: 780px; margin-top: 10px;">
+                        <div class="column-card" style="border-color: #0284c7; text-align: left; padding: 10px 14px;">
+                            <h3 style="color: #0284c7; font-size: 1rem; border-bottom: 1px dashed #cbd5e1; padding-bottom: 4px; margin-bottom: 6px;">📍 Vértice</h3>
+                            <p style="font-size: 0.86rem; color: #334155; line-height: 1.5;">Punto de intersección donde se unen dos lados o rectas del triángulo (Ej. Vértices $A$, $B$, $C$).</p>
+                        </div>
+                        <div class="column-card" style="border-color: var(--primary-orange); text-align: left; padding: 10px 14px;">
+                            <h3 style="color: var(--primary-orange); font-size: 1rem; border-bottom: 1px dashed #cbd5e1; padding-bottom: 4px; margin-bottom: 6px;">📏 Segmento de Recta</h3>
+                            <p style="font-size: 0.86rem; color: #334155; line-height: 1.5;">Tramo continuo delimitado entre dos puntos o vértices (Ej. Segmento $AD$, $BC$).</p>
+                        </div>
+                        <div class="column-card" style="border-color: var(--primary-green); text-align: left; padding: 10px 14px;">
+                            <h3 style="color: var(--primary-green); font-size: 1rem; border-bottom: 1px dashed #cbd5e1; padding-bottom: 4px; margin-bottom: 6px;">⏸️ Rectas Paralelas</h3>
+                            <p style="font-size: 0.86rem; color: #334155; line-height: 1.5;">Rectas que mantienen siempre la misma distancia entre sí y nunca se cruzan ($DE \parallel BC$).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Teorema de Tales: El Triángulo Ilustrado -->
+                <div class="slide">
+                    <h2>Teorema de Tales: Gráfico del Triángulo</h2>
+                    <p>Observa el triángulo $\Delta ABC$ cortado por la paralela $DE \parallel BC$:</p>
+
+                    <!-- SVG Ultra Limpio y Desahogado de Tales -->
+                    <div style="margin: 10px 0; background: #ffffff; padding: 20px; border-radius: 16px; border: 2px solid #cbd5e1; box-shadow: 0 4px 10px rgba(0,0,0,0.04); width: 100%; max-width: 780px;">
+                        <svg width="520" height="210" viewBox="0 0 520 210" style="display: block; margin: auto;">
+                            <!-- Triángulo Principal ABC -->
+                            <polygon points="260,30 50,175 470,175" fill="#f8fafc" stroke="#244b5a" stroke-width="3"/>
+                            
+                            <!-- Recta Paralela DE -->
+                            <line x1="134" y1="115" x2="386" y2="115" stroke="#db6015" stroke-width="3.5" stroke-dasharray="7,4"/>
+                            
+                            <!-- Puntos de Vértice -->
+                            <circle cx="260" cy="30" r="5" fill="#db6015"/>
+                            <text x="260" y="16" fill="#db6015" font-weight="bold" font-size="18" text-anchor="middle">A</text>
+
+                            <circle cx="50" cy="175" r="5" fill="#244b5a"/>
+                            <text x="35" y="195" fill="#244b5a" font-weight="bold" font-size="18" text-anchor="middle">B</text>
+
+                            <circle cx="470" cy="175" r="5" fill="#244b5a"/>
+                            <text x="485" y="195" fill="#244b5a" font-weight="bold" font-size="18" text-anchor="middle">C</text>
+
+                            <circle cx="134" cy="115" r="5" fill="#db6015"/>
+                            <text x="115" y="120" fill="#db6015" font-weight="bold" font-size="18" text-anchor="end">D</text>
+
+                            <circle cx="386" cy="115" r="5" fill="#db6015"/>
+                            <text x="405" y="120" fill="#db6015" font-weight="bold" font-size="18">E</text>
+
+                            <!-- Letras de Segmentos Limpias y Despejadas -->
+                            <text x="180" y="65" fill="#0284c7" font-weight="bold" font-size="16" text-anchor="end">AD</text>
+                            <text x="340" y="65" fill="#0284c7" font-weight="bold" font-size="16">AE</text>
+                            
+                            <text x="75" y="150" fill="#0369a1" font-weight="bold" font-size="16" text-anchor="end">DB</text>
+                            <text x="445" y="150" fill="#0369a1" font-weight="bold" font-size="16">EC</text>
+                            
+                            <text x="260" y="105" fill="#db6015" font-weight="bold" font-size="16" text-anchor="middle">DE (paralela)</text>
+                            <text x="260" y="198" fill="#244b5a" font-weight="bold" font-size="16" text-anchor="middle">BC (base)</text>
+
+                            <!-- Ángulo alfa superior -->
+                            <path d="M 248,39 A 18,18 0 0,0 272,39" fill="none" stroke="#8b5cf6" stroke-width="2.5"/>
+                            <text x="260" y="54" fill="#8b5cf6" font-weight="bold" font-size="13" text-anchor="middle">&alpha;</text>
+                        </svg>
+                    </div>
+
+                    <p style="font-size: 0.9rem; color: #334155;">
+                        🔹 La paralela $DE$ corta los lados $AB$ y $AC$ dividiéndolos en tramos proporcionales $AD$, $DB$, $AE$ y $EC$.
+                    </p>
+                </div>
+
+                <!-- 5. Teorema de Tales: Ecuaciones Formales -->
+                <div class="slide" style="padding: 16px 65px;">
+                    <h2 style="font-size: 1.5rem; margin-bottom: 0.3rem;">Teorema de Tales: Ecuaciones de Proporción</h2>
+                    <p style="font-size: 0.9rem; margin-bottom: 0.4rem;">Debido a la semejanza de triángulos ($\Delta ADE \sim \Delta ABC$), se cumplen las proporciones:</p>
+
+                    <div class="info-card" style="border-left: 4px solid var(--primary-orange); background: #fffbeb; padding: 10px 16px; margin: 8px 0;">
+                        <h3 style="color: var(--primary-orange); margin-bottom: 4px; font-size: 1.05rem;">Proporcionalidad entre Lados Homólogos:</h3>
+                        <p style="font-size: 1.2rem; font-weight: bold; color: var(--primary-blue-dark); margin: 4px 0;">
+                            $$\frac{AD}{AB} = \frac{AE}{AC} = \frac{DE}{BC}$$
                         </p>
-                        <p style="font-size: 0.9rem; color: #475569; margin-top: 6px; line-height: 1.6;">
-                            En un triángulo $\Delta ABC$, si $DE \parallel BC$, entonces $\Delta ADE \sim \Delta ABC$ (los triángulos son semejantes).
+                    </div>
+
+                    <div class="info-card" style="border-left: 4px solid #0284c7; background: #f0f9ff; padding: 10px 16px; margin: 8px 0;">
+                        <h3 style="color: #0284c7; margin-bottom: 4px; font-size: 1.05rem;">Proporcionalidad entre Segmentos Divididos:</h3>
+                        <p style="font-size: 1.2rem; font-weight: bold; color: var(--primary-blue-dark); margin: 4px 0;">
+                            $$\frac{AD}{DB} = \frac{AE}{EC} \quad \Longrightarrow \quad AD \cdot EC = DB \cdot AE$$
                         </p>
                     </div>
                 </div>
 
-                <!-- 4. Teoremas de Euclides en Triángulo Rectángulo -->
+                <!-- 6. Teorema de Euclides: Vocabulario y Gráfico -->
                 <div class="slide">
-                    <h2>Teoremas de Euclides (Relaciones Métricas)</h2>
-                    <p>En todo triángulo rectángulo $\Delta ABC$ (recto en C), la altura $h$ sobre la hipotenusa $c$ la divide en proyecciones $m$ y $n$:</p>
+                    <h2>Teorema de Euclides: Gráfico del Triángulo</h2>
+                    <p>Triángulo rectángulo $\Delta ABC$ ($\angle C = 90^\circ$) con altura $h$ perpendicular a la hipotenusa $c$:</p>
 
-                    <div class="columns-container">
-                        <div class="column-card" style="border-color: var(--primary-green);">
-                            <div class="column-card-title" style="color: var(--primary-green);">Teorema de la Altura</div>
-                            <p style="font-size: 1.15rem; font-weight: bold; color: var(--primary-blue-dark); margin-top: 6px;">
-                                $$h^2 = m \cdot n \quad \Longrightarrow \quad h = \sqrt{m \cdot n}$$
+                    <!-- SVG Espacioso y Limpio de Euclides -->
+                    <div style="margin: 10px 0; background: #ffffff; padding: 20px; border-radius: 16px; border: 2px solid #cbd5e1; box-shadow: 0 4px 10px rgba(0,0,0,0.04); width: 100%; max-width: 780px;">
+                        <svg width="520" height="200" viewBox="0 0 520 200" style="display: block; margin: auto;">
+                            <!-- Triángulo Rectángulo Recto en C arriba -->
+                            <polygon points="180,24 35,165 485,165" fill="#f8fafc" stroke="#244b5a" stroke-width="3"/>
+                            
+                            <!-- Altura h perpendicular a la hipotenusa -->
+                            <line x1="180" y1="24" x2="180" y2="165" stroke="#8b5cf6" stroke-width="3.5" stroke-dasharray="6,4"/>
+                            
+                            <!-- Marcadores de Ángulo Recto -->
+                            <path d="M 167,35 L 178,45 L 189,35" fill="none" stroke="#ef4444" stroke-width="2.5"/>
+                            <rect x="180" y="150" width="14" height="14" fill="none" stroke="#8b5cf6" stroke-width="2.5"/>
+
+                            <!-- Vértices destacados -->
+                            <circle cx="180" cy="24" r="5" fill="#ef4444"/>
+                            <text x="180" y="14" fill="#ef4444" font-weight="bold" font-size="15" text-anchor="middle">Vértice C (90°)</text>
+
+                            <circle cx="35" cy="165" r="5" fill="#244b5a"/>
+                            <text x="20" y="175" fill="#244b5a" font-weight="bold" font-size="15">A</text>
+
+                            <circle cx="485" cy="165" r="5" fill="#244b5a"/>
+                            <text x="500" y="175" fill="#244b5a" font-weight="bold" font-size="15" text-anchor="end">B</text>
+
+                            <circle cx="180" cy="165" r="5" fill="#8b5cf6"/>
+                            <text x="180" y="185" fill="#8b5cf6" font-weight="bold" font-size="15" text-anchor="middle">D</text>
+
+                            <!-- Etiquetas de Lados y Proyecciones desahogadas -->
+                            <text x="95" y="85" fill="#0369a1" font-weight="bold" font-size="14" text-anchor="middle">Cateto b</text>
+                            <text x="350" y="85" fill="#0369a1" font-weight="bold" font-size="14" text-anchor="middle">Cateto a</text>
+                            <text x="198" y="95" fill="#8b5cf6" font-weight="bold" font-size="14">Altura h</text>
+                            <text x="100" y="155" fill="#22c55e" font-weight="bold" font-size="13" text-anchor="middle">Proyección m</text>
+                            <text x="330" y="155" fill="#db6015" font-weight="bold" font-size="13" text-anchor="middle">Proyección n</text>
+                            <text x="260" y="198" fill="#244b5a" font-weight="bold" font-size="13" text-anchor="middle">Hipotenusa c (c = m + n)</text>
+                        </svg>
+                    </div>
+
+                    <p style="font-size: 0.9rem; color: #334155;">
+                        🔹 Las proyecciones $m$ y $n$ representan las sombras que proyecta cada cateto sobre la hipotenusa $c$.
+                    </p>
+                </div>
+
+                <!-- 7. Teorema de Euclides: Ecuaciones Métricas -->
+                <div class="slide">
+                    <h2>Teorema de Euclides: Relaciones Métricas</h2>
+                    <p>Las ecuaciones formales que relacionan la altura, catetos y proyecciones son:</p>
+
+                    <div class="columns-container" style="margin-top: 15px; gap: 20px;">
+                        <div class="column-card" style="border-color: var(--primary-green); padding: 18px 20px;">
+                            <div class="column-card-title" style="color: var(--primary-green); font-size: 1.2rem;">Teorema de la Altura</div>
+                            <p style="font-size: 1.45rem; font-weight: bold; color: var(--primary-blue-dark); margin: 15px 0;">
+                                $$h^2 = m \cdot n \implies h = \sqrt{m \cdot n}$$
                             </p>
-                            <p style="font-size: 0.85rem; color: #64748b;">La altura es la media proporcional geométrica entre las proyecciones.</p>
+                            <p style="font-size: 0.9rem; color: #475569; line-height: 1.5;">La altura es la media proporcional geométrica entre las dos proyecciones de la hipotenusa.</p>
                         </div>
-                        <div class="column-card" style="border-color: var(--primary-purple);">
-                            <div class="column-card-title" style="color: var(--primary-purple);">Teorema del Cateto</div>
-                            <p style="font-size: 1.15rem; font-weight: bold; color: var(--primary-blue-dark); margin-top: 6px;">
+                        <div class="column-card" style="border-color: var(--primary-purple); padding: 18px 20px;">
+                            <div class="column-card-title" style="color: var(--primary-purple); font-size: 1.2rem;">Teorema de los Catetos</div>
+                            <p style="font-size: 1.45rem; font-weight: bold; color: var(--primary-blue-dark); margin: 15px 0;">
                                 $$a^2 = c \cdot n \quad \mid \quad b^2 = c \cdot m$$
                             </p>
-                            <p style="font-size: 0.85rem; color: #64748b;">Cada cateto al cuadrado es el producto de la hipotenusa por su proyección adjunta.</p>
+                            <p style="font-size: 0.9rem; color: #475569; line-height: 1.5;">Cada cateto al cuadrado equivale al producto de la hipotenusa completa por su proyección adjunta.</p>
                         </div>
                     </div>
                 </div>
@@ -673,7 +795,7 @@
 
     <script>
         let currentSlide = 0;
-        const totalSlides = 12;
+        const totalSlides = 15;
         const slideContainer = document.getElementById('slide-container');
         const slideNumDisplay = document.getElementById('slide-num');
         const progressBar = document.getElementById('progress-bar');
