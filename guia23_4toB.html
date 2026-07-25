@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía 23: Teorema de Tales y Euclides - 4to Bachillerato</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@400;700&display=swap"
+        rel="stylesheet">
+    
+    <!-- MathJax Library para Renderizado Matemático LaTeX Formal -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary-orange: #db6015;
+            --primary-yellow: #f7be00;
+            --primary-blue-dark: #244b5a;
+            --primary-green: #22c55e;
+            --primary-red: #ef4444;
+            --primary-purple: #8b5cf6;
+            --bg-light: #f8fafc;
+            --transition-speed: 0.5s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e2e8f0;
+            color: #1e293b;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        #app-container {
+            width: 100%;
+            max-width: 960px;
+            height: 540px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: auto;
+        }
+
+        header {
+            background-color: var(--primary-blue-dark);
+            color: white;
+            padding: 0 1.5rem;
+            height: 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            z-index: 200;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        #viewport {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            background: #ffffff;
+        }
+
+        @media (max-height: 600px) or (max-width: 960px) {
+            #app-container {
+                height: 100vh;
+                border-radius: 0;
+            }
+        }
+
+        .slide-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            padding: 24px 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            transition: opacity var(--transition-speed);
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.2rem;
+            color: var(--primary-orange);
+            margin-bottom: 0.6rem;
+            font-weight: 800;
+        }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.7rem;
+            color: var(--primary-blue-dark);
+            margin-bottom: 0.8rem;
+            font-weight: 700;
+        }
+
+        h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.15rem;
+            color: var(--primary-blue-dark);
+            margin-bottom: 0.4rem;
+            font-weight: 700;
+        }
+
+        p {
+            font-size: 0.98rem;
+            color: #444;
+            max-width: 780px;
+            line-height: 1.65;
+            margin-bottom: 0.6rem;
+        }
+
+        .info-card {
+            padding: 1rem 1.3rem;
+            border-radius: 12px;
+            background: #f0f8ff;
+            margin: 0.6rem 0;
+            width: 100%;
+            max-width: 780px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+            z-index: 250;
+            border: 1px solid #ddd;
+            color: var(--primary-blue-dark);
+            font-size: 1.3rem;
+            user-select: none;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            color: var(--primary-orange);
+            border-color: var(--primary-orange);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #prev-btn {
+            left: 15px;
+        }
+
+        #next-btn {
+            right: 15px;
+        }
+
+        .slide-indicators {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            font-size: 0.85rem;
+            color: #888;
+            z-index: 100;
+        }
+
+        .progress-bar-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: #edf2f7;
+            z-index: 100;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary-orange);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .quiz-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            width: 100%;
+            max-width: 600px;
+            margin: 0.6rem auto;
+        }
+
+        .option-btn {
+            padding: 0.8rem 1.2rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            text-align: left;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary-orange);
+            background: #fffcf9;
+        }
+
+        .columns-container {
+            display: flex;
+            gap: 15px;
+            margin: 10px 0;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .column-card {
+            flex: 1;
+            background: #f8fafc;
+            border: 2px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 12px 16px;
+            text-align: center;
+        }
+
+        .column-card-title {
+            font-size: 1.05rem;
+            font-weight: bold;
+            color: var(--primary-blue-dark);
+            border-bottom: 2px dashed #cbd5e1;
+            padding-bottom: 6px;
+            margin-bottom: 8px;
+        }
+
+        /* Estilos Libro de Texto: Pirámide Inversa a la Izquierda, Explicación a la Derecha */
+        .textbook-table {
+            width: 100%;
+            max-width: 780px;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 10px auto;
+            border: 2px solid #cbd5e1;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #ffffff;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+        }
+
+        .textbook-table th {
+            background-color: var(--primary-blue-dark);
+            color: #ffffff;
+            padding: 8px 12px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .textbook-table td {
+            padding: 10px 14px;
+            border-bottom: 1px dashed #cbd5e1;
+            vertical-align: middle;
+            line-height: 1.6;
+        }
+
+        .textbook-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .pyramid-col {
+            width: 45%;
+            text-align: center;
+            background: #fafafa;
+            border-right: 2px solid #cbd5e1;
+            font-family: 'Outfit', monospace;
+        }
+
+        .explain-col {
+            width: 55%;
+            text-align: left;
+            font-size: 0.9rem;
+            color: #334155;
+        }
+
+        .widget-box {
+            background: #f1f5f9;
+            border: 2px solid #cbd5e1;
+            border-radius: 16px;
+            padding: 12px 20px;
+            width: 100%;
+            max-width: 650px;
+            margin-top: 5px;
+        }
+
+        .widget-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 6px 0;
+        }
+
+        .widget-label {
+            font-weight: bold;
+            color: var(--primary-blue-dark);
+            font-size: 1rem;
+        }
+
+        .widget-slider {
+            flex: 1;
+            margin: 0 15px;
+            accent-color: var(--primary-orange);
+        }
+
+        .widget-val {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-orange);
+            width: 80px;
+            text-align: right;
+        }
+
+        .conversion-grid {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            justify-content: space-around;
+        }
+
+        .conversion-box {
+            background: white;
+            padding: 6px 10px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            flex: 1;
+            text-align: center;
+        }
+
+        .conversion-val {
+            display: block;
+            font-size: 1.15rem;
+            font-weight: bold;
+            color: var(--primary-blue-dark);
+        }
+
+        .conversion-lbl {
+            font-size: 0.78rem;
+            color: #64748b;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app-container">
+        <header id="global-header">
+            <span>Colegio Escolaris - Matemática 4to Bachillerato</span>
+            <span>Guía 23: Teorema de Tales y Euclides</span>
+        </header>
+
+        <div id="viewport">
+            <div class="slide-container" id="slide-container">
+                
+                <!-- 1. Portada -->
+                <div class="slide active">
+                    <div style="font-size: 75px; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));">📐🏛️✏️</div>
+                    <h1>Teoremas de Tales y Euclides</h1>
+                    <h2>Lección 23 &bull; 4&deg; Bachillerato</h2>
+                    <p style="color: #64748b; font-style: italic;">¡Fundamentos de proporcionalidad geométrica y teoremas de la altura y catetos formateados en estilo libro con pirámide inversa!</p>
+                </div>
+
+                <!-- 2. Historia y Contexto -->
+                <div class="slide">
+                    <h2>Los Gigantes de la Geometría Griega</h2>
+                    
+                    <div class="columns-container">
+                        <div class="column-card" style="border-color: #0369a1;">
+                            <div class="column-card-title" style="color: #0369a1;">🏛️ Tales de Mileto (624 - 546 a.C.)</div>
+                            <p style="font-size: 0.9rem; text-align: left; color: #475569; line-height: 1.6;">
+                                Demostró que si $L_1 \parallel L_2 \parallel L_3$ cortan a dos transversales $t_1$ y $t_2$, los segmentos formados son <strong>estrictamente proporcionales</strong>.
+                            </p>
+                        </div>
+                        <div class="column-card" style="border-color: var(--primary-purple);">
+                            <div class="column-card-title" style="color: var(--primary-purple);">📜 Euclides de Alejandría (325 - 265 a.C.)</div>
+                            <p style="font-size: 0.9rem; text-align: left; color: #475569; line-height: 1.6;">
+                                Autor de los "Elementos". Estableció las relaciones geométricas formales entre la altura y los catetos proyectados sobre la hipotenusa.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Teorema de Tales -->
+                <div class="slide">
+                    <h2>Teorema Fundamental de Tales</h2>
+                    <p>Dadas tres rectas paralelas $L_1 \parallel L_2 \parallel L_3$ que cortan a dos transversales $t_1$ y $t_2$:</p>
+
+                    <div class="info-card" style="border-left: 5px solid var(--primary-orange); background: #fffbeb;">
+                        <h3 style="color: var(--primary-orange);">Ecuación de Proporcionalidad Geométrica:</h3>
+                        <p style="font-size: 1.45rem; font-weight: bold; color: var(--primary-blue-dark); margin: 8px 0;">
+                            $$\frac{AB}{BC} = \frac{A'B'}{B'C'} \quad \Longrightarrow \quad AB \cdot B'C' = BC \cdot A'B'$$
+                        </p>
+                        <p style="font-size: 0.9rem; color: #475569; margin-top: 6px; line-height: 1.6;">
+                            En un triángulo $\Delta ABC$, si $DE \parallel BC$, entonces $\Delta ADE \sim \Delta ABC$ (los triángulos son semejantes).
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 4. Teoremas de Euclides en Triángulo Rectángulo -->
+                <div class="slide">
+                    <h2>Teoremas de Euclides (Relaciones Métricas)</h2>
+                    <p>En todo triángulo rectángulo $\Delta ABC$ (recto en C), la altura $h$ sobre la hipotenusa $c$ la divide en proyecciones $m$ y $n$:</p>
+
+                    <div class="columns-container">
+                        <div class="column-card" style="border-color: var(--primary-green);">
+                            <div class="column-card-title" style="color: var(--primary-green);">Teorema de la Altura</div>
+                            <p style="font-size: 1.15rem; font-weight: bold; color: var(--primary-blue-dark); margin-top: 6px;">
+                                $$h^2 = m \cdot n \quad \Longrightarrow \quad h = \sqrt{m \cdot n}$$
+                            </p>
+                            <p style="font-size: 0.85rem; color: #64748b;">La altura es la media proporcional geométrica entre las proyecciones.</p>
+                        </div>
+                        <div class="column-card" style="border-color: var(--primary-purple);">
+                            <div class="column-card-title" style="color: var(--primary-purple);">Teorema del Cateto</div>
+                            <p style="font-size: 1.15rem; font-weight: bold; color: var(--primary-blue-dark); margin-top: 6px;">
+                                $$a^2 = c \cdot n \quad \mid \quad b^2 = c \cdot m$$
+                            </p>
+                            <p style="font-size: 0.85rem; color: #64748b;">Cada cateto al cuadrado es el producto de la hipotenusa por su proyección adjunta.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Ejemplo 1: Estilo Libro de Texto -->
+                <div class="slide">
+                    <h2>Ejemplo 1: Hallar segmento x por Tales</h2>
+                    <p style="margin-bottom: 4px;">Segmentos $AB = 6$, $BC = 9$, $A'B' = 4$ y $B'C' = x$.</p>
+
+                    <table class="textbook-table">
+                        <thead>
+                            <tr>
+                                <th class="pyramid-col">Desarrollo Matemático (Pirámide Inversa)</th>
+                                <th class="explain-col">Justificación y Explicación del Nivel</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="pyramid-col">$\frac{6}{9} = \frac{4}{x}$</td>
+                                <td class="explain-col"><strong>Nivel 1: Igualdad de Fracciones.</strong> Planteamos la proporción de Tales entre segmentos correspondientes.</td>
+                            </tr>
+                            <tr>
+                                <td class="pyramid-col">$6 \cdot x = 9 \cdot 4$</td>
+                                <td class="explain-col"><strong>Nivel 2: Producto Cruzado.</strong> Multiplicamos extremos por medios para eliminar denominadores.</td>
+                            </tr>
+                            <tr>
+                                <td class="pyramid-col">$6x = 36$</td>
+                                <td class="explain-col"><strong>Nivel 3: Simplificación de Producto.</strong> Operamos la multiplicación constante $9 \cdot 4 = 36$.</td>
+                            </tr>
+                            <tr>
+                                <td class="pyramid-col">$x = \frac{36}{6}$</td>
+                                <td class="explain-col"><strong>Nivel 4: Despeje de Incógnita.</strong> Transponemos el coeficiente 6 dividiendo al lado derecho.</td>
+                            </tr>
+                            <tr>
+                                <td class="pyramid-col" style="color: var(--primary-orange); font-weight: bold;">$x = 6$</td>
+                                <td class="explain-col"><strong>Nivel 5: Resultado Final.</strong> Dividimos $36 \div 6$ obteniendo la longitud del segmento desconocido $B'C'$.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 6. Ejemplo 2: Estilo Libro de Texto -->
+                <div class="slide">
+                    <h2>Ejemplo 2: Calcular la Altura h (Euclides)</h2>
+                    <p style="margin-bottom: 4px;">Proyecciones sobre la hipotenusa $m = 4 \text{ cm}$ y $n = 9 \text{ cm}$.</p>
+
+                    <table class="textbook-table">
+                        <thead>
+                            <tr>
+                                <th class="pyramid-col">Desarrollo Matemático (Pirámide Inversa)</th>
+                                <th class="explain-col">Justificación y Explicación del Nivel</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="pyramid-col">$h^2 = 4 \cdot 9$</td>
+                                <td class="explain-col"><strong>Nivel 1: Teorema de la Altura.</strong> Sustituimos las proyecciones en la fórmula $h^2 = m \cdot n$.</td>
+                            </tr>
+                            <tr>
+                                <td class="pyramid-col">$h^2 = 36$</td>
+                                <td class="explain-col"><strong>Nivel 2: Producto de Proyecciones.</strong> Multiplicamos los tramos de la hipotenusa $4 \cdot 9 = 36$.</td>
+                            </tr>
+                            <tr>
+                                <td class="pyramid-col">$h = \sqrt{36}$</td>
+                                <td class="explain-col"><strong>Nivel 3: Transposición Radical.</strong> Aplicamos la raíz cuadrada en ambos miembros para despejar la altura $h$.</td>
+                            </tr>
+                            <tr>
+                                <td class="pyramid-col" style="color: var(--primary-green); font-weight: bold;">$h = 6 \text{ cm}$</td>
+                                <td class="explain-col"><strong>Nivel 4: Resultado Final.</strong> Obtenemos la longitud exacta de la altura perpendicular.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 7. Ejemplo 3: Estilo Libro de Texto -->
+                <div class="slide">
+                    <h2>Ejemplo 3: Calcular Cateto a (Euclides)</h2>
+                    <p style="margin-bottom: 4px;">Hipotenusa $c = 25 \text{ cm}$ y proyección adjunta $n = 9 \text{ cm}$.</p>
+
+                    <table class="textbook-table">
+                        <thead>
+                            <tr>
+                                <th class="pyramid-col">Desarrollo Matemático (Pirámide Inversa)</th>
+                                <th class="explain-col">Justificación y Explicación del Nivel</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="pyramid-col">$a^2 = 25 \cdot 9$</td>
+                                <td class="explain-col"><strong>Nivel 1: Teorema del Cateto.</strong> Sustituimos en la ecuación $a^2 = c \cdot n$.</td>
+                            </tr>
+                            <tr>
+                                <td class="pyramid-col">$a^2 = 225$</td>
+                                <td class="explain-col"><strong>Nivel 2: Multiplicación Hipotenusa-Proyección.</strong> Operamos $25 \cdot 9 = 225$.</td>
+                            </tr>
+                            <tr>
+                                <td class="pyramid-col">$a = \sqrt{225}$</td>
+                                <td class="explain-col"><strong>Nivel 3: Transposición Radical.</strong> Extraemos la raíz cuadrada de ambos lados.</td>
+                            </tr>
+                            <tr>
+                                <td class="pyramid-col" style="color: var(--primary-purple); font-weight: bold;">$a = 15 \text{ cm}$</td>
+                                <td class="explain-col"><strong>Nivel 4: Resultado Final.</strong> Calculamos la longitud formal del cateto mayor.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 8. Simulador Interactivo de Tales -->
+                <div class="slide">
+                    <h2>¡Calculador Interactivo de Proporciones (Tales)!</h2>
+                    <p>Mueve el valor del segmento AB para calcular el segmento proporcional X (BC = 10, A'B' = 6):</p>
+                    
+                    <div class="widget-box">
+                        <div class="widget-row">
+                            <span class="widget-label">Segmento AB:</span>
+                            <input type="range" min="2" max="20" value="5" class="widget-slider" id="tales-slider" oninput="simularTales(this.value)">
+                            <span class="widget-val" id="val-ab">5 u</span>
+                        </div>
+                        
+                        <div class="conversion-grid">
+                            <div class="conversion-box">
+                                <span class="conversion-val" id="res-tales-x" style="color: var(--primary-orange);">12.00 u</span>
+                                <span class="conversion-lbl">Segmento B'C' (x)</span>
+                            </div>
+                            <div class="conversion-box">
+                                <span class="conversion-val" id="res-tales-k" style="color: var(--primary-green);">0.50</span>
+                                <span class="conversion-lbl">Razón de Proporción (k)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 9. QUIZ 1 -->
+                <div class="slide">
+                    <h2>Reto 1: Requisito de Tales</h2>
+                    <p>Para aplicar el Teorema de Tales entre dos rectas transversales...</p>
+                    <p style="font-weight: bold; color: var(--primary-blue-dark);">¿Qué condición fundamental deben cumplir las rectas que las cortan?</p>
+                    <div class="quiz-container">
+                        <button class="option-btn" onclick="checkQuiz(1, true, this, '¡Correcto! Las rectas que cortan las transversales deben ser paralelas entre sí.', '')">A) Deben ser estrictamente PARALELAS entre sí ($L_1 \parallel L_2 \parallel L_3$).</button>
+                        <button class="option-btn" onclick="checkQuiz(1, false, this, '', 'Las paralelas no deben ser perpendiculares a las transversales obligatoriamente.')">B) Deben ser perpendiculares a las transversales.</button>
+                        <button class="option-btn" onclick="checkQuiz(1, false, this, '', 'Las rectas paralelas nunca se cruzan en un mismo punto.')">C) Deben cruzarse todas en un mismo punto central.</button>
+                    </div>
+                    <div id="feedback-1" style="margin-top: 1rem; font-weight: 600; min-height: 24px;"></div>
+                </div>
+
+                <!-- 10. QUIZ 2 -->
+                <div class="slide">
+                    <h2>Reto 2: Teorema de la Altura de Euclides</h2>
+                    <p>Si en un triángulo rectángulo las proyecciones valen $m = 2 \text{ cm}$ y $n = 8 \text{ cm}$.</p>
+                    <p style="font-weight: bold; color: var(--primary-blue-dark);">¿Cuánto mide la altura $h$?</p>
+                    <div class="quiz-container">
+                        <button class="option-btn" onclick="checkQuiz(2, false, this, '', 'Recuerda que h² = m × n = 2 × 8 = 16. Luego extrae la raíz.')">A) 16 cm</button>
+                        <button class="option-btn" onclick="checkQuiz(2, true, this, '¡Excelente! h = √(2 × 8) = √16 = 4 cm.', '')">B) 4 cm</button>
+                        <button class="option-btn" onclick="checkQuiz(2, false, this, '', 'Suma no se aplica, es multiplicación: 2 × 8.')">C) 10 cm</button>
+                    </div>
+                    <div id="feedback-2" style="margin-top: 1rem; font-weight: 600; min-height: 24px;"></div>
+                </div>
+
+                <!-- 11. QUIZ 3 -->
+                <div class="slide">
+                    <h2>Reto 3: Teorema del Cateto de Euclides</h2>
+                    <p>La hipotenusa $c$ de un triángulo rectángulo mide 16 cm y la proyección $m = 4 \text{ cm}$.</p>
+                    <p style="font-weight: bold; color: var(--primary-blue-dark);">¿Cuánto mide el cateto $b$?</p>
+                    <div class="quiz-container">
+                        <button class="option-btn" onclick="checkQuiz(3, true, this, '¡Perfecto! b = √(c × m) = √(16 × 4) = √64 = 8 cm.', '')">A) 8 cm</button>
+                        <button class="option-btn" onclick="checkQuiz(3, false, this, '', 'b² = 16 × 4 = 64. Debes sacar la raíz cuadrada.')">B) 64 cm</button>
+                        <button class="option-btn" onclick="checkQuiz(3, false, this, '', 'La hipotenusa es 16 y la proyección 4.')">C) 12 cm</button>
+                    </div>
+                    <div id="feedback-3" style="margin-top: 1rem; font-weight: 600; min-height: 24px;"></div>
+                </div>
+
+                <!-- 12. Final -->
+                <div class="slide">
+                    <div style="font-size: 80px;">🎯</div>
+                    <h2>¡Misión Cumplida!</h2>
+                    <p>¡Has comprendido formalmente las leyes de semejanza y proporciones de Tales y Euclides!</p>
+                    <button onclick="goToSlide(0)"
+                        style="background: var(--primary-orange); color: white; border: none; padding: 1rem 2rem; border-radius: 30px; font-weight: 700; cursor: pointer; margin-top: 1.5rem; font-size: 1.1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">Volver a estudiar</button>
+                </div>
+
+            </div>
+        </div>
+
+        <button class="nav-btn" id="prev-btn" onclick="prevSlide()" disabled aria-label="Anterior">&#8592;</button>
+        <button class="nav-btn" id="next-btn" onclick="nextSlide()" aria-label="Siguiente">&#8594;</button>
+
+        <div class="slide-indicators">
+            <span id="slide-num">1 / 12</span>
+        </div>
+
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const totalSlides = 12;
+        const slideContainer = document.getElementById('slide-container');
+        const slideNumDisplay = document.getElementById('slide-num');
+        const progressBar = document.getElementById('progress-bar');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        function updateSlide() {
+            slideContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+            slideNumDisplay.textContent = `${currentSlide + 1} / ${totalSlides}`;
+            
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = `${progress}%`;
+
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === totalSlides - 1;
+
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach((slide, index) => {
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlide();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlide();
+            }
+        }
+
+        function goToSlide(num) {
+            currentSlide = num;
+            updateSlide();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+
+        function simularTales(ab) {
+            document.getElementById('val-ab').textContent = `${ab} u`;
+            const bc = 10;
+            const a_b = 6;
+            const x = (bc * a_b / ab).toFixed(2);
+            const k = (ab / bc).toFixed(2);
+            
+            document.getElementById('res-tales-x').textContent = `${x} u`;
+            document.getElementById('res-tales-k').textContent = k;
+        }
+
+        function checkQuiz(quizNum, isCorrect, btnElement, correctMsg, wrongMsg) {
+            const container = btnElement.parentElement;
+            const buttons = container.querySelectorAll('.option-btn');
+            const feedback = document.getElementById(`feedback-${quizNum}`);
+
+            buttons.forEach(btn => {
+                btn.style.borderColor = '#e2e8f0';
+                btn.style.background = 'white';
+                btn.style.color = '#1e293b';
+            });
+
+            if (isCorrect) {
+                btnElement.style.borderColor = 'var(--primary-green)';
+                btnElement.style.background = '#f0fdf4';
+                btnElement.style.color = '#166534';
+                feedback.style.color = 'var(--primary-green)';
+                feedback.textContent = correctMsg;
+            } else {
+                btnElement.style.borderColor = 'var(--primary-red)';
+                btnElement.style.background = '#fef2f2';
+                btnElement.style.color = '#991b1b';
+                feedback.style.color = 'var(--primary-red)';
+                feedback.textContent = wrongMsg;
+            }
+        }
+
+        // Initialize progress bar and slider state
+        updateSlide();
+    </script>
+</body>
+
+</html>
