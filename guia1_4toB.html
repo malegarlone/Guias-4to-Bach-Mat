@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lección 1: Operaciones Entre Polinomios - 4to Bachillerato</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-blue: #0284c7;
+            --primary-dark: #0f172a;
+            --primary-orange: #db6015;
+            --primary-green: #16a34a;
+            --primary-purple: #9333ea;
+            --bg-light: #f8fafc;
+            --transition-speed: 0.5s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #cbd5e1;
+            color: #1e293b;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        #app-container {
+            width: 100%;
+            max-width: 960px;
+            height: 540px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: auto;
+        }
+
+        header {
+            background-color: var(--primary-dark);
+            color: white;
+            padding: 0 1.5rem;
+            height: 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            z-index: 200;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        #viewport {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            background: #ffffff;
+        }
+
+        @media (max-height: 600px) or (max-width: 960px) {
+            #app-container {
+                height: 100vh;
+                border-radius: 0;
+            }
+        }
+
+        .slide-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100%;
+            padding: 14px 65px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            transition: opacity var(--transition-speed);
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.2rem;
+            color: var(--primary-blue);
+            margin-bottom: 0.4rem;
+            font-weight: 800;
+        }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+            margin-bottom: 0.2rem;
+            font-weight: 700;
+        }
+
+        p {
+            font-size: 0.92rem;
+            color: #475569;
+            max-width: 820px;
+            line-height: 1.5;
+            margin-bottom: 0.3rem;
+        }
+
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+            z-index: 250;
+            border: 1px solid #ddd;
+            color: var(--primary-dark);
+            font-size: 1.3rem;
+            user-select: none;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            color: var(--primary-blue);
+            border-color: var(--primary-blue);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #prev-btn {
+            left: 15px;
+        }
+
+        #next-btn {
+            right: 15px;
+        }
+
+        .slide-indicators {
+            position: absolute;
+            bottom: 1.2rem;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            font-size: 0.85rem;
+            color: #888;
+            z-index: 100;
+        }
+
+        .progress-bar-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: #edf2f7;
+            z-index: 100;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary-blue);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .quiz-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            width: 100%;
+            max-width: 640px;
+            margin: 0.4rem auto;
+        }
+
+        .option-btn {
+            padding: 0.7rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            text-align: left;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .option-btn:hover {
+            border-color: var(--primary-blue);
+            background: #f0f9ff;
+        }
+
+        .content-box-vertical {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 840px;
+            flex: 1;
+            margin: 4px 0;
+        }
+
+        .step-row {
+            background: #ffffff;
+            padding: 8px 12px;
+            border-radius: 8px;
+            white-space: nowrap;
+            overflow-x: auto;
+            border-left: 4px solid var(--primary-blue);
+            font-size: 0.88rem;
+            color: #334155;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app-container">
+        <header id="global-header">
+            <span>Colegio Escolaris - Matemática 4to Bachillerato</span>
+            <span>Lección 1: Operaciones Entre Polinomios</span>
+        </header>
+
+        <div id="viewport">
+            <div class="slide-container" id="slide-container">
+                
+                <!-- 1. Portada -->
+                <div class="slide active">
+                    <div class="content-box-vertical">
+                        <div style="font-size: 80px; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));">📊🔢📐</div>
+                        <h1>Operaciones Entre Polinomios</h1>
+                        <h2>Lección 1 &bull; 4&deg; Bachillerato</h2>
+                        <p style="color: #64748b; font-style: italic;">¡Domina la suma, resta, multiplicación distribuida y división de polinomios con reducción de términos semejantes!</p>
+                    </div>
+                </div>
+
+                <!-- 2. Conceptos Fundamentales: Grado y Términos Semejantes -->
+                <div class="slide">
+                    <h2>Estructura de un Polinomio y Términos Semejantes</h2>
+                    <p>Un polinomio es una expresión algebraica formada por la suma de monomios con exponentes enteros positivos.</p>
+
+                    <div class="content-box-vertical" style="width: 100%; gap: 12px;">
+                        <div style="display: flex; gap: 20px; width: 100%;">
+                            <!-- Tarjeta Grado del Polinomio -->
+                            <div style="flex: 1; background: #ffffff; border-left: 6px solid var(--primary-blue); box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-radius: 0 12px 12px 0; padding: 14px 18px; text-align: left;">
+                                <h3 style="color: var(--primary-blue); font-size: 1.05rem; margin-bottom: 6px;">📐 Grado de un Polinomio</h3>
+                                <p style="font-size: 0.88rem; color: #475569; margin-bottom: 8px;">
+                                    Es el mayor exponente de la variable en la expresión ordenada:
+                                </p>
+                                <div style="background: #f0f9ff; padding: 8px 12px; border-radius: 8px; font-weight: bold; color: var(--primary-blue); font-size: 0.95rem; text-align: center;">
+                                    P(x) = 4x&sup3; - 5x&sup2; + 7x - 2 &emsp;&rarr;&emsp; Grado 3 (Cúbico)
+                                </div>
+                            </div>
+
+                            <!-- Tarjeta Términos Semejantes -->
+                            <div style="flex: 1; background: #ffffff; border-left: 6px solid var(--primary-purple); box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-radius: 0 12px 12px 0; padding: 14px 18px; text-align: left;">
+                                <h3 style="color: var(--primary-purple); font-size: 1.05rem; margin-bottom: 6px;">🔄 Términos Semejantes</h3>
+                                <p style="font-size: 0.88rem; color: #475569; margin-bottom: 8px;">
+                                    Son aquellos que tienen exactamente las mismas variables con los mismos exponentes:
+                                </p>
+                                <div style="background: #f3e8ff; padding: 8px 12px; border-radius: 8px; font-weight: bold; color: #6b21a8; font-size: 0.95rem; text-align: center;">
+                                    3x&sup2;y y -8x&sup2;y &emsp;&rarr;&emsp; ¡Se pueden sumar o restar!
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Regla de Signos -->
+                        <div style="width: 100%; background: #ffffff; border-left: 6px solid var(--primary-orange); box-shadow: 0 4px 12px rgba(0,0,0,0.04); border-radius: 0 10px 10px 0; padding: 10px 16px; text-align: left; display: flex; align-items: center; gap: 12px;">
+                            <span style="font-size: 1.4rem;">💡</span>
+                            <p style="font-size: 0.9rem; color: #334155; margin: 0; font-weight: bold;">
+                                Regla de Oro en Resta: El signo menos (-) antes de un paréntesis cambia el signo de TODOS los términos interiores.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Suma y Resta de Polinomios Resuelto Paso a Paso -->
+                <div class="slide">
+                    <h2>Suma y Resta de Polinomios</h2>
+                    <p>Agrupamos los términos semejantes y reducimos sus coeficientes numéricos respetando los signos:</p>
+
+                    <div class="content-box-vertical" style="width: 100%; gap: 10px;">
+                        <div style="width: 100%; background: #ffffff; border-left: 6px solid var(--primary-blue); box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-radius: 0 12px 12px 0; padding: 14px 18px; text-align: left;">
+                            <h3 style="color: var(--primary-blue); font-size: 1.05rem; margin-bottom: 8px;">📋 Ejemplo Resuelto: Resta P(x) - Q(x)</h3>
+                            <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 8px;">Dados P(x) = 5x&sup3; - 3x&sup2; + 4x y Q(x) = 2x&sup3; + 4x&sup2; - 6:</p>
+
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <div class="step-row" style="border-color: var(--primary-blue);">
+                                    <span style="color: var(--primary-blue); font-weight: bold;">Paso 1 (Planteamiento):</span> P(x) - Q(x) = (5x&sup3; - 3x&sup2; + 4x) - (2x&sup3; + 4x&sup2; - 6)
+                                </div>
+                                <div class="step-row" style="border-color: var(--primary-orange);">
+                                    <span style="color: var(--primary-orange); font-weight: bold;">Paso 2 (Cambiar signos del restando):</span> = 5x&sup3; - 3x&sup2; + 4x - 2x&sup3; - 4x&sup2; + 6
+                                </div>
+                                <div class="step-row" style="border-color: var(--primary-purple);">
+                                    <span style="color: var(--primary-purple); font-weight: bold;">Paso 3 (Agrupar semejantes):</span> = (5x&sup3; - 2x&sup3;) + (-3x&sup2; - 4x&sup2;) + 4x + 6
+                                </div>
+                                <div class="step-row" style="border-color: var(--primary-green); background: #f0fdf4; font-weight: bold; color: #166534;">
+                                    <span>Resultado Final Reducido:</span> = 3x&sup3; - 7x&sup2; + 4x + 6
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Multiplicación de Polinomios Resuelto Paso a Paso -->
+                <div class="slide">
+                    <h2>Multiplicación de Polinomios (Propiedad Distributiva)</h2>
+                    <p>Multiplicamos cada término del primer polinomio por todos los términos del segundo, aplicando leyes de exponentes ($x^a \cdot x^b = x^{a+b}$):</p>
+
+                    <div class="content-box-vertical" style="width: 100%; gap: 10px;">
+                        <div style="width: 100%; background: #ffffff; border-left: 6px solid var(--primary-orange); box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-radius: 0 12px 12px 0; padding: 14px 18px; text-align: left;">
+                            <h3 style="color: var(--primary-orange); font-size: 1.05rem; margin-bottom: 8px;">📋 Ejemplo Resuelto: (2x&sup2; + 3)(x - 4)</h3>
+
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <div class="step-row" style="border-color: #0284c7;">
+                                    <span style="color: #0284c7; font-weight: bold;">Paso 1 (Distribuir primer término):</span> 2x&sup2;(x - 4) = 2x&sup3; - 8x&sup2;
+                                </div>
+                                <div class="step-row" style="border-color: var(--primary-orange);">
+                                    <span style="color: var(--primary-orange); font-weight: bold;">Paso 2 (Distribuir segundo término):</span> 3(x - 4) = 3x - 12
+                                </div>
+                                <div class="step-row" style="border-color: var(--primary-purple);">
+                                    <span style="color: var(--primary-purple); font-weight: bold;">Paso 3 (Unir términos):</span> 2x&sup3; - 8x&sup2; + 3x - 12
+                                </div>
+                                <div class="step-row" style="border-color: var(--primary-green); background: #fffbeb; font-weight: bold; color: var(--primary-orange);">
+                                    <span>Resultado Final Reducido:</span> = 2x&sup3; - 8x&sup2; + 3x - 12
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. División de Polinomios (Sintética / Larga) -->
+                <div class="slide">
+                    <h2>División de Polinomios y Regla de Ruffini</h2>
+                    <p>Para dividir un polinomio $P(x)$ entre un binomio lineal de la forma $(x - c)$, utilizamos la división sintética:</p>
+
+                    <div class="content-box-vertical" style="width: 100%; gap: 10px;">
+                        <div style="width: 100%; background: #ffffff; border-left: 6px solid var(--primary-purple); box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-radius: 0 12px 12px 0; padding: 14px 18px; text-align: left;">
+                            <h3 style="color: var(--primary-purple); font-size: 1.05rem; margin-bottom: 8px;">📋 Ejemplo Resuelto: (x&sup2; - 5x + 6) &divide; (x - 2)</h3>
+
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <div class="step-row" style="border-color: #0284c7;">
+                                    <span style="color: #0284c7; font-weight: bold;">Paso 1 (Identificar raíz del divisor):</span> Divisor x - 2 = 0 &rarr; Raíz c = 2. Coeficientes = [1, -5, 6].
+                                </div>
+                                <div class="step-row" style="border-color: var(--primary-orange);">
+                                    <span style="color: var(--primary-orange); font-weight: bold;">Paso 2 (Operación sintética):</span> Bajar 1. Multiplicar 1 &times; 2 = 2. Sumar -5 + 2 = -3.
+                                </div>
+                                <div class="step-row" style="border-color: var(--primary-purple);">
+                                    <span style="color: var(--primary-purple); font-weight: bold;">Paso 3 (Multiplicar y residuo):</span> Multiplicar -3 &times; 2 = -6. Residuo = 6 + (-6) = 0.
+                                </div>
+                                <div class="step-row" style="border-color: var(--primary-green); background: #f3e8ff; font-weight: bold; color: #6b21a8;">
+                                    <span>Cociente Resultante:</span> C(x) = x - 3 &emsp;(Residuo = 0)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. QUIZ 1 -->
+                <div class="slide">
+                    <div class="content-box-vertical">
+                        <h2>Reto 1: Suma de Polinomios</h2>
+                        <p>Al sumar <strong>(3x&sup2; + 5x - 2) + (2x&sup2; - 3x + 7)</strong>...</p>
+                        <p style="font-weight: bold; color: var(--primary-blue);">¿Cuál es el resultado de reducir términos semejantes?</p>
+                        <div class="quiz-container">
+                            <button class="option-btn" onclick="checkQuiz(1, true, this, '¡Correcto! 3x² + 2x² = 5x², 5x - 3x = 2x, -2 + 7 = +5.', '')">A) 5x&sup2; + 2x + 5</button>
+                            <button class="option-btn" onclick="checkQuiz(1, false, this, '', 'Revisa los signos de los términos independientes: -2 + 7 = +5.')">B) 5x&sup2; + 8x - 9</button>
+                            <button class="option-btn" onclick="checkQuiz(1, false, this, '', 'Al sumar no se multiplican ni suman los exponentes.')">C) 6x&sup4; + 2x + 5</button>
+                        </div>
+                        <div id="feedback-1" style="margin-top: 0.8rem; font-weight: 600; min-height: 24px;"></div>
+                    </div>
+                </div>
+
+                <!-- 7. QUIZ 2 -->
+                <div class="slide">
+                    <div class="content-box-vertical">
+                        <h2>Reto 2: Multiplicación de Polinomios</h2>
+                        <p>¿Qué resulta al multiplicar los monomios <strong>(-4x&sup3;) &times; (3x&sup2;)</strong>?</p>
+                        <div class="quiz-container">
+                            <button class="option-btn" onclick="checkQuiz(2, true, this, '¡Excelente! Coeficientes: -4 x 3 = -12. Exponentes: x³⁺² = x⁵.', '')">A) -12x&sup5;</button>
+                            <button class="option-btn" onclick="checkQuiz(2, false, this, '', 'En la multiplicación los exponentes de la misma base SE SUMAN (3 + 2 = 5).')">B) -12x&sup6;</button>
+                            <button class="option-btn" onclick="checkQuiz(2, false, this, '', 'Recuerda multiplicar los coeficientes numéricos (-4 x 3 = -12).')">C) -1x&sup5;</button>
+                        </div>
+                        <div id="feedback-2" style="margin-top: 0.8rem; font-weight: 600; min-height: 24px;"></div>
+                    </div>
+                </div>
+
+                <!-- 8. QUIZ 3 -->
+                <div class="slide">
+                    <div class="content-box-vertical">
+                        <h2>Reto 3: División de Polinomios</h2>
+                        <p>Al dividir <strong>(x&sup2; - 9) &divide; (x - 3)</strong> utilizando diferencia de cuadrados...</p>
+                        <p style="font-weight: bold; color: var(--primary-blue);">¿Cuál es el cociente resultante?</p>
+                        <div class="quiz-container">
+                            <button class="option-btn" onclick="checkQuiz(3, true, this, '¡Fantástico! (x² - 9) = (x - 3)(x + 3). Al cancelar (x - 3) queda (x + 3).', '')">A) x + 3</button>
+                            <button class="option-btn" onclick="checkQuiz(3, false, this, '', '(x - 3) es el divisor.')">B) x - 3</button>
+                            <button class="option-btn" onclick="checkQuiz(3, false, this, '', 'El resultado simplificado es x + 3.')">C) x + 9</button>
+                        </div>
+                        <div id="feedback-3" style="margin-top: 0.8rem; font-weight: 600; min-height: 24px;"></div>
+                    </div>
+                </div>
+
+                <!-- 9. Final -->
+                <div class="slide">
+                    <div class="content-box-vertical">
+                        <div style="font-size: 80px;">🎯</div>
+                        <h2>¡Misión Cumplida!</h2>
+                        <p>¡Has dominado las operaciones entre polinomios nivel Bachillerato!</p>
+                        <button onclick="goToSlide(0)"
+                            style="background: var(--primary-blue); color: white; border: none; padding: 1rem 2rem; border-radius: 30px; font-weight: 700; cursor: pointer; margin-top: 1.5rem; font-size: 1.1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">Volver a repasar</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <button class="nav-btn" id="prev-btn" onclick="prevSlide()" disabled aria-label="Anterior">&#8592;</button>
+        <button class="nav-btn" id="next-btn" onclick="nextSlide()" aria-label="Siguiente">&#8594;</button>
+
+        <div class="slide-indicators">
+            <span id="slide-num">1 / 9</span>
+        </div>
+
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const totalSlides = 9;
+        const slideContainer = document.getElementById('slide-container');
+        const slideNumDisplay = document.getElementById('slide-num');
+        const progressBar = document.getElementById('progress-bar');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        function updateSlide() {
+            slideContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+            slideNumDisplay.textContent = `${currentSlide + 1} / ${totalSlides}`;
+            
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = `${progress}%`;
+
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === totalSlides - 1;
+
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach((slide, index) => {
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlide();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlide();
+            }
+        }
+
+        function goToSlide(num) {
+            currentSlide = num;
+            updateSlide();
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+
+        function checkQuiz(quizNum, isCorrect, btnElement, correctMsg, wrongMsg) {
+            const container = btnElement.parentElement;
+            const buttons = container.querySelectorAll('.option-btn');
+            const feedback = document.getElementById(`feedback-${quizNum}`);
+
+            buttons.forEach(btn => {
+                btn.style.borderColor = '#e2e8f0';
+                btn.style.background = 'white';
+                btn.style.color = '#1e293b';
+            });
+
+            if (isCorrect) {
+                btnElement.style.borderColor = 'var(--primary-green)';
+                btnElement.style.background = '#f0fdf4';
+                btnElement.style.color = '#166534';
+                feedback.style.color = 'var(--primary-green)';
+                feedback.textContent = correctMsg;
+            } else {
+                btnElement.style.borderColor = 'var(--primary-red)';
+                btnElement.style.background = '#fef2f2';
+                btnElement.style.color = '#991b1b';
+                feedback.style.color = '#991b1b';
+                feedback.textContent = wrongMsg;
+            }
+        }
+
+        updateSlide();
+    </script>
+</body>
+
+</html>
